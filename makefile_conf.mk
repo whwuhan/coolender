@@ -13,9 +13,6 @@ OBJ_DIR := obj
 
 
 
-
-
-
 # 第三方库头文件
 ASSIMP_INCLUDE := $(3RD_SRC_DIR)/assimp/include
 GLFW_INCLUDE := $(3RD_SRC_DIR)/glfw/include
