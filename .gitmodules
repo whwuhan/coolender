@@ -1,15 +1,18 @@
 [submodule "3rdsrc/assimp"]
 	path = 3rdsrc/assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "3rdsrc/whlib"]
-	path = 3rdsrc/whlib
-	url = git@github.com:whwuhan/whlib.git
-[submodule "3rdsrc/glm"]
-	path = 3rdsrc/glm
-	url = https://github.com/g-truc/glm.git
 [submodule "3rdsrc/glfw"]
 	path = 3rdsrc/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "3rdsrc/glm"]
+	path = 3rdsrc/glm
+	url = https://github.com/g-truc/glm.git
 [submodule "3rdsrc/stb"]
 	path = 3rdsrc/stb
 	url = https://github.com/nothings/stb.git
+[submodule "3rdsrc/whlib"]
+	path = 3rdsrc/whlib
+	url = https://github.com/whwuhan/whlib.git
+[submodule "3rdsrc/imgui"]
+	path = 3rdsrc/imgui
+	url = https://github.com/ocornut/imgui.git
