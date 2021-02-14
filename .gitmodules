@@ -1,6 +1,3 @@
-[submodule "3rdsrc/whlib"]
-	path = 3rdsrc/whlib
-	url = git@github.com:whwuhan/whlib.git
 [submodule "3rdsrc/assimp"]
 	path = 3rdsrc/assimp
 	url = https://github.com/assimp/assimp.git
