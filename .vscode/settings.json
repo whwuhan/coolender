@@ -94,7 +94,8 @@
         "rope": "cpp",
         "slist": "cpp",
         "cfenv": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "*.ipp": "cpp"
     },
     "git.ignoreLimitWarning": true
 }
