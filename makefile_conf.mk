@@ -7,7 +7,7 @@ FLAGS := -std=c++11
 # 目录配置
 INCLUDE_DIR := include
 SRC_DIR := src
-LIB_DIR := lib
+LIBS_DIR := libs
 OBJ_DIR := obj
 3RD_SRC_DIR := 3rdsrc
 
