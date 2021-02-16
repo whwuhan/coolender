@@ -95,7 +95,11 @@
         "slist": "cpp",
         "cfenv": "cpp",
         "cinttypes": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "__cxx_version": "cpp",
+        "filesystem": "cpp",
+        "version": "cpp",
+        "*.inc": "cpp"
     },
     "git.ignoreLimitWarning": true
 }

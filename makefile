@@ -1,14 +1,14 @@
 include makefile_conf.mk
 #所有.o文件
-OBJ_SRC := obj/main.o obj/camera.o obj/mesh.o obj/model.o
+OBJS := obj/main.o obj/camera.o obj/mesh.o obj/model.o obj/shader.o obj/window.o
 
-Coolender : $(OBJ_SRC)
+Coolender : $(OBJS)
 	$(CC) $(FLAGS) \
 	-I$(INCLUDE_DIR) \
 	$(3RD_SRC_INCLUDE) \
-	-L$(LIBS_DIR) -lassimp -lglfw3 -lglad -limgui \
+	-L$(LIBS_DIR) -lassimp -lzlibstatic -lglfw3 -lglad -limgui \
 	-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo \
-	$(OBJ_SRC) \
+	$(OBJS) \
 	-o Coolender
 
 # 注意：如果指定了.o文件的存放目录，target也要指定路径，否则每次编译都会重新编译.o文件
@@ -25,7 +25,12 @@ obj/mesh.o : include/mesh.h src/mesh.cpp
 obj/model.o : include/model.h src/model.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/model.cpp -o $@
 
+obj/shader.o : include/shader.h src/shader.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/shader.cpp -o $@
+
+obj/window.o : include/window.h src/window.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/window.cpp -o $@
 
 .PHONY : clean
 clean : 
-	-rm -rf Coolender
+	-rm -rf Coolender $(OBJS)
