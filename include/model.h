@@ -1,8 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
-
+#pragma once
 #include <glad/glad.h> 
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <stb_image.h>
@@ -244,4 +241,3 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 
     return textureID;
 }
-#endif

@@ -1,13 +1,11 @@
 /**
  * 网格Mesh头文件
 */
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <shader.h>
-
 #include <string>
 #include <vector>
 
@@ -48,4 +46,3 @@ private:
     //初始化所有buffer
     void setupMesh();
 };
-#endif
