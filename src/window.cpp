@@ -1,6 +1,14 @@
 #include <window.h>
 using namespace std;
 using namespace Coolender;
+
+//timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+//相机位置
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
 //默认构造函数
 Window::Window():winWidth(800), winHeight(600)
 {}
@@ -13,7 +21,7 @@ Window::Window(
 
 void Window::initAndRun()
 {
-    //======================glfw glad 初始化======================
+    //======================glfw glad opengl 初始化======================
     glfwInit(); //初始化GLFW
     
     //通过glfwWindowHint()函数来设置参数，前面是参数名称，后面是值
@@ -24,7 +32,7 @@ void Window::initAndRun()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //mac用户需要设置，初始化才能有效
     #endif
     //创建一个窗口对象
-    GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, "Coolender", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, "Coolender version 1.0", NULL, NULL);
     //参数依次是长，宽，名称，后两个参数忽略
     if (window == NULL)
     {
@@ -38,7 +46,6 @@ void Window::initAndRun()
     glfwSwapInterval(1); // Enable vsync 每帧的交换间隔，防止屏幕撕裂
     //注册回调函数，告诉GLFW窗口大小调整时，调用这个回调函数
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-    
     //GLAD是用来管理OpenGL的函数指针
     //初始化GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -47,7 +54,14 @@ void Window::initAndRun()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return;
     }
-    //======================glfw glad 初始化结束======================
+    //openGL全局配置
+    glEnable(GL_DEPTH_TEST); //开启深度测试
+    glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
+    //======================glfw glad opengl 初始化结束======================
+
+    //shader
+    Shader test("shader/test.vs.glsl", "shader/test.fs.glsl");
+    Plane floor;
 
 
 
@@ -61,10 +75,9 @@ void Window::initAndRun()
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    
-
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
+    //ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
@@ -78,10 +91,29 @@ void Window::initAndRun()
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     //======================imgui 初始化结束======================
 
+
+
+    glViewport(0, 0, winWidth, winHeight);
+
     //渲染循环
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
+        // per-frame time logic
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        //input
+        processInput(window);
+
+        // render
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
@@ -132,11 +164,7 @@ void Window::initAndRun()
         }
         // Rendering
         ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
@@ -152,8 +180,6 @@ void Window::initAndRun()
     return;
 }
 
-
-
 //回调函数声明，更改窗口大小的时候，更改视口大小
 void Coolender::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -163,7 +189,144 @@ void Coolender::framebufferSizeCallback(GLFWwindow* window, int width, int heigh
 // 声明输入函数，判断是否按下键盘
 void Coolender::processInput(GLFWwindow *window)
 {
-    //glfwGetKey()函数，它需要一个窗口以及一个按键作为输入。
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) //检测是否按下esc，按下就退出窗口
+    //退出
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, true);
+    }
+    //向前
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        camera.ProcessKeyboard(FORWARD, 10 * deltaTime);
+    }
+    //向后
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        camera.ProcessKeyboard(BACKWARD, 10 * deltaTime);
+    }
+    //向左
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        camera.ProcessKeyboard(LEFT, 10 * deltaTime);
+    }
+    //向右
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        camera.ProcessKeyboard(RIGHT, 10 * deltaTime);
+    }
+    //向上
+    if (glfwGetKey(window, GLFW_KEY_SPACE))
+    {
+        camera.ProcessKeyboard(UPWARD, 10 * deltaTime);
+    } 
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void Coolender::scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(yoffset);
+}
+
+
+
+// 渲染一个球体
+unsigned int sphereVAO = 0;
+unsigned int indexCount;
+void renderSphere()
+{
+    if (0 == sphereVAO)
+    {
+        glGenVertexArrays(1, &sphereVAO);
+
+        unsigned int vbo, ebo;
+        glGenBuffers(1, &vbo);
+        glGenBuffers(1, &ebo);
+
+        std::vector<glm::vec3> positions; // 球面上的点
+        std::vector<glm::vec2> uv;        //球面上的uv坐标
+        std::vector<glm::vec3> normals;   //球面上的点法线
+        std::vector<unsigned int> indices;
+
+        // 球的精细程度
+        const unsigned int X_SEGMENTS = 64;
+        const unsigned int Y_SEGMENTS = 64;
+        const float PI = 3.14159265359;
+        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        {
+            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            {
+                // 绘制球面上的点
+                float xSegment = (float)x / (float)X_SEGMENTS;
+                float ySegment = (float)y / (float)Y_SEGMENTS;
+                float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+                float yPos = std::cos(ySegment * PI);
+                float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+                positions.push_back(glm::vec3(xPos, yPos, zPos));
+                uv.push_back(glm::vec2(xSegment, ySegment));
+                normals.push_back(glm::vec3(xPos, yPos, zPos));
+            }
+        }
+
+        // 将三个点绘制成一个面
+        bool oddRow = false; //是否是奇数行
+        for (unsigned int y = 0; y < Y_SEGMENTS; ++y)
+        {
+            if (!oddRow) // even rows: y == 0, y == 2; and so on
+            {
+                for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+                {
+                    indices.push_back(y * (X_SEGMENTS + 1) + x);
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                }
+            }
+            else
+            {
+                for (int x = X_SEGMENTS; x >= 0; --x) // 注意这里是int类型而不是unsigned int 如果是unsigned int会陷入死循环，因为无符号数不会小于0
+                {
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                    indices.push_back(y * (X_SEGMENTS + 1) + x);
+                }
+            }
+            oddRow = !oddRow;
+        }
+        indexCount = indices.size();
+
+        // 将点的坐标 法线 uv坐标放到一起（放入data内）
+        std::vector<float> data;
+        for (unsigned int i = 0; i < positions.size(); ++i)
+        {
+            data.push_back(positions[i].x);
+            data.push_back(positions[i].y);
+            data.push_back(positions[i].z);
+            if (uv.size() > 0)
+            {
+                data.push_back(uv[i].x);
+                data.push_back(uv[i].y);
+            }
+            if (normals.size() > 0)
+            {
+                data.push_back(normals[i].x);
+                data.push_back(normals[i].y);
+                data.push_back(normals[i].z);
+            }
+        }
+        // VAO VBO EBO 传输球的顶点数据
+        glBindVertexArray(sphereVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+        float stride = (3 + 2 + 3) * sizeof(float); // 第一个3 position.xyz 第二个2 uv.xy 第三个3 normal.xyz
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void *)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void *)(3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void *)(5 * sizeof(float)));
+    }
+    //绘制组成球面的三角形
+    glBindVertexArray(sphereVAO);
+    glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
 }
