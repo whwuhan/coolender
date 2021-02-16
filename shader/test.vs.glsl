@@ -13,7 +13,8 @@ out VS_OUT{
 uniform mat4 projection;
 uniform mat4 view;
 
-void main(){
+void main()
+{
     vs_out.FragPos = aPos;
     vs_out.Normal = aNormal;
     vs_out.TexCoords = aTexCoords;

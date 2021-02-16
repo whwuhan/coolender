@@ -11,6 +11,7 @@ Coolender : $(OBJS)
 	-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo \
 	$(OBJS) \
 	-o Coolender
+	./Coolender
 
 # 注意：如果指定了.o文件的存放目录，target也要指定路径，否则每次编译都会重新编译.o文件
 #目标文件

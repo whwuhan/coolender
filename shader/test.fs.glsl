@@ -2,7 +2,8 @@
 out vec4 FragColor;
 
 // 注意这里要重新声明一次VS_OUT
-in VS_OUT{
+in VS_OUT
+{
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;
@@ -13,7 +14,8 @@ uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform bool blinn;
 
-void main(){
+void main()
+{
     vec3 color = texture(floorTexture,fs_in.TexCoords).rgb;
     // ambient 环境光
     vec3 ambient = 0.05 * color;

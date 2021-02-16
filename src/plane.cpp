@@ -36,4 +36,3 @@ void Plane::init()
     texture = texLoader.loadTexture2D("img/wood.png");
     return ;
 }
-

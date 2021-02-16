@@ -9,12 +9,9 @@
 #include <iostream>
 #include <string>
 #include <window.h>
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+
 int main()
 {
-    Coolender::Window coolender(1000,800);
+    Coolender::Window coolender;
     coolender.initAndRun();
 }
