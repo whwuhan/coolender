@@ -8,6 +8,6 @@ namespace Coolender
     {
     public:
         TextureLoader();
-        unsigned int loadTexture(char const *path);
+        unsigned int loadTexture2D(char const *path);
     };
 }

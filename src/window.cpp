@@ -36,7 +36,7 @@ void Window::initAndRun()
     //参数依次是长，宽，名称，后两个参数忽略
     if (window == NULL)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return ;
     }
@@ -51,7 +51,7 @@ void Window::initAndRun()
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     //glfwGetProcAddress 根据编译的系统给出了正确的函数
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        cout << "Failed to initialize GLAD" << endl;
         return;
     }
     //openGL全局配置
@@ -62,7 +62,11 @@ void Window::initAndRun()
     //shader
     Shader test("shader/test.vs.glsl", "shader/test.fs.glsl");
     Plane floor;
-
+    floor.init();
+    test.use();
+    test.setInt("texture1", 0);
+    // lighting info
+    glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
 
 
@@ -94,7 +98,7 @@ void Window::initAndRun()
 
 
     glViewport(0, 0, winWidth, winHeight);
-
+    float blinn = true;
     //渲染循环
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -108,9 +112,24 @@ void Window::initAndRun()
         processInput(window);
 
         // render
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        test.use();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        test.setMat4("projection", projection);
+        test.setMat4("view", view);
+        // set light uniforms
+        test.setVec3("viewPos", camera.Position);
+        test.setVec3("lightPos", lightPos);
+        test.setInt("blinn", blinn);
+        // floor
+        glBindVertexArray(floor.VAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, floor.texture);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
 
 
 
@@ -243,10 +262,10 @@ void renderSphere()
         glGenBuffers(1, &vbo);
         glGenBuffers(1, &ebo);
 
-        std::vector<glm::vec3> positions; // 球面上的点
-        std::vector<glm::vec2> uv;        //球面上的uv坐标
-        std::vector<glm::vec3> normals;   //球面上的点法线
-        std::vector<unsigned int> indices;
+        vector<glm::vec3> positions; // 球面上的点
+        vector<glm::vec2> uv;        //球面上的uv坐标
+        vector<glm::vec3> normals;   //球面上的点法线
+        vector<unsigned int> indices;
 
         // 球的精细程度
         const unsigned int X_SEGMENTS = 64;
@@ -259,9 +278,9 @@ void renderSphere()
                 // 绘制球面上的点
                 float xSegment = (float)x / (float)X_SEGMENTS;
                 float ySegment = (float)y / (float)Y_SEGMENTS;
-                float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-                float yPos = std::cos(ySegment * PI);
-                float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+                float xPos = cos(xSegment * 2.0f * PI) * sin(ySegment * PI);
+                float yPos = cos(ySegment * PI);
+                float zPos = sin(xSegment * 2.0f * PI) * sin(ySegment * PI);
 
                 positions.push_back(glm::vec3(xPos, yPos, zPos));
                 uv.push_back(glm::vec2(xSegment, ySegment));
@@ -294,7 +313,7 @@ void renderSphere()
         indexCount = indices.size();
 
         // 将点的坐标 法线 uv坐标放到一起（放入data内）
-        std::vector<float> data;
+        vector<float> data;
         for (unsigned int i = 0; i < positions.size(); ++i)
         {
             data.push_back(positions[i].x);

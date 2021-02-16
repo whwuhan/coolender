@@ -7,7 +7,7 @@ TextureLoader::TextureLoader()
 
 // utility function for loading a 2D texture from file
 // ---------------------------------------------------
-unsigned int TextureLoader::loadTexture(char const *path)
+unsigned int TextureLoader::loadTexture2D(char const *path)
 {
     unsigned int textureID;
     glGenTextures(1, &textureID);
