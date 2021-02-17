@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <camera.h>
+#include <coolender.h>
 #include <coolender_ui.h>
 #include <shader.h>
 #include <texture_loader.h>

@@ -41,7 +41,8 @@ void Window::initAndRun()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //mac用户需要设置，初始化才能有效
     #endif
     //创建一个窗口对象
-    GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, "Coolender version 1.0", NULL, NULL);
+    string windowTitle = "Coolender Version " + Coolender::version;
+    GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, windowTitle.c_str(), NULL, NULL);
     //参数依次是长，宽，名称，后两个参数忽略
     if (window == NULL)
     {

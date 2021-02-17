@@ -1,5 +1,7 @@
 #include <coolender.h>
 using namespace coolender;
+using namespace std;
+string Coolender::version = "1.0";
 
 Coolender::Coolender()
 {}
