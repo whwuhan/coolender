@@ -81,8 +81,8 @@ void Window::initAndRun()
 
 
     //CoolenderUI初始化
-    CoolenderUI coolenderIU;
-    coolenderIU.init(window);
+    CoolenderUI coolenderUI;
+    coolenderUI.init(window);
 
 
 
@@ -128,7 +128,8 @@ void Window::initAndRun()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
-        coolenderIU.renderDemoUI();
+        //coolenderUI.renderDemoUI();
+        coolenderUI.render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
