@@ -1,6 +1,6 @@
 #include <plane.h>
 using namespace std;
-using namespace Coolender;
+using namespace coolender;
 
 Plane::Plane()
 {}

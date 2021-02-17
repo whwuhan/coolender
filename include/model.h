@@ -15,14 +15,14 @@
 #include <map>
 #include <vector>
 
-namespace Coolender
+namespace coolender
 {
     class Model 
     {
     public:
         //模型数据
-        std::vector<Coolender::Texture> textures_loaded;    //保存当前加载的纹理，保证纹理不需要重复加载
-        std::vector<Coolender::Mesh>    meshes;             //mesh
+        std::vector<coolender::Texture> textures_loaded;    //保存当前加载的纹理，保证纹理不需要重复加载
+        std::vector<coolender::Mesh>    meshes;             //mesh
         std::string directory;                   //模型加载路径
         bool gammaCorrection;                    //
 
@@ -30,7 +30,7 @@ namespace Coolender
         Model(std::string const &path, bool gamma = false);
 
         //遍历所有网格，并且绘制他们
-        void Draw(Coolender::Shader &shader);
+        void Draw(coolender::Shader &shader);
         
     private:
         //使用assimp加载模型
@@ -41,11 +41,11 @@ namespace Coolender
         void processNode(aiNode *node, const aiScene *scene);
         
         //处理mesh
-        Coolender::Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+        coolender::Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 
         // checks all material textures of a given type and loads the textures if they're not loaded yet.
         // the required info is returned as a Texture struct.
-        std::vector<Coolender::Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+        std::vector<coolender::Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
     };
 
     //加载纹理

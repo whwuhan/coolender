@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-namespace Coolender
+namespace coolender
 {
         //照相机移动方向枚举
     enum Camera_Movement

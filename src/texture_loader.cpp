@@ -1,6 +1,6 @@
 #include <texture_loader.h>
 using namespace std;
-using namespace Coolender;
+using namespace coolender;
 
 TextureLoader::TextureLoader()
 {}

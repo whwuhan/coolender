@@ -1,17 +1,16 @@
 #pragma once
-#include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
 #include <camera.h>
+#include <coolender_ui.h>
 #include <shader.h>
 #include <texture_loader.h>
 #include <plane.h>
 #include <stb_image.h>
-namespace Coolender
+namespace coolender
 {
     class Window
     {

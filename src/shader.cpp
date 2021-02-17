@@ -1,6 +1,6 @@
 #include <shader.h>
 using namespace std;
-using namespace Coolender;
+using namespace coolender;
 // constructor generates the shader on the fly
 // ------------------------------------------------------------------------
 Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)

@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-namespace Coolender
+namespace coolender
 {
     class Shader
     {

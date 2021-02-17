@@ -1,6 +1,6 @@
 #include <window.h>
 using namespace std;
-using namespace Coolender;
+using namespace coolender;
 
 Camera camera;
 //timing
@@ -71,6 +71,36 @@ void Window::initAndRun()
     glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
     //======================glfw glad opengl 初始化结束======================
 
+
+
+    //CoolenderUI初始化
+    CoolenderUI coolenderIU;
+    coolenderIU.init(window);
+
+    // // Setup Dear ImGui context
+    // IMGUI_CHECKVERSION();
+    // ImGui::CreateContext();
+    // ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    // //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // // Setup Dear ImGui style
+    // //ImGui::StyleColorsDark();
+    // //ImGui::StyleColorsClassic();
+    // ImGui::StyleColorsLight();
+
+    // // Setup Platform/Renderer backends
+    // ImGui_ImplGlfw_InitForOpenGL(window, true);
+    // ImGui_ImplOpenGL3_Init("#version 330");
+
+
+
+
+
+
+
+
+
     //shader
     Shader test("shader/test.vs.glsl", "shader/test.fs.glsl");
     Plane floor;
@@ -80,7 +110,7 @@ void Window::initAndRun()
     // lighting info
     glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
-    float blinn = true;
+    bool blinn = true;
     //渲染循环
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -112,6 +142,9 @@ void Window::initAndRun()
         glBindTexture(GL_TEXTURE_2D, floor.texture);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
+        //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
+        coolenderIU.render(blinn);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -123,13 +156,13 @@ void Window::initAndRun()
 }
 
 //回调函数声明，更改窗口大小的时候，更改视口大小
-void Coolender::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void coolender::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
 // 声明输入函数，判断是否按下键盘
-void Coolender::processInput(GLFWwindow *window)
+void coolender::processInput(GLFWwindow *window)
 {
     //退出
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -165,13 +198,13 @@ void Coolender::processInput(GLFWwindow *window)
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void Coolender::scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+void coolender::scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
 }
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void Coolender::mouseCallback(GLFWwindow* window, double xpos, double ypos)
+void coolender::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
     if (firstMouse)
     {

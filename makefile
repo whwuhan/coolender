@@ -1,7 +1,18 @@
 include makefile_conf.mk
 #所有.o文件
-OBJS := obj/main.o obj/camera.o obj/mesh.o obj/model.o \
-obj/plane.o obj/shader.o obj/stb_image.o obj/texture_loader.o obj/window.o
+OBJS := \
+obj/main.o \
+obj/camera.o \
+obj/coolender_ui.o \
+obj/coolender.o \
+obj/mesh.o \
+obj/model.o \
+obj/plane.o \
+obj/scence.o \
+obj/shader.o \
+obj/stb_image.o \
+obj/texture_loader.o \
+obj/window.o
 
 Coolender : $(OBJS)
 	$(CC) $(FLAGS) \
@@ -21,6 +32,12 @@ obj/main.o : main.cpp
 obj/camera.o : include/camera.h src/camera.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/camera.cpp -o $@
 
+obj/coolender_ui.o : include/coolender_ui.h src/coolender_ui.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/coolender_ui.cpp -o $@
+
+obj/coolender.o : include/coolender.h src/coolender.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/coolender.cpp -o $@
+
 obj/mesh.o : include/mesh.h src/mesh.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/mesh.cpp -o $@
 
@@ -29,6 +46,9 @@ obj/model.o : include/model.h src/model.cpp
 
 obj/plane.o : include/plane.h src/plane.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/plane.cpp -o $@
+
+obj/scence.o : include/scence.h src/scence.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/scence.cpp -o $@
 
 obj/shader.o : include/shader.h src/shader.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/shader.cpp -o $@

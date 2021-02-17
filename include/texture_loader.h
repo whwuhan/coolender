@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 #include <iostream>
-namespace Coolender
+namespace coolender
 {
     class TextureLoader
     {

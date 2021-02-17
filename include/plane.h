@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
 #include <texture_loader.h>
-namespace Coolender
+namespace coolender
 {
     class Plane
     {

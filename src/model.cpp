@@ -1,6 +1,6 @@
 #include <model.h>
 using namespace std;
-using namespace Coolender;
+using namespace coolender;
 
 //构造函数加载模型
 Model::Model(string const &path, bool gamma) : gammaCorrection(gamma)
@@ -174,7 +174,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 }
 
 //加载纹理
-unsigned int Coolender::TextureFromFile(const char *path, const string &directory, bool gamma)
+unsigned int coolender::TextureFromFile(const char *path, const string &directory, bool gamma)
 {
     string filename = string(path);
     filename = directory + '/' + filename;

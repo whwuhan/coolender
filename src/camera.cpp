@@ -4,7 +4,7 @@
 #include <camera.h>
 #include <iostream>
 using namespace std;
-using namespace Coolender;
+using namespace coolender;
 
 //构造方法
 Camera::Camera(glm::vec3 position,glm::vec3 up,float yaw,float pitch):

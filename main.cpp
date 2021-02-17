@@ -8,10 +8,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
-#include <window.h>
+#include <coolender.h>
 
 int main()
 {
-    Coolender::Window coolender;
+    coolender::Coolender coolender;
     coolender.initAndRun();
 }

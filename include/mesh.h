@@ -8,7 +8,7 @@
 #include <shader.h>
 #include <string>
 #include <vector>
-namespace Coolender
+namespace coolender
 {
     //点结构体
     struct Vertex{
