@@ -2,7 +2,10 @@
 using namespace std;
 using namespace coolender;
 
-Plane::Plane()
+Plane::Plane():texturePath("img/wood.png")
+{}
+
+Plane::Plane(string texturePath):texturePath(texturePath)
 {}
 
 void Plane::init()
@@ -33,6 +36,6 @@ void Plane::init()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
     TextureLoader texLoader;
-    texture = texLoader.loadTexture2D("img/wood.png");
+    texture = texLoader.loadTexture2D(texturePath.c_str());
     return ;
 }

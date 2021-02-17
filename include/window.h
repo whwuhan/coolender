@@ -19,7 +19,7 @@ namespace coolender
         Window(unsigned int winWidth, unsigned int winHeight);//设置宽高
         void initAndRun();//初始化glfw glad并运行窗口(包含渲染循环)
         bool cursorDisable;//是否进入光标不可显示模式
-        bool changeOperateModePressed;//更换操作模式按键是否被按下
+        bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
 
     private:
         unsigned int winWidth;//window 宽

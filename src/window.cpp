@@ -16,7 +16,7 @@ bool firstMouse = true;
 Window::Window():
 winWidth(1280), winHeight(720),
 cursorDisable(false),
-changeOperateModePressed(false)
+changeOperateModeKeyPressed(false)
 {}
 
 Window::Window(
@@ -24,7 +24,7 @@ Window::Window(
     unsigned int winHeight):
     winWidth(winWidth), winHeight(winHeight),
     cursorDisable(false),
-    changeOperateModePressed(false)
+    changeOperateModeKeyPressed(false)
 {}
 
 
@@ -82,12 +82,6 @@ void Window::initAndRun()
     //CoolenderUI初始化
     CoolenderUI coolenderIU;
     coolenderIU.init(window);
-
-
-
-
-
-
 
 
 
@@ -161,15 +155,15 @@ void coolender::processInput(GLFWwindow *window, Window *coolenderWindow)
     }
 
     //按Q切换操作模式
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && !coolenderWindow->changeOperateModePressed)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && !coolenderWindow->changeOperateModeKeyPressed)
     {
-        coolenderWindow->changeOperateModePressed = true;
+        coolenderWindow->changeOperateModeKeyPressed = true;
         changeOperateMode(window, coolenderWindow);
     }
 
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
     {
-        coolenderWindow->changeOperateModePressed = false;
+        coolenderWindow->changeOperateModeKeyPressed = false;
     }
 
 
