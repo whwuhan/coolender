@@ -13,12 +13,18 @@ float lastY = 600 / 2.0f;
 bool firstMouse = true;
 
 //默认构造函数
-Window::Window():winWidth(1280), winHeight(720)
+Window::Window():
+winWidth(1280), winHeight(720),
+cursorDisable(false),
+changeOperateModePressed(false)
 {}
 
 Window::Window(
     unsigned int winWidth, 
-    unsigned int winHeight):winWidth(winWidth), winHeight(winHeight)
+    unsigned int winHeight):
+    winWidth(winWidth), winHeight(winHeight),
+    cursorDisable(false),
+    changeOperateModePressed(false)
 {}
 
 
@@ -52,8 +58,8 @@ void Window::initAndRun()
 
 
     //新增监听鼠标和鼠标滚轮事件
-    glfwSetCursorPosCallback(window,mouseCallback);
-    glfwSetScrollCallback(window,scrollCallback);
+    // glfwSetCursorPosCallback(window,mouseCallback);
+    // glfwSetScrollCallback(window,scrollCallback);
     //告诉GLFW选中窗口不显示鼠标
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -105,7 +111,7 @@ void Window::initAndRun()
         lastFrame = currentFrame;
 
         //input
-        processInput(window);
+        processInput(window, this);
 
         // render
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -146,39 +152,81 @@ void coolender::framebufferSizeCallback(GLFWwindow* window, int width, int heigh
 }
 
 // 声明输入函数，判断是否按下键盘
-void coolender::processInput(GLFWwindow *window)
+void coolender::processInput(GLFWwindow *window, Window *coolenderWindow)
 {
     //退出
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, true);
     }
-    //向前
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+
+    //按Q切换操作模式
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && !coolenderWindow->changeOperateModePressed)
     {
-        camera.ProcessKeyboard(FORWARD, 10 * deltaTime);
+        coolenderWindow->changeOperateModePressed = true;
+        changeOperateMode(window, coolenderWindow);
     }
-    //向后
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
     {
-        camera.ProcessKeyboard(BACKWARD, 10 * deltaTime);
+        coolenderWindow->changeOperateModePressed = false;
     }
-    //向左
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+
+
+    //移动模式下的键盘监听
+    if(coolenderWindow->cursorDisable)
     {
-        camera.ProcessKeyboard(LEFT, 10 * deltaTime);
+        //相机移动
+        //向前
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            camera.ProcessKeyboard(FORWARD, deltaTime);
+        }
+        //向后
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        {
+            camera.ProcessKeyboard(BACKWARD, deltaTime);
+        }
+        //向左
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        {
+            camera.ProcessKeyboard(LEFT, deltaTime);
+        }
+        //向右
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        {
+            camera.ProcessKeyboard(RIGHT, deltaTime);
+        }
+        //向上
+        if (glfwGetKey(window, GLFW_KEY_SPACE))
+        {
+            camera.ProcessKeyboard(UPWARD, deltaTime);
+        } 
     }
-    //向右
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    {
-        camera.ProcessKeyboard(RIGHT, 10 * deltaTime);
-    }
-    //向上
-    if (glfwGetKey(window, GLFW_KEY_SPACE))
-    {
-        camera.ProcessKeyboard(UPWARD, 10 * deltaTime);
-    } 
 }
+
+//修改操作模式
+void coolender::changeOperateMode(GLFWwindow *window, Window *coolenderWindow)
+{
+    coolenderWindow->cursorDisable = !coolenderWindow->cursorDisable;
+    if(coolenderWindow->cursorDisable)
+    {       
+        //新增监听鼠标和鼠标滚轮事件
+        glfwSetCursorPosCallback(window,mouseCallback);
+        glfwSetScrollCallback(window,scrollCallback);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    else
+    {   
+        //取消监听鼠标和鼠标滚轮事件
+        glfwSetCursorPosCallback(window,nullptr);
+        glfwSetScrollCallback(window,nullptr);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+}
+
+
+
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
