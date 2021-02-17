@@ -9,7 +9,8 @@ namespace coolender
     public:
         CoolenderUI();
         void init(GLFWwindow* window);//初始化，在渲染循环外
-        void render(bool &showDW);//根据scence，渲染UI
+        void renderDemoUI();//根据scence，渲染UI
+        void render();
         void terminate();//清空数据
     };
 }

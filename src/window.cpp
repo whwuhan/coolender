@@ -13,7 +13,7 @@ float lastY = 600 / 2.0f;
 bool firstMouse = true;
 
 //默认构造函数
-Window::Window():winWidth(800), winHeight(600)
+Window::Window():winWidth(1280), winHeight(720)
 {}
 
 Window::Window(
@@ -55,7 +55,7 @@ void Window::initAndRun()
     glfwSetCursorPosCallback(window,mouseCallback);
     glfwSetScrollCallback(window,scrollCallback);
     //告诉GLFW选中窗口不显示鼠标
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
     //GLAD是用来管理OpenGL的函数指针
@@ -76,22 +76,6 @@ void Window::initAndRun()
     //CoolenderUI初始化
     CoolenderUI coolenderIU;
     coolenderIU.init(window);
-
-    // // Setup Dear ImGui context
-    // IMGUI_CHECKVERSION();
-    // ImGui::CreateContext();
-    // ImGuiIO& io = ImGui::GetIO(); (void)io;
-    // //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    // //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    // // Setup Dear ImGui style
-    // //ImGui::StyleColorsDark();
-    // //ImGui::StyleColorsClassic();
-    // ImGui::StyleColorsLight();
-
-    // // Setup Platform/Renderer backends
-    // ImGui_ImplGlfw_InitForOpenGL(window, true);
-    // ImGui_ImplOpenGL3_Init("#version 330");
 
 
 
@@ -143,7 +127,7 @@ void Window::initAndRun()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
-        coolenderIU.render(blinn);
+        coolenderIU.renderDemoUI();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
