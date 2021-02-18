@@ -16,3 +16,6 @@
 [submodule "3rdsrc/imgui"]
 	path = 3rdsrc/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "3rdsrc/ImGuiFileDialog"]
+	path = 3rdsrc/ImGuiFileDialog
+	url = https://github.com/aiekick/ImGuiFileDialog.git
