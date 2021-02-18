@@ -16,7 +16,6 @@ namespace coolender
         void terminate();//清空数据
 
     private:
-
         bool showFileChooseDialog;//文件选择对话框
 
         void renderMenu();//顶部菜单栏

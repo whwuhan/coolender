@@ -129,6 +129,7 @@ void Window::initAndRun()
 
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
         //coolenderUI.renderDemoUI();
+        bool open = true;
         coolenderUI.render();
 
         glfwSwapBuffers(window);
