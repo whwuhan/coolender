@@ -19,9 +19,11 @@ GLFW_INCLUDE := $(3RD_SRC_DIR)/glfw/include
 GLAD_INCLUDE := $(3RD_SRC_DIR)/glad/include
 GLM_INCLUDE := $(3RD_SRC_DIR)/glm
 IMGUI_INCLUDE := $(3RD_SRC_DIR)/imgui
+IMGUI_FILE_DIALOG_INCLUDE := $(3RD_SRC_DIR)/ImGuiFileDialog
 #GL3W_INCLUDE := $(3RD_SRC_DIR)/imgui/examples/libs/gl3w
 STB_INCLUDE := $(3RD_SRC_DIR)/stb
 WHLIB_INCLUDE := $(3RD_SRC_DIR)/whlib/include
+
 
 
 #包含所有第三方头文件
@@ -30,5 +32,6 @@ WHLIB_INCLUDE := $(3RD_SRC_DIR)/whlib/include
 -I$(GLAD_INCLUDE) \
 -I$(GLM_INCLUDE) \
 -I$(IMGUI_INCLUDE) \
+-I$(IMGUI_FILE_DIALOG_INCLUDE) \
 -I$(STB_INCLUDE) \
 -I$(WHLIB_INCLUDE)

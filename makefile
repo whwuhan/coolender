@@ -18,7 +18,7 @@ Coolender : $(OBJS)
 	$(CC) $(FLAGS) \
 	-I$(INCLUDE_DIR) \
 	$(3RD_SRC_INCLUDE) \
-	-L$(LIBS_DIR) -lassimp -lzlibstatic -lglfw3 -lglad -limgui \
+	-L$(LIBS_DIR) -lassimp -lzlibstatic -lglfw3 -lglad -limgui -limguifiledialog \
 	-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo \
 	$(OBJS) \
 	-o Coolender
