@@ -10,6 +10,9 @@ float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
 float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标 
 float CoolenderUI::rightSidebarPosY = 22;//右侧边栏位置的Y坐标
+float CoolenderUI::rightSidebarWidth = 400;//右侧边栏位置的X坐标 
+float CoolenderUI::rightSidebarHeight = 600;//右侧边栏位置的Y坐标
+
 
 CoolenderUI::CoolenderUI():
 window(nullptr),
@@ -227,17 +230,21 @@ void CoolenderUI::renderRightSideBar()
 
     //设置下一个窗口的属性
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize
+    (
+        ImVec2(CoolenderUI::rightSidebarWidth, CoolenderUI::rightSidebarHeight), 
+        ImGuiCond_FirstUseEver
+    );
     ImGui::SetNextWindowPos
     (
         ImVec2
-        (
+        (   // 注意FramebufferSize是窗口实际长度的2倍
             mainViewport->WorkPos.x + winWidth / 2.0 - CoolenderUI::rightSidebarPosX - ImGui::GetWindowWidth(), 
             mainViewport->WorkPos.y + CoolenderUI::rightSidebarPosY
         ), 
         ImGuiCond_FirstUseEver
     );
-    cout << ImGui::GetWindowWidth() << endl;
+    //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
         if (ImGui::CollapsingHeader("Global Setting"))

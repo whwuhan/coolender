@@ -31,7 +31,9 @@ namespace coolender
 
         static float rightSidebarPosX;//右侧边栏位置的X坐标
         static float rightSidebarPosY;//右侧边栏位置的Y坐标
-        
+        static float rightSidebarWidth;//右侧边栏位置的X坐标
+        static float rightSidebarHeight;//右侧边栏位置的Y坐标
+
         float fontSize;//字体大小
         float globalScale;//整体的字体缩放
         float windowRounding;//窗口的圆角
