@@ -21,15 +21,18 @@ namespace coolender
         
 
     private:
-        ImGuiIO* io;//ImGui io
+
+        
         float fontSize;//字体大小
         float globalScale;//整体的字体缩放
+        float windowRounding;//窗口的圆角
+        float frameRounding;//内部图标的圆角
+
         //一级UI
         void renderMenu();//顶部菜单栏
         void renderUsage();//使用手册
         void renderRightSideBar();//右边的Side Bar
         
-
 
         //二级UI
 
