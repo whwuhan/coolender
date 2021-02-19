@@ -81,8 +81,8 @@ void Window::initAndRun()
 
 
     //CoolenderUI初始化
-    CoolenderUI coolenderUI;
-    coolenderUI.init(window);
+    CoolenderUI coolenderUI(window);//根据window设置UI
+    coolenderUI.init();
 
 
 

@@ -6,16 +6,30 @@ using namespace std;
 bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showRightSideBar = true;
 bool CoolenderUI::showFileChooseDialog = false;
+float CoolenderUI::usagePosX = 3;//usage位置的X坐标
+float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
+float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标 
+float CoolenderUI::rightSidebarPosY = 22;//右侧边栏位置的Y坐标
 
 CoolenderUI::CoolenderUI():
+window(nullptr),
 globalScale(1.0),
 fontSize(15.0),
 windowRounding(6.0),
 frameRounding(3.0)
 {}
 
+CoolenderUI::CoolenderUI(GLFWwindow* window):
+window(window),
+globalScale(1.0),
+fontSize(15.0),
+windowRounding(6.0),
+frameRounding(3.0)
+{}
+
+
 //初始化UI
-void CoolenderUI::init(GLFWwindow* window)
+void CoolenderUI::init()
 {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -179,21 +193,26 @@ void CoolenderUI::renderUsage()
 {   
     //设置大小和位置
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos
+    (
+        ImVec2(mainViewport->WorkPos.x + CoolenderUI::usagePosX, mainViewport->WorkPos.y + CoolenderUI::usagePosY), 
+        ImGuiCond_FirstUseEver
+    );
     //ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
     
     //窗口内容
     ImGui::Begin("Usage", &CoolenderUI::showUsage, ImGuiWindowFlags_AlwaysAutoResize);
     {
-        ImGui::Text("Please press Q to change operate mode!");
+        ImGui::Text("How to switch mode:");
+        ImGui::BulletText("Please press Q to change operate mode!");
         ImGui::Separator();
         ImGui::Text("In cursor operate mode:");
-        ImGui::Text("You can use cursor to select what you want.");
+        ImGui::BulletText("You can use cursor to select what you want.");
         ImGui::Separator();
         ImGui::Text("In movement operate mode:");
-        ImGui::Text("Press WASD and SPACE key to move your view position.");
-        ImGui::Text("Move your mouse to change view angle.");
-        ImGui::Text("Scroll the mouse wheel to change the field of view.");
+        ImGui::BulletText("Press WASD and SPACE key to move your view position.");
+        ImGui::BulletText("Move your mouse to change view angle.");
+        ImGui::BulletText("Scroll the mouse wheel to change the field of view.");
     }
 
     ImGui::End();
@@ -202,8 +221,31 @@ void CoolenderUI::renderUsage()
 //渲染右侧Sidebar
 void CoolenderUI::renderRightSideBar()
 {
-    ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Text("PROGRAMMER GUIDE:");
+    //获取glfw window
+    int winWidth, winHeight;
+    glfwGetFramebufferSize(window, &winWidth, &winHeight);
+
+    //设置下一个窗口的属性
+    const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos
+    (
+        ImVec2
+        (
+            mainViewport->WorkPos.x + winWidth / 2.0 - CoolenderUI::rightSidebarPosX - ImGui::GetWindowWidth(), 
+            mainViewport->WorkPos.y + CoolenderUI::rightSidebarPosY
+        ), 
+        ImGuiCond_FirstUseEver
+    );
+    cout << ImGui::GetWindowWidth() << endl;
+    ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
+    {
+        if (ImGui::CollapsingHeader("Global Setting"))
+        {
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::BulletText("Sections below are demonstrating many aspects of the library.");
+        }
+    }
     ImGui::End();
 }
 
