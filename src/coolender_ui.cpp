@@ -1,6 +1,8 @@
 #include <coolender_ui.h>
 using namespace coolender;
 using namespace std;
+using namespace wh::basic;
+using namespace wh::utils::io;
 
 //static 变量初始化
 bool CoolenderUI::showUsage = true;
@@ -244,7 +246,6 @@ void CoolenderUI::renderRightSideBar()
         ), 
         ImGuiCond_FirstUseEver
     );
-    
     //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
@@ -269,15 +270,8 @@ void CoolenderUI::renderRightSideBar()
                 Window::clearColor.w = clearColor[3];
                 ImGui::Separator();
             }
-
-            
-            {
-
-            }
-            
         }
     }
-        cout << ImGui::GetWindowWidth() << endl;
     ImGui::End();
 }
 
@@ -293,14 +287,19 @@ void CoolenderUI::renderFileChooseDialog()
     // display
     if (ImGuiFileDialog::Instance()->Display("ChooseFileDialog")) 
     {
-        // action if OK
+        // action if OK 点击OK
         if (ImGuiFileDialog::Instance()->IsOk())
         {
+            //获取的路径和文件名称
             string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
             string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
             // action
             cout << "You choose file:" << filePathName << endl;
             cout << "Your choosed file’s path is " << filePath << endl;
+
+            //读取点云数据
+            PointCloud pointCloud;
+            loadPointCloudObj(filePathName, &pointCloud);
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showFileChooseDialog = false;
         }

@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <window.h>
+#include <whlib.h>
 namespace coolender
 {
     class CoolenderUI
