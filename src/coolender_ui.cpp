@@ -8,7 +8,7 @@ bool CoolenderUI::showRightSideBar = true;
 bool CoolenderUI::showFileChooseDialog = false;
 float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
-float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标 
+float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标(距离右侧的距离) 
 float CoolenderUI::rightSidebarPosY = 22;//右侧边栏位置的Y坐标
 float CoolenderUI::rightSidebarWidth = 500;//右侧边栏宽
 float CoolenderUI::rightSidebarHeight = 650;//右侧边栏高
@@ -244,28 +244,40 @@ void CoolenderUI::renderRightSideBar()
         ), 
         ImGuiCond_FirstUseEver
     );
+    
     //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
         //全局设置
         if (ImGui::CollapsingHeader("Global Setting" ))
         {   
-            ImGui::Text("Background Color:");
-            ImGui::SameLine();
-            static float clearColor[4] = 
+            {   
+                //背景颜色框
+                ImGui::Text("Background Color:");
+                ImGui::SameLine();
+                static float clearColor[4] = 
+                {
+                    Window::clearColor.x,
+                    Window::clearColor.y,
+                    Window::clearColor.z,
+                    Window::clearColor.w
+                };
+                ImGui::ColorEdit4("color 2", clearColor);
+                Window::clearColor.x = clearColor[0];
+                Window::clearColor.y = clearColor[1];
+                Window::clearColor.z = clearColor[2];
+                Window::clearColor.w = clearColor[3];
+                ImGui::Separator();
+            }
+
+            
             {
-                Window::clearColor.x,
-                Window::clearColor.y,
-                Window::clearColor.z,
-                Window::clearColor.w
-            };
-            ImGui::ColorEdit4("color 2", clearColor);
-            Window::clearColor.x = clearColor[0];
-            Window::clearColor.y = clearColor[1];
-            Window::clearColor.z = clearColor[2];
-            Window::clearColor.w = clearColor[3];
+
+            }
+            
         }
     }
+        cout << ImGui::GetWindowWidth() << endl;
     ImGui::End();
 }
 

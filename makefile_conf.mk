@@ -23,6 +23,7 @@ IMGUI_FILE_DIALOG_INCLUDE := $(3RD_SRC_DIR)/ImGuiFileDialog
 #GL3W_INCLUDE := $(3RD_SRC_DIR)/imgui/examples/libs/gl3w
 STB_INCLUDE := $(3RD_SRC_DIR)/stb
 WHLIB_INCLUDE := $(3RD_SRC_DIR)/whlib/include
+EIGEN_INCLUDE := $(3RD_SRC_DIR)/whlib/deps/eigen-3.3.7
 
 
 
@@ -34,4 +35,5 @@ WHLIB_INCLUDE := $(3RD_SRC_DIR)/whlib/include
 -I$(IMGUI_INCLUDE) \
 -I$(IMGUI_FILE_DIALOG_INCLUDE) \
 -I$(STB_INCLUDE) \
--I$(WHLIB_INCLUDE)
+-I$(WHLIB_INCLUDE) \
+-I$(EIGEN_INCLUDE)

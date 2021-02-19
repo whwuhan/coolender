@@ -2,6 +2,8 @@
 using namespace std;
 using namespace coolender;
 //static变量初始化
+bool Window::cursorDisable = false;//是否进入光标不可显示模式
+bool Window::changeOperateModeKeyPressed = false;//更换操作模式按键是否被按下
 Camera Window::camera;
 unsigned int Window::winWidth = 1280;
 unsigned int Window::winHeight = 720;
@@ -16,12 +18,8 @@ bool Window::firstMouse = true;
 glm::vec4 Window::clearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 //默认构造函数
-Window::Window():
-cursorDisable(false),
-changeOperateModeKeyPressed(false)
+Window::Window()
 {}
-
-
 
 void Window::initAndRun()
 {

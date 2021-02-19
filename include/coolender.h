@@ -7,7 +7,6 @@ namespace coolender
     public:
         Coolender();
         void initAndRun();
-
         static std::string version;//版本号
     };
 }

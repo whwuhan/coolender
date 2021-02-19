@@ -18,8 +18,8 @@ namespace coolender
     public :
         Window();//默认构造函数
         void initAndRun();//初始化glfw glad并运行窗口(包含渲染循环)
-        bool cursorDisable;//是否进入光标不可显示模式
-        bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
+        static bool cursorDisable;//是否进入光标不可显示模式
+        static bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
 
         static unsigned int winWidth;//window 宽
         static unsigned int winHeight;//window 高
@@ -31,7 +31,6 @@ namespace coolender
         static float lastX;
         static float lastY;
         static bool firstMouse;
-
         static glm::vec4 clearColor;
 
     private:
