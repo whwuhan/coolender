@@ -1,31 +1,26 @@
 #include <window.h>
 using namespace std;
 using namespace coolender;
-
-Camera camera;
+//static变量初始化
+Camera Window::camera;
+unsigned int Window::winWidth = 1280;
+unsigned int Window::winHeight = 720;
 //timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-
-
-float lastX = 800 / 2.0f;
-float lastY = 600 / 2.0f;
-bool firstMouse = true;
+float Window::deltaTime = 0.0f;
+float Window::lastFrame = 0.0f;
+//防止模式切换镜头闪烁
+float Window::lastX = Window::winWidth / 2.0f;
+float Window::lastY = Window::winHeight / 2.0f;
+bool Window::firstMouse = true;
+//其他static变量初始化
+glm::vec4 Window::clearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 //默认构造函数
 Window::Window():
-winWidth(1280), winHeight(720),
 cursorDisable(false),
 changeOperateModeKeyPressed(false)
 {}
 
-Window::Window(
-    unsigned int winWidth, 
-    unsigned int winHeight):
-    winWidth(winWidth), winHeight(winHeight),
-    cursorDisable(false),
-    changeOperateModeKeyPressed(false)
-{}
 
 
 void Window::initAndRun()
@@ -43,6 +38,7 @@ void Window::initAndRun()
     //创建一个窗口对象
     string windowTitle = "Coolender Version " + Coolender::version;
     GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, windowTitle.c_str(), NULL, NULL);
+    this->window = window;
     //参数依次是长，宽，名称，后两个参数忽略
     if (window == NULL)
     {
@@ -50,14 +46,11 @@ void Window::initAndRun()
         glfwTerminate();
         return ;
     }
-    
     //将窗口的上下文设置成主线程的上下文
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync 每帧的交换间隔，防止屏幕撕裂
     //注册回调函数，告诉GLFW窗口大小调整时，调用这个回调函数
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-
-
     //新增监听鼠标和鼠标滚轮事件
     // glfwSetCursorPosCallback(window,mouseCallback);
     // glfwSetScrollCallback(window,scrollCallback);
@@ -109,7 +102,13 @@ void Window::initAndRun()
         processInput(window, this);
 
         // render
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor
+        (
+            Window::clearColor.x,
+            Window::clearColor.y,
+            Window::clearColor.z,
+            Window::clearColor.w
+        );
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         test.use();
@@ -136,9 +135,13 @@ void Window::initAndRun()
         glfwPollEvents();
     }
     
+    //UI cleanup
+    coolenderUI.destroy();
+
     //glfw cleanup
     glfwDestroyWindow(window);
     glfwTerminate();
+
     return;
 }
 
@@ -177,27 +180,27 @@ void coolender::processInput(GLFWwindow *window, Window *coolenderWindow)
         //向前
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            camera.ProcessKeyboard(FORWARD, deltaTime);
+            Window::camera.ProcessKeyboard(FORWARD, Window::deltaTime);
         }
         //向后
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            camera.ProcessKeyboard(BACKWARD, deltaTime);
+            Window::camera.ProcessKeyboard(BACKWARD, Window::deltaTime);
         }
         //向左
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            camera.ProcessKeyboard(LEFT, deltaTime);
+            Window::camera.ProcessKeyboard(LEFT, Window::deltaTime);
         }
         //向右
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            camera.ProcessKeyboard(RIGHT, deltaTime);
+            Window::camera.ProcessKeyboard(RIGHT, Window::deltaTime);
         }
         //向上
         if (glfwGetKey(window, GLFW_KEY_SPACE))
         {
-            camera.ProcessKeyboard(UPWARD, deltaTime);
+            Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime);
         } 
     }
 }
@@ -222,33 +225,30 @@ void coolender::changeOperateMode(GLFWwindow *window, Window *coolenderWindow)
     }
 }
 
-
-
-
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void coolender::scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(yoffset);
+    Window::camera.ProcessMouseScroll(yoffset);
 }
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
 void coolender::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (firstMouse)
+    if (Window::firstMouse)
     {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
+        Window::lastX = xpos;
+        Window::lastY = ypos;
+        Window::firstMouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float xoffset = xpos - Window::lastX;
+    float yoffset = Window::lastY - ypos; // reversed since y-coordinates go from bottom to top
 
-    lastX = xpos;
-    lastY = ypos;
+    Window::lastX = xpos;
+    Window::lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    Window::camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 

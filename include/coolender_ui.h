@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <window.h>
 namespace coolender
 {
     class CoolenderUI
@@ -17,11 +18,12 @@ namespace coolender
         void init();//初始化，在渲染循环外
         void renderDemoUI();//根据scence，渲染UI
         void render();//渲染所有的UI
-        void terminate();//清空数据
+        void destroy();//清空数据
 
         static bool showFileChooseDialog;//文件选择对话框
         static bool showUsage;//显示操作手册
         static bool showRightSideBar;//显示右边Sidebar
+
         
 
     private:

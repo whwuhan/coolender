@@ -17,15 +17,25 @@ namespace coolender
     {
     public :
         Window();//默认构造函数
-        Window(unsigned int winWidth, unsigned int winHeight);//设置宽高
         void initAndRun();//初始化glfw glad并运行窗口(包含渲染循环)
         bool cursorDisable;//是否进入光标不可显示模式
         bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
 
+        static unsigned int winWidth;//window 宽
+        static unsigned int winHeight;//window 高
+        static Camera camera;//相机
+        //timing
+        static float deltaTime;
+        static float lastFrame;
+        //防止模式切换镜头闪烁
+        static float lastX;
+        static float lastY;
+        static bool firstMouse;
+
+        static glm::vec4 clearColor;
+
     private:
-        unsigned int winWidth;//window 宽
-        unsigned int winHeight;//window 高
-        
+        GLFWwindow *window;
     };
     //回调函数声明，更改窗口大小的时候，更改视口大小
     void framebufferSizeCallback(GLFWwindow* window, int width, int height);

@@ -10,8 +10,8 @@ float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
 float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标 
 float CoolenderUI::rightSidebarPosY = 22;//右侧边栏位置的Y坐标
-float CoolenderUI::rightSidebarWidth = 400;//右侧边栏位置的X坐标 
-float CoolenderUI::rightSidebarHeight = 600;//右侧边栏位置的Y坐标
+float CoolenderUI::rightSidebarWidth = 500;//右侧边栏宽
+float CoolenderUI::rightSidebarHeight = 650;//右侧边栏高
 
 
 CoolenderUI::CoolenderUI():
@@ -177,13 +177,13 @@ void CoolenderUI::renderMenu()
             //使用手册
             if (ImGui::MenuItem("Usage", NULL, CoolenderUI::showUsage))
             {
-                CoolenderUI::showUsage = true;
+                CoolenderUI::showUsage = !CoolenderUI::showUsage;
             }
 
             //右侧Sidebar
             if (ImGui::MenuItem("Show Right Sidebar", NULL, CoolenderUI::showRightSideBar))
             {
-                CoolenderUI::showRightSideBar = true;
+                CoolenderUI::showRightSideBar = !CoolenderUI::showRightSideBar;
             }
             ImGui::EndMenu();
         }
@@ -224,7 +224,7 @@ void CoolenderUI::renderUsage()
 //渲染右侧Sidebar
 void CoolenderUI::renderRightSideBar()
 {
-    //获取glfw window
+    //获取glfw window宽高
     int winWidth, winHeight;
     glfwGetFramebufferSize(window, &winWidth, &winHeight);
 
@@ -247,10 +247,23 @@ void CoolenderUI::renderRightSideBar()
     //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
-        if (ImGui::CollapsingHeader("Global Setting"))
-        {
-            ImGui::Text("ABOUT THIS DEMO:");
-            ImGui::BulletText("Sections below are demonstrating many aspects of the library.");
+        //全局设置
+        if (ImGui::CollapsingHeader("Global Setting" ))
+        {   
+            ImGui::Text("Background Color:");
+            ImGui::SameLine();
+            static float clearColor[4] = 
+            {
+                Window::clearColor.x,
+                Window::clearColor.y,
+                Window::clearColor.z,
+                Window::clearColor.w
+            };
+            ImGui::ColorEdit4("color 2", clearColor);
+            Window::clearColor.x = clearColor[0];
+            Window::clearColor.y = clearColor[1];
+            Window::clearColor.z = clearColor[2];
+            Window::clearColor.w = clearColor[3];
         }
     }
     ImGui::End();
@@ -283,4 +296,12 @@ void CoolenderUI::renderFileChooseDialog()
         ImGuiFileDialog::Instance()->Close();
         CoolenderUI::showFileChooseDialog = false;
     }        
+}
+
+//cleanup
+void CoolenderUI::destroy()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
