@@ -296,7 +296,6 @@ void CoolenderUI::renderFileChooseDialog()
             // action
             cout << "You choose file:" << filePathName << endl;
             cout << "Your choosed file’s path is " << filePath << endl;
-
             //读取点云数据
             PointCloud pointCloud;
             loadPointCloudObj(filePathName, &pointCloud);
