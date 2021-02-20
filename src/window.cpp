@@ -67,8 +67,8 @@ void Window::initAndRun()
     //openGL全局配置
     glEnable(GL_DEPTH_TEST); //开启深度测试
     glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
-    glEnable(GL_PROGRAM_POINT_SIZE);
-    glPointSize(10000000000);
+    //glEnable(GL_PROGRAM_POINT_SIZE);
+    glPointSize(25);
     //======================glfw glad opengl 初始化结束======================
 
 
@@ -90,9 +90,13 @@ void Window::initAndRun()
 
     //点云shader
     Shader pointCloudShader("shader/point_cloud.vs.glsl", "shader/point_cloud.fs.glsl");
-    glm::vec4 color(1.0f, 0.5f, 0.0f, 1.0f);
+    pointCloudShader.use();
+    glm::mat4 model(1.0f);
+    glm::vec4 color(0.0f, 1.0f, 0.0f, 1.0f);
+    pointCloudShader.setMat4("model", model);
+    pointCloudShader.setVec4("color", color);
     bool blinn = true;
-
+    
     //准备渲染场景
     Render render;
 
@@ -137,11 +141,8 @@ void Window::initAndRun()
 
         //渲染点云
         pointCloudShader.use();
-        glm::mat4 model(1.0f);
-        pointCloudShader.setMat4("model", model);
         pointCloudShader.setMat4("view", view);
         pointCloudShader.setMat4("projection", projection);
-        pointCloudShader.setVec4("color", color);
         
 
         //绘制点云

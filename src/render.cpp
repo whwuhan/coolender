@@ -13,7 +13,7 @@ void Render::renderPointCloudInit(PointCloud &pointCloud)
     {
         for(int j = 0; j < 3;j++)
         {
-            pointCloudData[i + j] = pointCloud.points.row(i)[j];
+            pointCloudData[i * 3 + j] = pointCloud.points.row(i)[j];
         }
     }
     glGenVertexArrays(1, &pointCloud.VAO);
