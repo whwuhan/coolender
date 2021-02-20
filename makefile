@@ -9,6 +9,7 @@ objs/light.o \
 objs/mesh.o \
 objs/model.o \
 objs/plane.o \
+objs/render.o \
 objs/scene.o \
 objs/shader.o \
 objs/stb_image.o \
@@ -50,6 +51,9 @@ objs/model.o : include/model.h src/model.cpp
 
 objs/plane.o : include/plane.h src/plane.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/plane.cpp -o $@
+
+objs/render.o : include/render.h src/render.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/render.cpp -o $@
 
 objs/scene.o : include/scene.h src/scene.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/scene.cpp -o $@

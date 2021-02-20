@@ -86,7 +86,14 @@ void Window::initAndRun()
     // lighting info
     glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
+    //点云shader
+    Shader pointCloudShader("shader/point_cloud.vs.glsl", "shader/point_cloud.fs.glsl");
+    glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
     bool blinn = true;
+
+    //准备渲染场景
+    Render render;
+
     //渲染循环
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -109,24 +116,39 @@ void Window::initAndRun()
         );
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        test.use();
+
+        // test.use();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        test.setMat4("projection", projection);
-        test.setMat4("view", view);
-        // set light uniforms
-        test.setVec3("viewPos", camera.Position);
-        test.setVec3("lightPos", lightPos);
-        test.setInt("blinn", blinn);
-        // floor
-        glBindVertexArray(floor.VAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, floor.texture);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // test.setMat4("projection", projection);
+        // test.setMat4("view", view);
+        // // set light uniforms
+        // test.setVec3("viewPos", camera.Position);
+        // test.setVec3("lightPos", lightPos);
+        // test.setInt("blinn", blinn);
+        // // floor
+        // glBindVertexArray(floor.VAO);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, floor.texture);
+        // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        //渲染点云
+        pointCloudShader.use();
+        glm::mat4 model(1.0f);
+        pointCloudShader.setMat4("model", model);
+        pointCloudShader.setMat4("view", view);
+        pointCloudShader.setMat4("projection", projection);
+        pointCloudShader.setVec4("color", color);
+
+        //绘制点云
+        for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+        {
+            render.renderPointCloud(it->second);
+        }
+
 
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
         //coolenderUI.renderDemoUI();
-        bool open = true;
         coolenderUI.render();
 
         glfwSwapBuffers(window);

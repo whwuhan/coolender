@@ -8,6 +8,7 @@
 #include <iostream>
 #include <window.h>
 #include <whlib.h>
+#include <scene.h>
 namespace coolender
 {
     class CoolenderUI

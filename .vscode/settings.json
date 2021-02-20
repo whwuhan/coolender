@@ -99,7 +99,10 @@
         "__cxx_version": "cpp",
         "filesystem": "cpp",
         "version": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "*.expression": "cpp",
+        "alignedvector3": "cpp",
+        "fft": "cpp"
     },
     "git.ignoreLimitWarning": true
 }

@@ -299,6 +299,12 @@ void CoolenderUI::renderFileChooseDialog()
             //读取点云数据
             PointCloud pointCloud;
             loadPointCloudObj(filePathName, &pointCloud);
+            Scene::addPointCloud(filePathName, pointCloud);
+            Render render;
+            render.renderPointCloudInit(pointCloud);
+            cout << pointCloud.VAO << endl;
+            cout << pointCloud.VBO << endl;
+            //关闭窗口
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showFileChooseDialog = false;
         }

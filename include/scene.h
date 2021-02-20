@@ -24,5 +24,8 @@ namespace coolender
         static void deleteLight(std::string lightName);
         static void deletePointCloud(std::string pointCloudName);
         static void deletePolygonMesh(std::string polygonMeshName);
+
+        //渲染场景
+        static void renderScene();
     };
 }
