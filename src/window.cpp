@@ -67,6 +67,8 @@ void Window::initAndRun()
     //openGL全局配置
     glEnable(GL_DEPTH_TEST); //开启深度测试
     glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glPointSize(10000000000);
     //======================glfw glad opengl 初始化结束======================
 
 
@@ -88,7 +90,7 @@ void Window::initAndRun()
 
     //点云shader
     Shader pointCloudShader("shader/point_cloud.vs.glsl", "shader/point_cloud.fs.glsl");
-    glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
+    glm::vec4 color(1.0f, 0.5f, 0.0f, 1.0f);
     bool blinn = true;
 
     //准备渲染场景
@@ -98,6 +100,7 @@ void Window::initAndRun()
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
+
         // per-frame time logic
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -117,20 +120,20 @@ void Window::initAndRun()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        // test.use();
+        test.use();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        // test.setMat4("projection", projection);
-        // test.setMat4("view", view);
-        // // set light uniforms
-        // test.setVec3("viewPos", camera.Position);
-        // test.setVec3("lightPos", lightPos);
-        // test.setInt("blinn", blinn);
-        // // floor
-        // glBindVertexArray(floor.VAO);
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, floor.texture);
-        // glDrawArrays(GL_TRIANGLES, 0, 6);
+        test.setMat4("projection", projection);
+        test.setMat4("view", view);
+        // set light uniforms
+        test.setVec3("viewPos", camera.Position);
+        test.setVec3("lightPos", lightPos);
+        test.setInt("blinn", blinn);
+        // floor
+        glBindVertexArray(floor.VAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, floor.texture);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //渲染点云
         pointCloudShader.use();
@@ -139,6 +142,7 @@ void Window::initAndRun()
         pointCloudShader.setMat4("view", view);
         pointCloudShader.setMat4("projection", projection);
         pointCloudShader.setVec4("color", color);
+        
 
         //绘制点云
         for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)

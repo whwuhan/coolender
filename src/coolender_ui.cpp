@@ -299,11 +299,11 @@ void CoolenderUI::renderFileChooseDialog()
             //读取点云数据
             PointCloud pointCloud;
             loadPointCloudObj(filePathName, &pointCloud);
+            //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
+            //并做渲染初始化
             Render render;
-            render.renderPointCloudInit(pointCloud);
-            cout << pointCloud.VAO << endl;
-            cout << pointCloud.VBO << endl;
+            render.renderPointCloudInit(Scene::pointCloudCollection[filePathName]);
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showFileChooseDialog = false;
