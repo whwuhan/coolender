@@ -7,6 +7,7 @@
 #include <camera.h>
 #include <coolender.h>
 #include <coolender_ui.h>
+#include <scene.h>
 #include <shader.h>
 #include <texture_loader.h>
 #include <plane.h>

@@ -5,10 +5,11 @@ objs/main.o \
 objs/camera.o \
 objs/coolender_ui.o \
 objs/coolender.o \
+objs/light.o \
 objs/mesh.o \
 objs/model.o \
 objs/plane.o \
-objs/scence.o \
+objs/scene.o \
 objs/shader.o \
 objs/stb_image.o \
 objs/texture_loader.o \
@@ -38,6 +39,9 @@ objs/coolender_ui.o : include/coolender_ui.h src/coolender_ui.cpp
 objs/coolender.o : include/coolender.h src/coolender.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/coolender.cpp -o $@
 
+objs/light.o : include/light.h src/light.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/light.cpp -o $@
+
 objs/mesh.o : include/mesh.h src/mesh.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/mesh.cpp -o $@
 
@@ -47,8 +51,8 @@ objs/model.o : include/model.h src/model.cpp
 objs/plane.o : include/plane.h src/plane.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/plane.cpp -o $@
 
-objs/scence.o : include/scence.h src/scence.cpp
-	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/scence.cpp -o $@
+objs/scene.o : include/scene.h src/scene.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/scene.cpp -o $@
 
 objs/shader.o : include/shader.h src/shader.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/shader.cpp -o $@
