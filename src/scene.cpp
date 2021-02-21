@@ -4,6 +4,8 @@ using namespace coolender;
 using namespace wh::basic;
 using namespace glm;
 vec4 Scene::clearColor(1.0f, 1.0f, 1.0f, 1.0f);
+bool Scene::showFloor = true;
+bool Scene::phongLightingModel = true;
 
 
 //注意static变量要先初始化 否则链接失败

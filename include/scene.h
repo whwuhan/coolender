@@ -11,8 +11,9 @@ namespace coolender
         Scene();
 
         //场景的属性
-        static glm::vec4 clearColor;
-
+        static glm::vec4 clearColor;//背景颜色
+        static bool showFloor;//显示地板
+        static bool phongLightingModel;
 
 
         // void init();

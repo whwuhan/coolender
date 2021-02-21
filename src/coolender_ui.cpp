@@ -250,10 +250,21 @@ void CoolenderUI::renderRightSideBar()
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
         //全局设置
-        if (ImGui::CollapsingHeader("Global Setting" ))
+        if(ImGui::CollapsingHeader("Global Setting"))
         {   
+            //相机速度
+            ImGui::Text("Camera Speed:");
+            ImGui::SameLine();
+            ImGui::SliderFloat("", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed Scale = %.3f");
+
+
+        }
+
+        //场景设置
+        if(ImGui::CollapsingHeader("Scene Setting"))
+        {   
+            //背景颜色框
             {   
-                //背景颜色框
                 ImGui::Text("Background Color:");
                 ImGui::SameLine();
                 static float clearColor[4] = 
@@ -269,6 +280,14 @@ void CoolenderUI::renderRightSideBar()
                 Scene::clearColor.z = clearColor[2];
                 Scene::clearColor.w = clearColor[3];
                 ImGui::Separator();
+            }
+
+            //地板设置
+            {   
+                ImGui::TableNextColumn();
+                ImGui::Text("Show floor:");
+                ImGui::SameLine();
+                ImGui::Checkbox("", &Scene::showFloor);
             }
         }
     }

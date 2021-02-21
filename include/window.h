@@ -24,6 +24,7 @@ namespace coolender
         static unsigned int winWidth;//window 宽
         static unsigned int winHeight;//window 高
         static Camera camera;//相机
+        static float cameraSpeedScale;//相机移速比例
         //timing
         static float deltaTime;
         static float lastFrame;

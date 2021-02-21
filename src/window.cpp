@@ -5,6 +5,7 @@ using namespace coolender;
 bool Window::cursorDisable = false;//是否进入光标不可显示模式
 bool Window::changeOperateModeKeyPressed = false;//更换操作模式按键是否被按下
 Camera Window::camera;
+float Window::cameraSpeedScale = 1.0f;//相机移速比例
 unsigned int Window::winWidth = 1280;
 unsigned int Window::winHeight = 720;
 //timing
@@ -113,7 +114,8 @@ void Window::initAndRun()
         //input
         processInput(window, this);
 
-        // render
+        //开始渲染场景
+        //背景颜色
         glClearColor
         (
             Scene::clearColor.x,
@@ -123,21 +125,27 @@ void Window::initAndRun()
         );
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-        test.use();
+        //获取投影矩阵和相机矩阵
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        test.setMat4("projection", projection);
-        test.setMat4("view", view);
-        // set light uniforms
-        test.setVec3("viewPos", camera.Position);
-        test.setVec3("lightPos", lightPos);
-        test.setInt("blinn", blinn);
-        // floor
-        glBindVertexArray(floor.VAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, floor.texture);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        //渲染地板
+        if(Scene::showFloor)
+        {
+            test.use();
+            test.setMat4("projection", projection);
+            test.setMat4("view", view);
+            // set light uniforms
+            test.setVec3("viewPos", camera.Position);
+            test.setVec3("lightPos", lightPos);
+            test.setInt("blinn", blinn);
+            // floor
+            glBindVertexArray(floor.VAO);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, floor.texture);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+
 
         //渲染点云
         pointCloudShader.use();
@@ -207,27 +215,27 @@ void coolender::processInput(GLFWwindow *window, Window *coolenderWindow)
         //向前
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            Window::camera.ProcessKeyboard(FORWARD, Window::deltaTime);
+            Window::camera.ProcessKeyboard(FORWARD, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向后
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            Window::camera.ProcessKeyboard(BACKWARD, Window::deltaTime);
+            Window::camera.ProcessKeyboard(BACKWARD, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向左
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            Window::camera.ProcessKeyboard(LEFT, Window::deltaTime);
+            Window::camera.ProcessKeyboard(LEFT, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向右
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            Window::camera.ProcessKeyboard(RIGHT, Window::deltaTime);
+            Window::camera.ProcessKeyboard(RIGHT, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向上
         if (glfwGetKey(window, GLFW_KEY_SPACE))
         {
-            Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime);
+            Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime * Window::cameraSpeedScale);
         } 
     }
 }
