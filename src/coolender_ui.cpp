@@ -323,9 +323,10 @@ void CoolenderUI::renderRightSideBar()
                             it->second.color.w = pointColor[3];
 
                             //缩放
-                            float& scale = it->second.model[1][1];
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("Scale", &transX, 0.01f);
+                            float& scale = it->second.model[0][0];
+                            ImGui::SliderFloat("Scale", &scale, 0.0f, 10.0f, "Scale = %.3f");
+                            it->second.model[1][1] = scale;
+                            it->second.model[2][2] = scale;
 
 
                             //平移 注意glm是按照列优选的顺序来的
