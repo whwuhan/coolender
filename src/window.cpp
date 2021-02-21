@@ -162,15 +162,8 @@ void Window::initAndRun()
         {
             if(it->second.show)
             {   
-                glm::vec4 color
-                (
-                    it->second.color[0],
-                    it->second.color[1],
-                    it->second.color[2],
-                    it->second.color[3]
-                );
                 pointCloudShader.setFloat("pointSize", it->second.pointSize);
-                pointCloudShader.setVec4("color", color);
+                pointCloudShader.setVec4("color", it->second.color);
                 render.renderPointCloud(it->second);
             }
         }

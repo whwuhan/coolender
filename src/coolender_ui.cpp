@@ -304,27 +304,44 @@ void CoolenderUI::renderRightSideBar()
                         {
                             //checkbox
                             ImGui::Checkbox("Show point cloud", &it->second.show);
+                            
                             //pointSize
                             ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 50.f, "Point size = %.3f");
+                            
                             //color
                             float pointColor[4] = 
                             {
-                                it->second.color[0],
-                                it->second.color[1],
-                                it->second.color[2],
-                                it->second.color[3],
+                                it->second.color.x,
+                                it->second.color.y,
+                                it->second.color.z,
+                                it->second.color.w,
                             };
                             ImGui::ColorEdit4("Point color", pointColor);
-                            it->second.color[0] = pointColor[0];
-                            it->second.color[1] = pointColor[1];
-                            it->second.color[2] = pointColor[2];
-                            it->second.color[3] = pointColor[3];
-                            //delete button
+                            it->second.color.x = pointColor[0];
+                            it->second.color.y = pointColor[1];
+                            it->second.color.z = pointColor[2];
+                            it->second.color.w = pointColor[3];
+
+                            //平移矩阵
+                            float f1 = 0.0;
+                            ImGui::SetNextItemWidth(80);
+                            ImGui::DragFloat("x", &f1, 0.01f);
+                            ImGui::SameLine();
+                            ImGui::SetNextItemWidth(80);
+                            ImGui::DragFloat("y", &f1, 0.01f);
+                            ImGui::SameLine();
+                            ImGui::SetNextItemWidth(80);
+                            ImGui::DragFloat("z", &f1, 0.01f);
+
+                            //旋转矩阵 
+
+                            //delete button 
                             ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
                             if(ImGui::Button("Delete", buttonSize))
                             {
                                 Scene::deletePointCloud(it->first);
                                 //注意这里删除后要break否则会出现内存错误
+                                //猜测是因为map删除元素后，迭代器失效！！！！
                                 ImGui::TreePop();
                                 ImGui::Separator();
                                 break;
