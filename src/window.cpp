@@ -9,7 +9,7 @@ double Window::cursorPosY = Window::winHeight / 2.0f;//鼠标位置Y
 Camera Window::camera;
 float Window::cameraSpeedScale = 1.0f;//相机移速比例
 bool Window::useMSAA = true;
-int Window::MSAALevel = 32;
+int Window::MSAALevel = 8;
 unsigned int Window::winWidth = 1280;
 unsigned int Window::winHeight = 720;
 //timing
@@ -73,8 +73,8 @@ void Window::initAndRun()
     //openGL全局配置
     glEnable(GL_DEPTH_TEST); //开启深度测试
     glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
-    //glEnable(GL_PROGRAM_POINT_SIZE);
-    glPointSize(25);
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    //glPointSize(25);
     //======================glfw glad opengl 初始化结束======================
 
 
@@ -98,9 +98,8 @@ void Window::initAndRun()
     Shader pointCloudShader("shader/point_cloud.vs.glsl", "shader/point_cloud.fs.glsl");
     pointCloudShader.use();
     glm::mat4 model(1.0f);
-    glm::vec4 color(0.0f, 1.0f, 0.0f, 1.0f);
     pointCloudShader.setMat4("model", model);
-    pointCloudShader.setVec4("color", color);
+
     bool blinn = true;
 
     //准备渲染场景
@@ -153,16 +152,27 @@ void Window::initAndRun()
         }
 
 
+        //场景渲染
         //渲染点云
         pointCloudShader.use();
         pointCloudShader.setMat4("view", view);
         pointCloudShader.setMat4("projection", projection);
         
-
-        //场景渲染
         for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
         {
-            render.renderPointCloud(it->second);
+            if(it->second.show)
+            {   
+                glm::vec4 color
+                (
+                    it->second.color[0],
+                    it->second.color[1],
+                    it->second.color[2],
+                    it->second.color[3]
+                );
+                pointCloudShader.setFloat("pointSize", it->second.pointSize);
+                pointCloudShader.setVec4("color", color);
+                render.renderPointCloud(it->second);
+            }
         }
 
 

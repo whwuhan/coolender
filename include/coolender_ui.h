@@ -54,7 +54,6 @@ namespace coolender
 
 
 
-
         //隐藏UI
         void renderFileChooseDialog();//渲染文件选择对话框
         

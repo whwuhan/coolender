@@ -23,7 +23,6 @@ namespace coolender
         static std::map<std::string, wh::basic::PointCloud> pointCloudCollection;//点云
         static std::map<std::string, wh::basic::PolygonMesh> polygonMeshCollection;//Mesh网格
 
-
         //给场景中添加物体
         static void addLight(std::string lightName, coolender::Light &light);
         static void addPointCloud(std::string pointCloudName, wh::basic::PointCloud &pointCloud);

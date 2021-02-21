@@ -3,7 +3,6 @@ using namespace coolender;
 using namespace std;
 using namespace wh::basic;
 using namespace wh::utils::io;
-
 //static 变量初始化
 bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showRightSideBar = true;
@@ -273,7 +272,7 @@ void CoolenderUI::renderRightSideBar()
         {   
             //背景颜色框
             {   
-                static float clearColor[4] = 
+                float clearColor[4] = 
                 {
                     Scene::clearColor.x,
                     Scene::clearColor.y,
@@ -285,13 +284,57 @@ void CoolenderUI::renderRightSideBar()
                 Scene::clearColor.y = clearColor[1];
                 Scene::clearColor.z = clearColor[2];
                 Scene::clearColor.w = clearColor[3];
-                ImGui::Separator();
             }
 
             //地板设置
             {   
                 ImGui::TableNextColumn();
                 ImGui::Checkbox("Show floor", &Scene::showFloor);
+                ImGui::Separator();
+            }
+
+            //根据场景中的点云开始设置
+            {
+                if (ImGui::TreeNode("Point cloud:"))
+                {
+                    //每一个点云
+                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                    {   
+                        if (ImGui::TreeNode(it->first.c_str()))
+                        {
+                            //checkbox
+                            ImGui::Checkbox("Show point cloud", &it->second.show);
+                            //pointSize
+                            ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 50.f, "Point size = %.3f");
+                            //color
+                            float pointColor[4] = 
+                            {
+                                it->second.color[0],
+                                it->second.color[1],
+                                it->second.color[2],
+                                it->second.color[3],
+                            };
+                            ImGui::ColorEdit4("Point color", pointColor);
+                            it->second.color[0] = pointColor[0];
+                            it->second.color[1] = pointColor[1];
+                            it->second.color[2] = pointColor[2];
+                            it->second.color[3] = pointColor[3];
+                            //delete button
+                            ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
+                            if(ImGui::Button("Delete", buttonSize))
+                            {
+                                Scene::deletePointCloud(it->first);
+                                //注意这里删除后要break否则会出现内存错误
+                                ImGui::TreePop();
+                                ImGui::Separator();
+                                break;
+                            }
+                            ImGui::TreePop();
+                            ImGui::Separator();
+                        }
+                    }
+                    ImGui::TreePop();
+                }
             }
         }
     }
