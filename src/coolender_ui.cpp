@@ -341,9 +341,6 @@ void CoolenderUI::renderRightSideBar()
                             ImGui::SameLine();
                             ImGui::SetNextItemWidth(80);
                             ImGui::DragFloat("z", &transZ, 0.01f);
-                            // it->second.model =  glm::translate(
-                            //     it->second.model, glm::vec3(transX, transY, transZ)
-                            // );
 
                             
                             //旋转
