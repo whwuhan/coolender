@@ -15,7 +15,7 @@ float Window::lastX = Window::winWidth / 2.0f;
 float Window::lastY = Window::winHeight / 2.0f;
 bool Window::firstMouse = true;
 //其他static变量初始化
-glm::vec4 Window::clearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
 
 //默认构造函数
 Window::Window()
@@ -96,7 +96,7 @@ void Window::initAndRun()
     pointCloudShader.setMat4("model", model);
     pointCloudShader.setVec4("color", color);
     bool blinn = true;
-    
+
     //准备渲染场景
     Render render;
 
@@ -116,10 +116,10 @@ void Window::initAndRun()
         // render
         glClearColor
         (
-            Window::clearColor.x,
-            Window::clearColor.y,
-            Window::clearColor.z,
-            Window::clearColor.w
+            Scene::clearColor.x,
+            Scene::clearColor.y,
+            Scene::clearColor.z,
+            Scene::clearColor.w
         );
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -145,12 +145,14 @@ void Window::initAndRun()
         pointCloudShader.setMat4("projection", projection);
         
 
-        //绘制点云
+        //场景渲染
         for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
         {
             render.renderPointCloud(it->second);
         }
 
+
+        //根据场景渲染UI
 
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
         //coolenderUI.renderDemoUI();

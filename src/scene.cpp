@@ -2,7 +2,11 @@
 using namespace std;
 using namespace coolender;
 using namespace wh::basic;
-//注意static变量要先初始化 链接失败
+using namespace glm;
+vec4 Scene::clearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+//注意static变量要先初始化 否则链接失败
 map<string, Light> Scene::lightCollection;//光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云
 map<string, PolygonMesh> Scene::polygonMeshCollection;//Mesh网格

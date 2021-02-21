@@ -2,12 +2,19 @@
 #include <map>
 #include <whlib.h>
 #include <light.h>
+#include <glm/glm.hpp>
 namespace coolender
 {
     class Scene
     {
     public:
         Scene();
+
+        //场景的属性
+        static glm::vec4 clearColor;
+
+
+
         // void init();
         //场景中的物体
         static std::map<std::string, coolender::Light> lightCollection;//光源

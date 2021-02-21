@@ -31,7 +31,6 @@ namespace coolender
         static float lastX;
         static float lastY;
         static bool firstMouse;
-        static glm::vec4 clearColor;
 
     private:
         GLFWwindow *window;

@@ -258,16 +258,16 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::SameLine();
                 static float clearColor[4] = 
                 {
-                    Window::clearColor.x,
-                    Window::clearColor.y,
-                    Window::clearColor.z,
-                    Window::clearColor.w
+                    Scene::clearColor.x,
+                    Scene::clearColor.y,
+                    Scene::clearColor.z,
+                    Scene::clearColor.w
                 };
-                ImGui::ColorEdit4("color 2", clearColor);
-                Window::clearColor.x = clearColor[0];
-                Window::clearColor.y = clearColor[1];
-                Window::clearColor.z = clearColor[2];
-                Window::clearColor.w = clearColor[3];
+                ImGui::ColorEdit4("", clearColor);
+                Scene::clearColor.x = clearColor[0];
+                Scene::clearColor.y = clearColor[1];
+                Scene::clearColor.z = clearColor[2];
+                Scene::clearColor.w = clearColor[3];
                 ImGui::Separator();
             }
         }
