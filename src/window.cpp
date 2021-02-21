@@ -96,9 +96,7 @@ void Window::initAndRun()
 
     //点云shader
     Shader pointCloudShader("shader/point_cloud.vs.glsl", "shader/point_cloud.fs.glsl");
-    pointCloudShader.use();
-    glm::mat4 model(1.0f);
-    pointCloudShader.setMat4("model", model);
+
 
     bool blinn = true;
 
@@ -162,6 +160,8 @@ void Window::initAndRun()
         {
             if(it->second.show)
             {   
+                pointCloudShader.use();
+                pointCloudShader.setMat4("model", it->second.model);
                 pointCloudShader.setFloat("pointSize", it->second.pointSize);
                 pointCloudShader.setVec4("color", it->second.color);
                 render.renderPointCloud(it->second);

@@ -322,18 +322,30 @@ void CoolenderUI::renderRightSideBar()
                             it->second.color.z = pointColor[2];
                             it->second.color.w = pointColor[3];
 
-                            //平移矩阵
-                            float f1 = 0.0;
+                            //缩放
+                            float& scale = it->second.model[1][1];
                             ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("x", &f1, 0.01f);
-                            ImGui::SameLine();
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("y", &f1, 0.01f);
-                            ImGui::SameLine();
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("z", &f1, 0.01f);
+                            ImGui::DragFloat("Scale", &transX, 0.01f);
 
-                            //旋转矩阵 
+
+                            //平移 注意glm是按照列优选的顺序来的
+                            float& transX = it->second.model[3][0];
+                            float& transY = it->second.model[3][1];
+                            float& transZ = it->second.model[3][2];
+                            ImGui::SetNextItemWidth(80);
+                            ImGui::DragFloat("x", &transX, 0.01f);
+                            ImGui::SameLine();
+                            ImGui::SetNextItemWidth(80);
+                            ImGui::DragFloat("y", &transY, 0.01f);
+                            ImGui::SameLine();
+                            ImGui::SetNextItemWidth(80);
+                            ImGui::DragFloat("z", &transZ, 0.01f);
+                            // it->second.model =  glm::translate(
+                            //     it->second.model, glm::vec3(transX, transY, transZ)
+                            // );
+
+                            
+                            //旋转
 
                             //delete button 
                             ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
