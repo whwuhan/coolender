@@ -4,16 +4,20 @@ using namespace coolender;
 //static变量初始化
 bool Window::cursorDisable = false;//是否进入光标不可显示模式
 bool Window::changeOperateModeKeyPressed = false;//更换操作模式按键是否被按下
+double Window::cursorPosX = Window::winWidth / 2.0f;//鼠标位置X
+double Window::cursorPosY = Window::winHeight / 2.0f;//鼠标位置Y
 Camera Window::camera;
 float Window::cameraSpeedScale = 1.0f;//相机移速比例
+bool Window::useMSAA = true;
+int Window::MSAALevel = 32;
 unsigned int Window::winWidth = 1280;
 unsigned int Window::winHeight = 720;
 //timing
 float Window::deltaTime = 0.0f;
 float Window::lastFrame = 0.0f;
 //防止模式切换镜头闪烁
-float Window::lastX = Window::winWidth / 2.0f;
-float Window::lastY = Window::winHeight / 2.0f;
+// float Window::lastX = Window::winWidth / 2.0f;
+// float Window::lastY = Window::winHeight / 2.0f;
 bool Window::firstMouse = true;
 //其他static变量初始化
 
@@ -31,6 +35,7 @@ void Window::initAndRun()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //设置主版本
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //设置次版本
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //设置使用核心模式
+    glfwWindowHint(GLFW_SAMPLES, Window::MSAALevel);//MSAA采样数
     #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //mac用户需要设置，初始化才能有效
     #endif
@@ -110,7 +115,8 @@ void Window::initAndRun()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
+        //初始设置
+        
         //input
         processInput(window, this);
 
@@ -254,7 +260,7 @@ void coolender::changeOperateMode(GLFWwindow *window, Window *coolenderWindow)
     else
     {   
         //取消监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(window,nullptr);
+        glfwSetCursorPosCallback(window,getCursorPos);//获取鼠标位置
         glfwSetScrollCallback(window,nullptr);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
@@ -270,22 +276,30 @@ void coolender::scrollCallback(GLFWwindow *window, double xoffset, double yoffse
 // -------------------------------------------------------
 void coolender::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
+
     if (Window::firstMouse)
     {
-        Window::lastX = xpos;
-        Window::lastY = ypos;
+        Window::cursorPosX = xpos;
+        Window::cursorPosY = ypos;
         Window::firstMouse = false;
     }
+    
 
-    float xoffset = xpos - Window::lastX;
-    float yoffset = Window::lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float xoffset = xpos - Window::cursorPosX;
+    float yoffset = Window::cursorPosY - ypos; // reversed since y-coordinates go from bottom to top
 
-    Window::lastX = xpos;
-    Window::lastY = ypos;
+    Window::cursorPosX = xpos;
+    Window::cursorPosY = ypos;
 
     Window::camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
+//获取当前指针的位置
+void coolender::getCursorPos(GLFWwindow* window, double xpos, double ypos)
+{
+    Window::cursorPosX = xpos;
+    Window::cursorPosY = ypos;
+}
 
 // 渲染一个球体
 unsigned int sphereVAO = 0;

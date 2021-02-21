@@ -253,10 +253,18 @@ void CoolenderUI::renderRightSideBar()
         if(ImGui::CollapsingHeader("Global Setting"))
         {   
             //相机速度
-            ImGui::Text("Camera Speed:");
-            ImGui::SameLine();
-            ImGui::SliderFloat("", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed Scale = %.3f");
+            ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
+            ImGui::Separator();
 
+            //MSAA
+            // ImGui::Checkbox("MSAA", &Window::useMSAA);
+            // if(Window::useMSAA)
+            // {
+            //     ImGui::RadioButton("MSAA x0", &Window::MSAALevel, 0); ImGui::SameLine();
+            //     ImGui::RadioButton("MSAA x8", &Window::MSAALevel, 8); ImGui::SameLine();
+            //     ImGui::RadioButton("MSAA x16", &Window::MSAALevel, 16); ImGui::SameLine();
+            //     ImGui::RadioButton("MSAA x32", &Window::MSAALevel, 32);
+            // }
 
         }
 
@@ -265,8 +273,6 @@ void CoolenderUI::renderRightSideBar()
         {   
             //背景颜色框
             {   
-                ImGui::Text("Background Color:");
-                ImGui::SameLine();
                 static float clearColor[4] = 
                 {
                     Scene::clearColor.x,
@@ -274,7 +280,7 @@ void CoolenderUI::renderRightSideBar()
                     Scene::clearColor.z,
                     Scene::clearColor.w
                 };
-                ImGui::ColorEdit4("", clearColor);
+                ImGui::ColorEdit4("Background color", clearColor);
                 Scene::clearColor.x = clearColor[0];
                 Scene::clearColor.y = clearColor[1];
                 Scene::clearColor.z = clearColor[2];
@@ -285,9 +291,7 @@ void CoolenderUI::renderRightSideBar()
             //地板设置
             {   
                 ImGui::TableNextColumn();
-                ImGui::Text("Show floor:");
-                ImGui::SameLine();
-                ImGui::Checkbox("", &Scene::showFloor);
+                ImGui::Checkbox("Show floor", &Scene::showFloor);
             }
         }
     }
