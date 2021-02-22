@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include <whlib.h>
-#include <cool_light.h>
+#include <cld_light.h>
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 namespace coolender

@@ -1,4 +1,4 @@
-#include <cool_coolender_ui.h>
+#include <cld_coolender_ui.h>
 using namespace coolender;
 using namespace std;
 using namespace wh::basic;
@@ -220,7 +220,6 @@ void CoolenderUI::renderUsage()
         ImGui::BulletText("Move your mouse to change view angle.");
         ImGui::BulletText("Scroll the mouse wheel to change the field of view.");
     }
-
     ImGui::End();
 }
 
@@ -359,11 +358,11 @@ void CoolenderUI::renderRightSideBar()
                                 break;
                             }
                             ImGui::TreePop();
-                            ImGui::Separator();
                         }
                     }
                     ImGui::TreePop();
                 }
+                ImGui::Separator();
             }
         }
     }

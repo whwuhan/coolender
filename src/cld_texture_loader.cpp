@@ -1,4 +1,4 @@
-#include <cool_texture_loader.h>
+#include <cld_texture_loader.h>
 using namespace std;
 using namespace coolender;
 

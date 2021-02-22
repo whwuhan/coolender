@@ -1,4 +1,4 @@
-#include <cool_shader.h>
+#include <cld_shader.h>
 using namespace std;
 using namespace coolender;
 // constructor generates the shader on the fly

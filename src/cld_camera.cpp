@@ -1,7 +1,7 @@
 /**
  * 相机实现类
 */
-#include <cool_camera.h>
+#include <cld_camera.h>
 #include <iostream>
 using namespace std;
 using namespace coolender;
