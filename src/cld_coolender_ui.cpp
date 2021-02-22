@@ -5,19 +5,30 @@ using namespace wh::basic;
 using namespace wh::utils::io;
 //static 变量初始化
 GLFWwindow* CoolenderUI::glfwWindow = nullptr;
+//整体设置
+float CoolenderUI::fontSize = 15.0;//字体大小
+float CoolenderUI::globalScale = 1.0;//整体的字体缩放
+float CoolenderUI::windowRounding = 6.0;//窗口的圆角
+float CoolenderUI::frameRounding = 3.0;//内部图标的圆角
+
 bool CoolenderUI::showRightSideBar = true;
 bool CoolenderUI::showUsage = true;
+bool CoolenderUI::showMessageBox = true;
 bool CoolenderUI::showFileChooseDialog = false;
+
 float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
 float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标(距离右侧的距离) 
 float CoolenderUI::rightSidebarPosY = 22;//右侧边栏位置的Y坐标
 float CoolenderUI::rightSidebarWidth = 500;//右侧边栏宽
 float CoolenderUI::rightSidebarHeight = 650;//右侧边栏高
-float CoolenderUI::fontSize = 15.0;//字体大小
-float CoolenderUI::globalScale = 1.0;//整体的字体缩放
-float CoolenderUI::windowRounding = 6.0;//窗口的圆角
-float CoolenderUI::frameRounding = 3.0;//内部图标的圆角
+float CoolenderUI::messageBoxPosX = 3;//message box距离左边距离
+float CoolenderUI::messageBoxPosY = 300;//message box距离usage的纵向距离
+// float CoolenderUI::messageBoxWidth = 200;//宽
+// float CoolenderUI::messageBoxHeight = 200;//高
+
+// int CoolenderUI::globalSettingOpenAction = 1;//初始是否打开global setting界面
+// int CoolenderUI::sceneSettingOpenAction = 1;//初始是否打开scene setting界面
 
 // CoolenderUI::CoolenderUI():
 // window(nullptr),
@@ -121,12 +132,17 @@ void CoolenderUI::render()
         //使用手册
         if(CoolenderUI::showUsage)
         {
-            renderUsage();
+            CoolenderUI::renderUsage();
         }
         //右侧Sidebar
         if(CoolenderUI::showRightSideBar)
         {
-            renderRightSideBar();
+            CoolenderUI::renderRightSideBar();
+        }
+        //messagebox
+        if(CoolenderUI::showMessageBox)
+        {
+            CoolenderUI::renderMessageBox();
         }
         //初始显示部分结束
 
@@ -178,9 +194,15 @@ void CoolenderUI::renderMenu()
         if (ImGui::BeginMenu("Window"))
         {
             //使用手册
-            if (ImGui::MenuItem("Usage", NULL, CoolenderUI::showUsage))
+            if (ImGui::MenuItem("Show Usage", NULL, CoolenderUI::showUsage))
             {
                 CoolenderUI::showUsage = !CoolenderUI::showUsage;
+            }
+
+            //message box
+            if (ImGui::MenuItem("Show Message Box", NULL, CoolenderUI::showMessageBox))
+            {
+                CoolenderUI::showMessageBox = !CoolenderUI::showMessageBox;
             }
 
             //右侧Sidebar
@@ -229,29 +251,31 @@ void CoolenderUI::renderRightSideBar()
     //获取glfw window宽高
     int winWidth, winHeight;
     glfwGetFramebufferSize(Window::glfwWindow, &winWidth, &winHeight);
-
-    //设置下一个窗口的属性
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowSize
-    (
-        ImVec2(CoolenderUI::rightSidebarWidth, CoolenderUI::rightSidebarHeight), 
-        ImGuiCond_FirstUseEver
-    );
+    //设置位置
     ImGui::SetNextWindowPos
     (
         ImVec2
         (   // 注意FramebufferSize是窗口实际长度的2倍
-            mainViewport->WorkPos.x + winWidth / 2.0 - CoolenderUI::rightSidebarPosX - ImGui::GetWindowWidth(), 
+            mainViewport->WorkPos.x + winWidth / 2.0 - CoolenderUI::rightSidebarWidth - CoolenderUI::rightSidebarPosX, 
             mainViewport->WorkPos.y + CoolenderUI::rightSidebarPosY
         ), 
+        ImGuiCond_FirstUseEver
+    );
+    //设置大小
+    ImGui::SetNextWindowSize
+    (
+        ImVec2(CoolenderUI::rightSidebarWidth, CoolenderUI::rightSidebarHeight), 
         ImGuiCond_FirstUseEver
     );
     //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
         //全局设置
+        ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Global Setting"))
         {   
+            
             //相机速度
             ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
             ImGui::Separator();
@@ -269,6 +293,7 @@ void CoolenderUI::renderRightSideBar()
         }
 
         //场景设置
+        ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Scene Setting"))
         {   
             //背景颜色框
@@ -280,11 +305,11 @@ void CoolenderUI::renderRightSideBar()
                     Scene::clearColor.z,
                     Scene::clearColor.w
                 };
-                ImGui::ColorEdit4("Background color", clearColor);
+                ImGui::ColorEdit3("Background color", clearColor);
                 Scene::clearColor.x = clearColor[0];
                 Scene::clearColor.y = clearColor[1];
                 Scene::clearColor.z = clearColor[2];
-                Scene::clearColor.w = clearColor[3];
+                Scene::clearColor.w = 1.0f;
             }
 
             //地板设置
@@ -295,12 +320,14 @@ void CoolenderUI::renderRightSideBar()
             }
 
             //根据场景中的点云开始设置
-            {
+            {   
+                ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
                 if (ImGui::TreeNode("Point cloud:"))
                 {
                     //每一个点云
                     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                     {   
+                        ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
                         if (ImGui::TreeNode(it->first.c_str()))
                         {
                             //checkbox
@@ -324,27 +351,38 @@ void CoolenderUI::renderRightSideBar()
                             it->second.color.w = pointColor[3];
 
                             //缩放
-                            float& scale = it->second.model[0][0];
-                            ImGui::SliderFloat("Scale", &scale, 0.0f, 10.0f, "Scale = %.3f");
-                            it->second.model[1][1] = scale;
-                            it->second.model[2][2] = scale;
-
+                            
+                            ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
+                            it->second.model = 
+                            glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale, it->second.scale ,it->second.scale));
 
                             //平移 注意glm是按照列优选的顺序来的
-                            float& transX = it->second.model[3][0];
-                            float& transY = it->second.model[3][1];
-                            float& transZ = it->second.model[3][2];
                             ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("x", &transX, 0.01f);
+                            ImGui::DragFloat("transX", &it->second.transX, 0.01f);
                             ImGui::SameLine();
                             ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("y", &transY, 0.01f);
+                            ImGui::DragFloat("transY", &it->second.transY, 0.01f);
                             ImGui::SameLine();
                             ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("z", &transZ, 0.01f);
-
+                            ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
+                            it->second.model =
+                            glm::translate(glm::mat4(1.0f), glm::vec3(it->second.transX, it->second.transY, it->second.transZ) );
                             
                             //旋转
+                            ImGui::SetNextItemWidth(60);
+                            ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);
+                            ImGui::SameLine();
+                            ImGui::SetNextItemWidth(60);
+                            ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);
+                            ImGui::SameLine();
+                            ImGui::SetNextItemWidth(60);
+                            ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
+                            it->second.model =  
+                            glm::rotate(it->second.model, glm::radians(it->second.rotateX), glm::vec3(1.0f, 0.0f, 0.0f));
+                            it->second.model= 
+                            glm::rotate(it->second.model, glm::radians(it->second.rotateY), glm::vec3(0.0f, 1.0f, 0.0f));
+                            it->second.model= 
+                            glm::rotate(it->second.model, glm::radians(it->second.rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
 
                             //delete button 
                             ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
@@ -366,6 +404,50 @@ void CoolenderUI::renderRightSideBar()
             }
         }
     }
+    ImGui::End();
+}
+
+//message信息框
+void CoolenderUI::renderMessageBox()
+{   
+    const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+    //获取glfw window宽高
+    int winWidth, winHeight;
+    glfwGetFramebufferSize(Window::glfwWindow, &winWidth, &winHeight);
+    //设置大小
+    // ImGui::SetNextWindowSize
+    // (
+    //     ImVec2(CoolenderUI::messageBoxWidth, CoolenderUI::messageBoxHeight), 
+    //     ImGuiCond_FirstUseEver
+    // );
+
+    //设置位置
+    ImGui::SetNextWindowPos
+    (
+        ImVec2
+        (   // 注意FramebufferSize是窗口实际长度的2倍
+            mainViewport->WorkPos.x + CoolenderUI::messageBoxPosX, 
+            mainViewport->WorkPos.y + CoolenderUI::messageBoxPosY
+        ), 
+        ImGuiCond_FirstUseEver
+    );
+
+    //Message box
+    ImGui::Begin("Message Box", &CoolenderUI::showMessageBox, ImGuiWindowFlags_AlwaysAutoResize);
+    {   
+        //简介
+        ImGui::Text("Brief Introduction:");
+        ImGui::BulletText("This is a simple scene renderer for \npoint cloud, polygonmesh and model.");
+        ImGui::Separator();
+        //显示帧数
+        ImGui::Text
+        (
+            "Application average %.3f ms/frame (%.1f FPS)", 
+            1000.0f / ImGui::GetIO().Framerate, 
+            ImGui::GetIO().Framerate
+        );
+    }
+    
     ImGui::End();
 }
 

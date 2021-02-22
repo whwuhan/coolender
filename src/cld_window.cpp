@@ -274,7 +274,6 @@ void coolender::scrollCallback(GLFWwindow *winglfwWindowdow, double xoffset, dou
 // -------------------------------------------------------
 void coolender::mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
 {
-
     if (Window::firstMouse)
     {
         Window::cursorPosX = xpos;
@@ -282,7 +281,6 @@ void coolender::mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
         Window::firstMouse = false;
     }
     
-
     float xoffset = xpos - Window::cursorPosX;
     float yoffset = Window::cursorPosY - ypos; // reversed since y-coordinates go from bottom to top
 
