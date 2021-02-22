@@ -82,7 +82,6 @@ void Window::initAndRun()
 
 
     //CoolenderUI初始化
-    //CoolenderUI coolenderUI(Window::glfwWindow);
     CoolenderUI::init(Window::glfwWindow);
 
 
@@ -169,7 +168,7 @@ void Window::initAndRun()
 
         //根据场景渲染UI
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
-        //coolenderUI.renderDemoUI();
+        //CoolenderUI.renderDemoUI();
         CoolenderUI::render();
 
         glfwSwapBuffers(Window::glfwWindow);
@@ -207,7 +206,6 @@ void coolender::processInput(GLFWwindow *glfwWindow)
         Window::changeOperateModeKeyPressed = true;
         changeOperateMode(Window::glfwWindow);
     }
-
     if (glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_RELEASE)
     {
         Window::changeOperateModeKeyPressed = false;
