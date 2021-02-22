@@ -1,4 +1,4 @@
-#include <window.h>
+#include <cool_window.h>
 using namespace std;
 using namespace coolender;
 //static变量初始化

@@ -3,13 +3,13 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
-#include <camera.h>
-#include <coolender.h>
-#include <coolender_ui.h>
-#include <shader.h>
-#include <texture_loader.h>
-#include <plane.h>
-#include <render.h>
+#include <cool_camera.h>
+#include <cool_coolender.h>
+#include <cool_coolender_ui.h>
+#include <cool_shader.h>
+#include <cool_texture_loader.h>
+#include <cool_plane.h>
+#include <cool_render.h>
 #include <stb_image.h>
 namespace coolender
 {

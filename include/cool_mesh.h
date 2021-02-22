@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <shader.h>
+#include <cool_shader.h>
 #include <string>
 #include <vector>
 namespace coolender

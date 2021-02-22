@@ -1,4 +1,4 @@
-#include <mesh.h>
+#include <cool_mesh.h>
 using namespace coolender;
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)

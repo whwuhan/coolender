@@ -6,8 +6,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include <shader.h>
-#include <mesh.h>
+#include <cool_shader.h>
+#include <cool_mesh.h>
 #include <string>
 #include <fstream>
 #include <sstream>

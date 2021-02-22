@@ -1,4 +1,4 @@
-#include <light.h>
+#include <cool_light.h>
 using namespace coolender;
 using namespace glm;
 Light::Light():

@@ -9,9 +9,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-#include <window.h>
+#include <cool_window.h>
 #include <whlib.h>
-#include <scene_wh.h>
+#include <cool_scene.h>
 namespace coolender
 {
     class CoolenderUI

@@ -1,13 +1,7 @@
 #pragma once
-/**
- * 
- * 场景类，添加wh后缀与assimp中的scene.h区分
- * 
- * 
-*/
 #include <map>
 #include <whlib.h>
-#include <light.h>
+#include <cool_light.h>
 #include <glm/glm.hpp>
 namespace coolender
 {

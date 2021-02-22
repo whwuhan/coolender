@@ -1,4 +1,4 @@
-#include <coolender.h>
+#include <cool_coolender.h>
 using namespace coolender;
 using namespace std;
 string Coolender::version = "1.0";

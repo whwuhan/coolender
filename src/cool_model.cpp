@@ -1,4 +1,4 @@
-#include <model.h>
+#include <cool_model.h>
 using namespace std;
 using namespace coolender;
 
