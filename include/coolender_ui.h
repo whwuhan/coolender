@@ -11,7 +11,7 @@
 #include <iostream>
 #include <window.h>
 #include <whlib.h>
-#include <scene.h>
+#include <scene_wh.h>
 namespace coolender
 {
     class CoolenderUI

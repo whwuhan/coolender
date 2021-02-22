@@ -10,7 +10,7 @@ objs/mesh.o \
 objs/model.o \
 objs/plane.o \
 objs/render.o \
-objs/scene.o \
+objs/scene_wh.o \
 objs/shader.o \
 objs/stb_image.o \
 objs/texture_loader.o \
@@ -55,8 +55,8 @@ objs/plane.o : include/plane.h src/plane.cpp
 objs/render.o : include/render.h src/render.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/render.cpp -o $@
 
-objs/scene.o : include/scene.h src/scene.cpp
-	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/scene.cpp -o $@
+objs/scene_wh.o : include/scene_wh.h src/scene_wh.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/scene_wh.cpp -o $@
 
 objs/shader.o : include/shader.h src/shader.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/shader.cpp -o $@
