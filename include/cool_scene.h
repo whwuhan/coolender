@@ -3,6 +3,7 @@
 #include <whlib.h>
 #include <cool_light.h>
 #include <glm/glm.hpp>
+#include <glad/glad.h>
 namespace coolender
 {
     class Scene

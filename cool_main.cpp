@@ -12,6 +12,5 @@
 
 int main()
 {
-    coolender::Coolender coolender;
-    coolender.initAndRun();
+    coolender::Coolender::initAndRun();
 }

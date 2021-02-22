@@ -4,8 +4,9 @@ using namespace std;
 using namespace wh::basic;
 using namespace wh::utils::io;
 //static 变量初始化
-bool CoolenderUI::showUsage = true;
+GLFWwindow* CoolenderUI::glfwWindow = nullptr;
 bool CoolenderUI::showRightSideBar = true;
+bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showFileChooseDialog = false;
 float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
@@ -13,27 +14,30 @@ float CoolenderUI::rightSidebarPosX = 3;//右侧边栏位置的X坐标(距离右
 float CoolenderUI::rightSidebarPosY = 22;//右侧边栏位置的Y坐标
 float CoolenderUI::rightSidebarWidth = 500;//右侧边栏宽
 float CoolenderUI::rightSidebarHeight = 650;//右侧边栏高
+float CoolenderUI::fontSize = 15.0;//字体大小
+float CoolenderUI::globalScale = 1.0;//整体的字体缩放
+float CoolenderUI::windowRounding = 6.0;//窗口的圆角
+float CoolenderUI::frameRounding = 3.0;//内部图标的圆角
 
+// CoolenderUI::CoolenderUI():
+// window(nullptr),
+// globalScale(1.0),
+// fontSize(15.0),
+// windowRounding(6.0),
+// frameRounding(3.0)
+// {}
 
-CoolenderUI::CoolenderUI():
-window(nullptr),
-globalScale(1.0),
-fontSize(15.0),
-windowRounding(6.0),
-frameRounding(3.0)
-{}
-
-CoolenderUI::CoolenderUI(GLFWwindow* window):
-window(window),
-globalScale(1.0),
-fontSize(15.0),
-windowRounding(6.0),
-frameRounding(3.0)
-{}
+// CoolenderUI::CoolenderUI(GLFWwindow* window):
+// window(window),
+// globalScale(1.0),
+// fontSize(15.0),
+// windowRounding(6.0),
+// frameRounding(3.0)
+// {}
 
 
 //初始化UI
-void CoolenderUI::init()
+void CoolenderUI::init(GLFWwindow* glfwWindow)
 {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -56,7 +60,7 @@ void CoolenderUI::init()
     //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 }
 
@@ -114,7 +118,6 @@ void CoolenderUI::render()
         // if (no_bring_to_front)  windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 
         //初始界面显示部分
-
         //使用手册
         if(CoolenderUI::showUsage)
         {
@@ -125,7 +128,6 @@ void CoolenderUI::render()
         {
             renderRightSideBar();
         }
-        
         //初始显示部分结束
 
 
@@ -134,7 +136,7 @@ void CoolenderUI::render()
         //显示文件选择框
         if(CoolenderUI::showFileChooseDialog)
         {
-            renderFileChooseDialog();
+            CoolenderUI::renderFileChooseDialog();
         }
         
         ImGui::Render();
@@ -227,7 +229,7 @@ void CoolenderUI::renderRightSideBar()
 {
     //获取glfw window宽高
     int winWidth, winHeight;
-    glfwGetFramebufferSize(window, &winWidth, &winHeight);
+    glfwGetFramebufferSize(Window::glfwWindow, &winWidth, &winHeight);
 
     //设置下一个窗口的属性
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
@@ -395,8 +397,7 @@ void CoolenderUI::renderFileChooseDialog()
             //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
             //并做渲染初始化
-            Render render;
-            render.renderPointCloudInit(Scene::pointCloudCollection[filePathName]);
+            Render::renderPointCloudInit(Scene::pointCloudCollection[filePathName]);
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showFileChooseDialog = false;

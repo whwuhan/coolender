@@ -49,7 +49,11 @@ void Scene::deleteLight(string lightName)
 
 //删除点云
 void Scene::deletePointCloud(string pointCloudName)
-{
+{   
+    //先删VBO VAO
+    glDeleteBuffers(1, &pointCloudCollection[pointCloudName].VBO);
+    glDeleteVertexArrays(1, &pointCloudCollection[pointCloudName].VAO);
+    //再删除场景中的点云
     pointCloudCollection.erase(pointCloudName);
     cout << "Delete point cloud successfully." << endl;
 }

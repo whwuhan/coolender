@@ -2,30 +2,30 @@
 using namespace std;
 using namespace coolender;
 //static变量初始化
+GLFWwindow* Window::glfwWindow = nullptr;//glfw window
 bool Window::cursorDisable = false;//是否进入光标不可显示模式
 bool Window::changeOperateModeKeyPressed = false;//更换操作模式按键是否被按下
-double Window::cursorPosX = Window::winWidth / 2.0f;//鼠标位置X
-double Window::cursorPosY = Window::winHeight / 2.0f;//鼠标位置Y
-Camera Window::camera;
+double Window::cursorPosX = Window::width / 2.0f;//鼠标位置X
+double Window::cursorPosY = Window::height / 2.0f;//鼠标位置Y
+Camera Window::camera;//相机
 float Window::cameraSpeedScale = 1.0f;//相机移速比例
 bool Window::useMSAA = true;
 int Window::MSAALevel = 8;
-unsigned int Window::winWidth = 1280;
-unsigned int Window::winHeight = 720;
+unsigned int Window::width = 1280;
+unsigned int Window::height = 720;
 //timing
 float Window::deltaTime = 0.0f;
 float Window::lastFrame = 0.0f;
 //防止模式切换镜头闪烁
-// float Window::lastX = Window::winWidth / 2.0f;
-// float Window::lastY = Window::winHeight / 2.0f;
+// float Window::lastX = Window::width / 2.0f;
+// float Window::lastY = Window::height / 2.0f;
 bool Window::firstMouse = true;
 //其他static变量初始化
 
 
 //默认构造函数
-Window::Window()
-{}
-
+// Window::Window()
+// {}
 void Window::initAndRun()
 {
     //======================glfw glad opengl 初始化======================
@@ -41,25 +41,25 @@ void Window::initAndRun()
     #endif
     //创建一个窗口对象
     string windowTitle = "Coolender Version " + Coolender::version;
-    GLFWwindow* window = glfwCreateWindow(winWidth, winHeight, windowTitle.c_str(), NULL, NULL);
-    this->window = window;
+    Window::glfwWindow = glfwCreateWindow(Window::width, Window::height, windowTitle.c_str(), NULL, NULL);
+
     //参数依次是长，宽，名称，后两个参数忽略
-    if (window == NULL)
+    if (Window::glfwWindow == nullptr)
     {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return ;
     }
     //将窗口的上下文设置成主线程的上下文
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(Window::glfwWindow);
     glfwSwapInterval(1); // Enable vsync 每帧的交换间隔，防止屏幕撕裂
     //注册回调函数，告诉GLFW窗口大小调整时，调用这个回调函数
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(Window::glfwWindow, framebufferSizeCallback);
     //新增监听鼠标和鼠标滚轮事件
-    // glfwSetCursorPosCallback(window,mouseCallback);
-    // glfwSetScrollCallback(window,scrollCallback);
+    // glfwSetCursorPosCallback(Window::glfwWindow,mouseCallback);
+    // glfwSetScrollCallback(Window::glfwWindow,scrollCallback);
     //告诉GLFW选中窗口不显示鼠标
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(Window::glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
     //GLAD是用来管理OpenGL的函数指针
@@ -80,9 +80,8 @@ void Window::initAndRun()
 
 
     //CoolenderUI初始化
-    CoolenderUI coolenderUI(window);//根据window设置UI
-    coolenderUI.init();
-
+    //CoolenderUI coolenderUI(Window::glfwWindow);
+    CoolenderUI::init(Window::glfwWindow);
 
 
     //shader
@@ -100,22 +99,19 @@ void Window::initAndRun()
 
     bool blinn = true;
 
-    //准备渲染场景
-    Render render;
-
     //渲染循环
     // Main loop
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(Window::glfwWindow))
     {
 
         // per-frame time logic
         float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        Window::deltaTime = currentFrame - Window::lastFrame;
+        Window::lastFrame = currentFrame;
         //初始设置
         
         //input
-        processInput(window, this);
+        processInput(Window::glfwWindow);
 
         //开始渲染场景
         //背景颜色
@@ -129,7 +125,7 @@ void Window::initAndRun()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //获取投影矩阵和相机矩阵
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         
         //渲染地板
@@ -164,85 +160,84 @@ void Window::initAndRun()
                 pointCloudShader.setMat4("model", it->second.model);
                 pointCloudShader.setFloat("pointSize", it->second.pointSize);
                 pointCloudShader.setVec4("color", it->second.color);
-                render.renderPointCloud(it->second);
+                Render::renderPointCloud(it->second);
             }
         }
 
 
         //根据场景渲染UI
-
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
         //coolenderUI.renderDemoUI();
-        coolenderUI.render();
+        CoolenderUI::render();
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(Window::glfwWindow);
         glfwPollEvents();
     }
     
     //UI cleanup
-    coolenderUI.destroy();
+    CoolenderUI::destroy();
 
     //glfw cleanup
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(Window::glfwWindow);
     glfwTerminate();
 
     return;
 }
 
 //回调函数声明，更改窗口大小的时候，更改视口大小
-void coolender::framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void coolender::framebufferSizeCallback(GLFWwindow* glfwWindow, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
 // 声明输入函数，判断是否按下键盘
-void coolender::processInput(GLFWwindow *window, Window *coolenderWindow)
+void coolender::processInput(GLFWwindow *glfwWindow)
 {
     //退出
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
-        glfwSetWindowShouldClose(window, true);
+        glfwSetWindowShouldClose(glfwWindow, true);
     }
 
     //按Q切换操作模式
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && !coolenderWindow->changeOperateModeKeyPressed)
+    if (glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_PRESS && !Window::changeOperateModeKeyPressed)
     {
-        coolenderWindow->changeOperateModeKeyPressed = true;
-        changeOperateMode(window, coolenderWindow);
+        Window::changeOperateModeKeyPressed = true;
+        changeOperateMode(Window::glfwWindow);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE)
+    if (glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_RELEASE)
     {
-        coolenderWindow->changeOperateModeKeyPressed = false;
+        Window::changeOperateModeKeyPressed = false;
     }
 
 
     //移动模式下的键盘监听
-    if(coolenderWindow->cursorDisable)
+    if(Window::cursorDisable)
     {
         //相机移动
         //向前
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
         {
             Window::camera.ProcessKeyboard(FORWARD, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向后
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        if (glfwGetKey(glfwWindow, GLFW_KEY_S) == GLFW_PRESS)
         {
             Window::camera.ProcessKeyboard(BACKWARD, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向左
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (glfwGetKey(glfwWindow, GLFW_KEY_A) == GLFW_PRESS)
         {
             Window::camera.ProcessKeyboard(LEFT, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向右
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        if (glfwGetKey(glfwWindow, GLFW_KEY_D) == GLFW_PRESS)
         {
             Window::camera.ProcessKeyboard(RIGHT, Window::deltaTime * Window::cameraSpeedScale);
         }
         //向上
-        if (glfwGetKey(window, GLFW_KEY_SPACE))
+        if (glfwGetKey(glfwWindow, GLFW_KEY_SPACE))
         {
             Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime * Window::cameraSpeedScale);
         } 
@@ -250,34 +245,34 @@ void coolender::processInput(GLFWwindow *window, Window *coolenderWindow)
 }
 
 //修改操作模式
-void coolender::changeOperateMode(GLFWwindow *window, Window *coolenderWindow)
+void coolender::changeOperateMode(GLFWwindow *glfwWindow)
 {
-    coolenderWindow->cursorDisable = !coolenderWindow->cursorDisable;
-    if(coolenderWindow->cursorDisable)
+    Window::cursorDisable = !Window::cursorDisable;
+    if(Window::cursorDisable)
     {       
         //新增监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(window,mouseCallback);
-        glfwSetScrollCallback(window,scrollCallback);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPosCallback(glfwWindow,mouseCallback);
+        glfwSetScrollCallback(glfwWindow,scrollCallback);
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else
     {   
         //取消监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(window,getCursorPos);//获取鼠标位置
-        glfwSetScrollCallback(window,nullptr);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetCursorPosCallback(glfwWindow,getCursorPos);//获取鼠标位置
+        glfwSetScrollCallback(glfwWindow,nullptr);
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void coolender::scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+void coolender::scrollCallback(GLFWwindow *winglfwWindowdow, double xoffset, double yoffset)
 {
     Window::camera.ProcessMouseScroll(yoffset);
 }
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void coolender::mouseCallback(GLFWwindow* window, double xpos, double ypos)
+void coolender::mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
 {
 
     if (Window::firstMouse)
@@ -298,7 +293,7 @@ void coolender::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 }
 
 //获取当前指针的位置
-void coolender::getCursorPos(GLFWwindow* window, double xpos, double ypos)
+void coolender::getCursorPos(GLFWwindow* glfwWindow, double xpos, double ypos)
 {
     Window::cursorPosX = xpos;
     Window::cursorPosY = ypos;

@@ -1,13 +1,9 @@
 #include <cool_coolender.h>
 using namespace coolender;
 using namespace std;
-string Coolender::version = "1.0";
-
-Coolender::Coolender()
-{}
+string Coolender::version = "alpha 1.0";
 
 void Coolender::initAndRun()
 {
-    Window window;
-    window.initAndRun();
+    Window::initAndRun();
 }
