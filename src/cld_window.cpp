@@ -159,6 +159,7 @@ void Window::initAndRun()
             {   
                 pointCloudShader.use();
                 pointCloudShader.setMat4("model", it->second.model);
+                cout << "window:" << it->second.model[3][0] << endl;
                 pointCloudShader.setFloat("pointSize", it->second.pointSize);
                 pointCloudShader.setVec4("color", it->second.color);
                 Render::renderPointCloud(it->second);

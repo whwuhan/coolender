@@ -349,14 +349,14 @@ void CoolenderUI::renderRightSideBar()
                             it->second.color.y = pointColor[1];
                             it->second.color.z = pointColor[2];
                             it->second.color.w = pointColor[3];
-
-                            //缩放
                             
+                            //注意glm是按照列优选的顺序来的
+                            //缩放
                             ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
-                            it->second.model = 
-                            glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale, it->second.scale ,it->second.scale));
-
-                            //平移 注意glm是按照列优选的顺序来的
+                            it->second.model =
+                                glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale));
+                            
+                            //平移 
                             ImGui::SetNextItemWidth(80);
                             ImGui::DragFloat("transX", &it->second.transX, 0.01f);
                             ImGui::SameLine();
@@ -366,24 +366,35 @@ void CoolenderUI::renderRightSideBar()
                             ImGui::SetNextItemWidth(80);
                             ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
                             it->second.model =
-                            glm::translate(glm::mat4(1.0f), glm::vec3(it->second.transX, it->second.transY, it->second.transZ) );
+                                glm::translate(
+                                    it->second.model, 
+                                    glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
                             
                             //旋转
-                            ImGui::SetNextItemWidth(60);
+                            ImGui::SetNextItemWidth(80);
                             ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);
                             ImGui::SameLine();
-                            ImGui::SetNextItemWidth(60);
+                            ImGui::SetNextItemWidth(80);
                             ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);
                             ImGui::SameLine();
-                            ImGui::SetNextItemWidth(60);
+                            ImGui::SetNextItemWidth(80);
                             ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
                             it->second.model =  
-                            glm::rotate(it->second.model, glm::radians(it->second.rotateX), glm::vec3(1.0f, 0.0f, 0.0f));
+                                glm::rotate(
+                                    it->second.model, 
+                                    glm::radians(it->second.rotateX), 
+                                    glm::vec3(1.0f, 0.0f, 0.0f));
                             it->second.model= 
-                            glm::rotate(it->second.model, glm::radians(it->second.rotateY), glm::vec3(0.0f, 1.0f, 0.0f));
+                                glm::rotate(
+                                    it->second.model, 
+                                    glm::radians(it->second.rotateY), 
+                                    glm::vec3(0.0f, 1.0f, 0.0f));
                             it->second.model= 
-                            glm::rotate(it->second.model, glm::radians(it->second.rotateZ), glm::vec3(0.0f, 0.0f, 1.0f));
-
+                                glm::rotate(
+                                    it->second.model, 
+                                    glm::radians(it->second.rotateZ), 
+                                    glm::vec3(0.0f, 0.0f, 1.0f));
+                            cout << "coolenderUI:" << it->second.model[3][0] << endl;
                             //delete button 
                             ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
                             if(ImGui::Button("Delete", buttonSize))
