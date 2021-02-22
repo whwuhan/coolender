@@ -27,9 +27,10 @@
 # *.lib
 
 # Executables
-*.exe
-*.out
-*.app
+# *.exe
+# *.out
+# *.app
 
 #macOS
 */.DS_Store
+.DS_Store
