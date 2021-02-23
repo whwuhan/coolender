@@ -394,7 +394,7 @@ void CoolenderUI::renderRightSideBar()
                                     it->second.model, 
                                     glm::radians(it->second.rotateZ), 
                                     glm::vec3(0.0f, 0.0f, 1.0f));
-                            cout << "coolenderUI:" << it->second.model[3][0] << endl;
+                            
                             //delete button 
                             ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
                             if(ImGui::Button("Delete", buttonSize))
