@@ -312,123 +312,118 @@ void CoolenderUI::renderRightSideBar()
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Scene Setting"))
         {   
-            //背景颜色框
-            {   
-                float clearColor[4] = 
-                {
-                    Scene::clearColor.x,
-                    Scene::clearColor.y,
-                    Scene::clearColor.z,
-                    Scene::clearColor.w
-                };
-                ImGui::ColorEdit3("Background color", clearColor);
-                Scene::clearColor.x = clearColor[0];
-                Scene::clearColor.y = clearColor[1];
-                Scene::clearColor.z = clearColor[2];
-                Scene::clearColor.w = 1.0f;
-            }
+            //背景颜色调整框
+            float clearColor[4] = 
+            {
+                Scene::clearColor.x,
+                Scene::clearColor.y,
+                Scene::clearColor.z,
+                Scene::clearColor.w
+            };
+            ImGui::ColorEdit3("Background color", clearColor);
+            Scene::clearColor.x = clearColor[0];
+            Scene::clearColor.y = clearColor[1];
+            Scene::clearColor.z = clearColor[2];
+            Scene::clearColor.w = 1.0f;
+            
 
             //地板设置
-            {   
-                ImGui::TableNextColumn();
-                ImGui::Checkbox("Show floor", &Scene::showFloor);
-                ImGui::Separator();
-            }
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("Show floor", &Scene::showFloor);
+            ImGui::Separator();
 
-            //根据场景中的点云开始设置
-            {   
-                ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-                if (ImGui::TreeNode("Point cloud:"))
-                {
-                    //每一个点云
-                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                    {   
-                        ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-                        if (ImGui::TreeNode(it->first.c_str()))
+            //根据场景中数据渲染UI
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("Point Cloud:"))
+            {
+                //每一个点云
+                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                {   
+                    ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+                    if (ImGui::TreeNode(it->first.c_str()))
+                    {
+                        //checkbox
+                        ImGui::Checkbox("Show point cloud", &it->second.show);
+                        
+                        //pointSize
+                        ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 50.f, "Point size = %.3f");
+                        
+                        //color
+                        float pointColor[4] = 
                         {
-                            //checkbox
-                            ImGui::Checkbox("Show point cloud", &it->second.show);
-                            
-                            //pointSize
-                            ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 50.f, "Point size = %.3f");
-                            
-                            //color
-                            float pointColor[4] = 
-                            {
-                                it->second.color.x,
-                                it->second.color.y,
-                                it->second.color.z,
-                                it->second.color.w,
-                            };
-                            ImGui::ColorEdit4("Point color", pointColor);
-                            it->second.color.x = pointColor[0];
-                            it->second.color.y = pointColor[1];
-                            it->second.color.z = pointColor[2];
-                            it->second.color.w = pointColor[3];
-                            
-                            //注意glm是按照列优选的顺序来的
-                            //缩放
-                            ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
-                            it->second.model =
-                                glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale));
-                            
-                            //平移 
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("transX", &it->second.transX, 0.01f);
-                            ImGui::SameLine();
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("transY", &it->second.transY, 0.01f);
-                            ImGui::SameLine();
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
-                            it->second.model =
-                                glm::translate(
-                                    it->second.model, 
-                                    glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
-                            
-                            //旋转
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);
-                            ImGui::SameLine();
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);
-                            ImGui::SameLine();
-                            ImGui::SetNextItemWidth(80);
-                            ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
-                            it->second.model =  
-                                glm::rotate(
-                                    it->second.model, 
-                                    glm::radians(it->second.rotateX), 
-                                    glm::vec3(1.0f, 0.0f, 0.0f));
-                            it->second.model= 
-                                glm::rotate(
-                                    it->second.model, 
-                                    glm::radians(it->second.rotateY), 
-                                    glm::vec3(0.0f, 1.0f, 0.0f));
-                            it->second.model= 
-                                glm::rotate(
-                                    it->second.model, 
-                                    glm::radians(it->second.rotateZ), 
-                                    glm::vec3(0.0f, 0.0f, 1.0f));
-                            
-                            //delete button 
-                            ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
-                            if(ImGui::Button("Delete", buttonSize))
-                            {
-                                Scene::deletePointCloud(it->first);
-                                //注意这里删除后要break否则会出现内存错误
-                                //猜测是因为map删除元素后，迭代器失效！！！！
-                                ImGui::TreePop();
-                                ImGui::Separator();
-                                break;
-                            }
+                            it->second.color.x,
+                            it->second.color.y,
+                            it->second.color.z,
+                            it->second.color.w,
+                        };
+                        ImGui::ColorEdit4("Point color", pointColor);
+                        it->second.color.x = pointColor[0];
+                        it->second.color.y = pointColor[1];
+                        it->second.color.z = pointColor[2];
+                        it->second.color.w = pointColor[3];
+                        
+                        //注意glm是按照列优选的顺序来的
+                        //缩放
+                        ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
+                        it->second.model =
+                            glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale));
+                        
+                        //平移 
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("transX", &it->second.transX, 0.01f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("transY", &it->second.transY, 0.01f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
+                        it->second.model =
+                            glm::translate(
+                                it->second.model, 
+                                glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
+                        
+                        //旋转
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);
+                        ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
+                        it->second.model =  
+                            glm::rotate(
+                                it->second.model, 
+                                glm::radians(it->second.rotateX), 
+                                glm::vec3(1.0f, 0.0f, 0.0f));
+                        it->second.model= 
+                            glm::rotate(
+                                it->second.model, 
+                                glm::radians(it->second.rotateY), 
+                                glm::vec3(0.0f, 1.0f, 0.0f));
+                        it->second.model= 
+                            glm::rotate(
+                                it->second.model, 
+                                glm::radians(it->second.rotateZ), 
+                                glm::vec3(0.0f, 0.0f, 1.0f));
+                        
+                        //delete button 
+                        ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
+                        if(ImGui::Button("Delete", buttonSize))
+                        {
+                            Scene::deletePointCloud(it->first);
+                            //注意这里删除后要break否则会出现内存错误
+                            //猜测是因为map删除元素后，迭代器失效！！！！
                             ImGui::TreePop();
+                            ImGui::Separator();
+                            break;
                         }
+                        ImGui::TreePop();
                     }
-                    ImGui::TreePop();
                 }
-                ImGui::Separator();
+                ImGui::TreePop();
             }
+            ImGui::Separator();
         }
     }
     ImGui::End();
