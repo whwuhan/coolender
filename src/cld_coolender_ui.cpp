@@ -15,6 +15,7 @@ bool CoolenderUI::showRightSideBar = true;
 bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showMessageBox = true;
 bool CoolenderUI::showFileChooseDialog = false;
+int CoolenderUI::style = 0;
 
 float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
@@ -275,7 +276,22 @@ void CoolenderUI::renderRightSideBar()
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Global Setting"))
         {   
-            
+            //UI风格设置
+            if (ImGui::Combo("Theme", &CoolenderUI::style, "Dark\0Light\0Classic"))
+            {
+                switch (CoolenderUI::style)
+                {
+                    case 0: 
+                        ImGui::StyleColorsDark(); 
+                        break;
+                    case 1: 
+                        ImGui::StyleColorsLight(); 
+                        break;
+                    case 2: 
+                        ImGui::StyleColorsClassic(); 
+                        break;
+                }
+            }
             //相机速度
             ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
             ImGui::Separator();

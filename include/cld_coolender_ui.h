@@ -21,10 +21,7 @@ namespace coolender
     public:
        
         static  GLFWwindow* glfwWindow;//glfw window
-        static bool showFileChooseDialog;//文件选择对话框
-        static bool showUsage;//显示操作手册
-        static bool showRightSideBar;//显示右边Sidebar
-        static bool showMessageBox;
+
         
         static void init(GLFWwindow* glfwWindow);//初始化，在渲染循环外
         static void renderDemoUI();//渲染imgui demo
@@ -37,6 +34,12 @@ namespace coolender
         static float globalScale;//整体的字体缩放
         static float windowRounding;//窗口的圆角
         static float frameRounding;//内部图标的圆角
+
+        static bool showFileChooseDialog;//文件选择对话框
+        static bool showUsage;//显示操作手册
+        static bool showRightSideBar;//显示右边Sidebar
+        static bool showMessageBox;//信息窗口
+        static int style;//UI风格
         
         static float usagePosX;//usage位置的X坐标
         static float usagePosY;//usage位置的Y坐标
@@ -44,8 +47,8 @@ namespace coolender
         static float rightSidebarPosY;//右侧边栏位置的Y坐标
         static float rightSidebarWidth;//右侧边栏位置的X坐标
         static float rightSidebarHeight;//右侧边栏位置的Y坐标
-        static float messageBoxPosX;
-        static float messageBoxPosY;
+        static float messageBoxPosX;//message box位置X坐标
+        static float messageBoxPosY;//message box位置Y坐标
         // static float messageBoxWidth;
         // static float messageBoxHeight;
 
@@ -59,6 +62,5 @@ namespace coolender
 
         //隐藏UI
         static void renderFileChooseDialog();//渲染文件选择对话框
-        
     };
 }
