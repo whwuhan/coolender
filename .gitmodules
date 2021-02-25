@@ -16,3 +16,6 @@
 [submodule "3rdsrc/ImGuiFileDialog"]
 	path = 3rdsrc/ImGuiFileDialog
 	url = https://github.com/aiekick/ImGuiFileDialog.git
+[submodule "3rdsrc/glfw"]
+	path = 3rdsrc/glfw
+	url = https://github.com/glfw/glfw.git
