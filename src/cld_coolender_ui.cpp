@@ -65,8 +65,8 @@ void CoolenderUI::init(GLFWwindow* glfwWindow)
 
     // Setup Dear ImGui style
     ImGuiStyle& style = ImGui::GetStyle();
-    style.FrameRounding = frameRounding;
-    style.WindowRounding = windowRounding;
+    style.FrameRounding = frameRounding; //设置frame的圆角
+    style.WindowRounding = windowRounding;//设置window的圆角
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
     //ImGui::StyleColorsLight();
