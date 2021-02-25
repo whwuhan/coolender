@@ -16,3 +16,6 @@
 [submodule "3rdsrc/whlib"]
 	path = 3rdsrc/whlib
 	url = https://github.com/whwuhan/whlib.git
+[submodule "3rdsrc/stb"]
+	path = 3rdsrc/stb
+	url = https://github.com/nothings/stb.git
