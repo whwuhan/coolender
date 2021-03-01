@@ -4,8 +4,8 @@ using namespace wh::basic;
 using namespace std;
 Render::Render()
 {}
-//准备渲染点云
-void Render::renderPointCloudInit(PointCloud &pointCloud)
+//准备渲染点状点云
+void Render::renderPointCloudPointInit(PointCloud &pointCloud)
 {
     //获取C++原生数据
     float pointCloudData[pointCloud.size * POINT3D_SIZE];
@@ -26,8 +26,22 @@ void Render::renderPointCloudInit(PointCloud &pointCloud)
     glBindVertexArray(0);
 }
 
-//渲染点云
-void Render::renderPointCloud(PointCloud &pointCloud)
+//渲染点状点云
+void Render::renderPointCloudPoint(PointCloud &pointCloud)
+{   
+    glBindVertexArray(pointCloud.VAO);
+    glDrawArrays(GL_POINTS, 0, pointCloud.size);
+    glBindVertexArray(0);
+}
+
+//准备渲染球状点云
+void Render::renderPointCloudSphereInit(PointCloud &pointCloud)
+{
+
+}
+
+//渲染球状点云
+void Render::renderPointCloudSphere(PointCloud &pointCloud)
 {   
     glBindVertexArray(pointCloud.VAO);
     glDrawArrays(GL_POINTS, 0, pointCloud.size);

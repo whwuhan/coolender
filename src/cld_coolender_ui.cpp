@@ -296,6 +296,13 @@ void CoolenderUI::renderRightSideBar()
             ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
             ImGui::Separator();
 
+            //点云绘制类型
+            int pointType = Scene::pointType;//enum强制转换为int
+            ImGui::Text("Point cloud point type:");
+            ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
+            ImGui::RadioButton("Sphere", &pointType, 1);
+            Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
+            ImGui::Separator();
             //MSAA
             // ImGui::Checkbox("MSAA", &Window::useMSAA);
             // if(Window::useMSAA)
@@ -499,8 +506,20 @@ void CoolenderUI::renderFileChooseDialog()
             loadPointCloudObj(filePathName, &pointCloud);
             //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
-            //并做渲染初始化
-            Render::renderPointCloudInit(Scene::pointCloudCollection[filePathName]);
+            switch(Scene::pointType)
+            {
+                case POINT:
+                    //并做渲染初始化
+                    Render::renderPointCloudPointInit(Scene::pointCloudCollection[filePathName]);
+                    break;
+                case SPHERE:
+                    Render::renderPointCloudSphereInit(Scene::pointCloudCollection[filePathName]);
+                    break;
+                default:
+                    cerr << "Render Point Cloud Type Wrong!" << endl;
+                    exit(0);
+            }
+            
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showFileChooseDialog = false;

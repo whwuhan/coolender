@@ -17,7 +17,9 @@ namespace coolender
         Render();
 
         //渲染点云
-        static void renderPointCloudInit(wh::basic::PointCloud &pointCloud);//准备渲染点云
-        static void renderPointCloud(wh::basic::PointCloud &pointCloud);//渲染点云
+        static void renderPointCloudPointInit(wh::basic::PointCloud &pointCloud);//准备渲染点状点云
+        static void renderPointCloudPoint(wh::basic::PointCloud &pointCloud);//渲染点状点云
+        static void renderPointCloudSphereInit(wh::basic::PointCloud &pointCloud);//准备渲染球状点云
+        static void renderPointCloudSphere(wh::basic::PointCloud &pointCloud);//渲染球状点云
     };
 }

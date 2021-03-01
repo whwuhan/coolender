@@ -6,6 +6,8 @@
 #include <glad/glad.h>
 namespace coolender
 {
+    enum POINT_TYPE{POINT, SPHERE};//点的绘制类型
+    enum LIGHT_MODEL{PHONG, BLINN_PHONG, PBR};//场景使用的光照模型
     class Scene
     {
     public:
@@ -15,6 +17,9 @@ namespace coolender
         static glm::vec4 clearColor;//背景颜色
         static bool showFloor;//显示地板
         static bool phongLightingModel;//Phong光照模型
+        static POINT_TYPE pointType;//点云点的绘制类型
+        static LIGHT_MODEL lightModel;//光照模型
+
 
 
 
