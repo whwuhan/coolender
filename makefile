@@ -12,6 +12,7 @@ objs/cld_plane.o \
 objs/cld_render.o \
 objs/cld_scene.o \
 objs/cld_shader.o \
+objs/cld_sphere.o \
 objs/cld_texture_loader.o \
 objs/cld_window.o \
 objs/stb_image.o 
@@ -61,6 +62,9 @@ objs/cld_scene.o : include/cld_scene.h src/cld_scene.cpp
 
 objs/cld_shader.o : include/cld_shader.h src/cld_shader.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_shader.cpp -o $@
+
+objs/cld_sphere.o : include/cld_sphere.h src/cld_sphere.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_sphere.cpp -o $@
 
 objs/cld_texture_loader.o : include/cld_texture_loader.h src/cld_texture_loader.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_texture_loader.cpp -o $@
