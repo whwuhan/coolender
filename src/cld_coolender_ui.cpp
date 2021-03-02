@@ -506,19 +506,22 @@ void CoolenderUI::renderFileChooseDialog()
             loadPointCloudObj(filePathName, &pointCloud);
             //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
-            switch(Scene::pointType)
-            {
-                case POINT:
-                    //并做渲染初始化
-                    Render::renderPointCloudPointInit(Scene::pointCloudCollection[filePathName]);
-                    break;
-                case SPHERE:
-                    Render::renderPointCloudSphereInit(Scene::pointCloudCollection[filePathName]);
-                    break;
-                default:
-                    cerr << "Render Point Cloud Type Wrong!" << endl;
-                    exit(0);
-            }
+            //传输数据给GPU
+            Render::renderPointCloudPointInit(Scene::pointCloudCollection[filePathName]);
+            Render::renderPointCloudSphereInit(Scene::pointCloudCollection[filePathName]);
+            // switch(Scene::pointType)
+            // {
+            //     case POINT:
+            //         //并做渲染初始化
+            //         Render::renderPointCloudPointInit(Scene::pointCloudCollection[filePathName]);
+            //         break;
+            //     case SPHERE:
+            //         Render::renderPointCloudSphereInit(Scene::pointCloudCollection[filePathName]);
+            //         break;
+            //     default:
+            //         cerr << "Render Point Cloud Type Wrong!" << endl;
+            //         exit(0);
+            // }
             
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();

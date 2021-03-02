@@ -5,7 +5,8 @@ layout(location = 2) in vec3 aNormal;//法线
 
 
 // declare an interface block; see 'Advanced GLSL' for what these are.
-out VsOut{
+out VsOut
+{
     vec3 FragPos;
     vec2 TexCoords;
     vec3 Normal;
@@ -15,7 +16,8 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-void main(){
+void main()
+{
     vsOut.FragPos = aPos;
     vsOut.Normal = aNormal;
     vsOut.TexCoords = aTexCoords;

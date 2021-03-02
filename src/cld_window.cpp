@@ -97,7 +97,7 @@ void Window::initAndRun()
     //点状点云shader
     Shader pointCloudPointShader("shader/point_cloud_point.vs.glsl", "shader/point_cloud_point.fs.glsl");
     //球状点云shader blinn-phong光照模型
-    Shader pointCloudSphereBlinnPhong("shader/point_cloud_sphere.vs.glsl", "shader/blinn_phong.fs.glsl");
+    // Shader pointCloudSphereBlinnPhong("shader/point_cloud_sphere.vs.glsl", "shader/blinn_phong.fs.glsl");
 
     bool blinn = true;
 
@@ -169,21 +169,21 @@ void Window::initAndRun()
                 }
                 break;
             //将点绘制成球
-            case SPHERE:
-                pointCloudSphereBlinnPhong.use();
-                pointCloudSphereBlinnPhong.setMat4("view", view);
-                pointCloudSphereBlinnPhong.setMat4("projection", projection);
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                {
-                    if(it->second.show)
-                    {   
-                        pointCloudSphereBlinnPhong.setMat4("model", it->second.model);
-                        //pointCloudPointShader.setFloat("pointSize", it->second.pointSize);
-                        pointCloudSphereBlinnPhong.setVec4("pointCloudColor", it->second.color);
-                        Render::renderPointCloudSphere(it->second);
-                    }
-                }
-                break;
+            // case SPHERE:
+            //     pointCloudSphereBlinnPhong.use();
+            //     pointCloudSphereBlinnPhong.setMat4("view", view);
+            //     pointCloudSphereBlinnPhong.setMat4("projection", projection);
+            //     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+            //     {
+            //         if(it->second.show)
+            //         {   
+            //             pointCloudSphereBlinnPhong.setMat4("model", it->second.model);
+            //             //pointCloudPointShader.setFloat("pointSize", it->second.pointSize);
+            //             pointCloudSphereBlinnPhong.setVec4("pointCloudColor", it->second.color);
+            //             Render::renderPointCloudSphere(it->second);
+            //         }
+            //     }
+            //     break;
             //绘制成错误类型
             default:
                 cerr << "Render Point Cloud Type Wrong!" << endl;
