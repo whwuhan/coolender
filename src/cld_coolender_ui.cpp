@@ -507,8 +507,8 @@ void CoolenderUI::renderFileChooseDialog()
             //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
             //传输数据给GPU
-            Render::renderPointCloudPointInit(Scene::pointCloudCollection[filePathName]);
-            Render::renderPointCloudSphereInit(Scene::pointCloudCollection[filePathName]);
+            Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[filePathName]);
+            Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName]);
             // switch(Scene::pointType)
             // {
             //     case POINT:

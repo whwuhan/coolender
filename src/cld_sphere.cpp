@@ -71,7 +71,7 @@ unsigned int Sphere::createSphere()
 
         // 将点的坐标 法线 uv坐标放到一起（放入data内）
         std::vector<float> data;
-        for (unsigned int i = 0; i < positions.size(); ++i)
+        for (unsigned int i = 0; i < positions.size(); i++)
         {
             data.push_back(positions[i].x);
             data.push_back(positions[i].y);
@@ -95,6 +95,7 @@ unsigned int Sphere::createSphere()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
         float stride = (3 + 2 + 3) * sizeof(float); // 第一个3 position.xyz 第二个2 uv.xy 第三个3 normal.xyz
+        glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void *)0);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void *)(3 * sizeof(float)));

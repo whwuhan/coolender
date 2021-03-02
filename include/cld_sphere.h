@@ -19,6 +19,5 @@ namespace coolender
         static unsigned int xSegments;//x轴上的分割数量
         static unsigned int ySegments;//y轴上的分割数量
         static unsigned int createSphere();//产生球的mesh,返回VAO
-    
     };
 }

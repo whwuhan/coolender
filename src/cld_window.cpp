@@ -11,8 +11,8 @@ Camera Window::camera;//相机
 float Window::cameraSpeedScale = 1.0f;//相机移速比例
 bool Window::useMSAA = true;
 int Window::MSAALevel = 8;
-unsigned int Window::width = 1280;
-unsigned int Window::height = 720;
+unsigned int Window::width = 1600;
+unsigned int Window::height = 900;
 //timing
 float Window::deltaTime = 0.0f;
 float Window::lastFrame = 0.0f;
@@ -95,7 +95,9 @@ void Window::initAndRun()
     glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
     //点状点云shader
-    Shader pointCloudPointShader("shader/point_cloud_point.vs.glsl", "shader/point_cloud_point.fs.glsl");
+    Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
+    //绘制球状点云
+    Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");
     //球状点云shader blinn-phong光照模型
     // Shader pointCloudSphereBlinnPhong("shader/point_cloud_sphere.vs.glsl", "shader/blinn_phong.fs.glsl");
 
@@ -154,37 +156,39 @@ void Window::initAndRun()
         {
             //绘制成点
             case POINT:
-                pointCloudPointShader.use();
-                pointCloudPointShader.setMat4("view", view);
-                pointCloudPointShader.setMat4("projection", projection);
+                pointCloudTypePointShader.use();
+                pointCloudTypePointShader.setMat4("view", view);
+                pointCloudTypePointShader.setMat4("projection", projection);
                 for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                 {
                     if(it->second.show)
                     {   
-                        pointCloudPointShader.setMat4("model", it->second.model);
-                        pointCloudPointShader.setFloat("pointSize", it->second.pointSize);
-                        pointCloudPointShader.setVec4("pointCloudColor", it->second.color);
-                        Render::renderPointCloudPoint(it->second);
+                        pointCloudTypePointShader.setMat4("model", it->second.model);
+                        pointCloudTypePointShader.setFloat("pointSize", it->second.pointSize);
+                        pointCloudTypePointShader.setVec4("pointCloudColor", it->second.color);
+                        Render::renderPointCloudTypePoint(it->second);
                     }
                 }
                 break;
             //将点绘制成球
-            // case SPHERE:
-            //     pointCloudSphereBlinnPhong.use();
-            //     pointCloudSphereBlinnPhong.setMat4("view", view);
-            //     pointCloudSphereBlinnPhong.setMat4("projection", projection);
-            //     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-            //     {
-            //         if(it->second.show)
-            //         {   
-            //             pointCloudSphereBlinnPhong.setMat4("model", it->second.model);
-            //             //pointCloudPointShader.setFloat("pointSize", it->second.pointSize);
-            //             pointCloudSphereBlinnPhong.setVec4("pointCloudColor", it->second.color);
-            //             Render::renderPointCloudSphere(it->second);
-            //         }
-            //     }
-            //     break;
-            //绘制成错误类型
+            case SPHERE:
+                pointCloudTypeShpereShader.use();
+                pointCloudTypeShpereShader.setMat4("view", view);
+                pointCloudTypeShpereShader.setMat4("projection", projection);
+                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                {
+                    if(it->second.show)
+                    {   
+                        // pointCloudTypeShpereShader.setMat4("model", it->second.model);
+                        pointCloudTypePointShader.setMat4("model", it->second.model);
+                        pointCloudTypeShpereShader.setFloat("pointSize", it->second.pointSize);
+                        pointCloudTypeShpereShader.setVec4("pointCloudColor", it->second.color);
+                        
+                        Render::renderPointCloudTypeSphere(it->second);
+                    }
+                }
+                break;
+            // 绘制成错误类型
             default:
                 cerr << "Render Point Cloud Type Wrong!" << endl;
                 exit(0);
