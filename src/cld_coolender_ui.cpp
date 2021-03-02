@@ -353,7 +353,8 @@ void CoolenderUI::renderRightSideBar()
                         ImGui::Checkbox("Show point cloud", &it->second.show);
                         
                         //pointSize
-                        ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 50.f, "Point size = %.3f");
+                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: s%.3f");
+                        //ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 10.f, "Point size = %.3f");
                         
                         //color
                         float pointColor[4] = 

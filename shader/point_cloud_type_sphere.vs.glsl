@@ -13,7 +13,8 @@ out VsOut
     vec3 Normal;
 } vsOut;
 
-uniform mat4 model;//不要model了因为现在是使用instanceMatrix
+uniform mat4 pointModel;//点的model矩阵
+uniform mat4 model;//点云的model矩阵
 uniform mat4 view;
 uniform mat4 projection;
 
@@ -26,5 +27,5 @@ void main()
     vsOut.Normal = aNormal;
     vsOut.TexCoords = aTexCoords;
     // gl_Position = projection * view * ainstanceMatrix * vec4(aPos, 1.0f); 
-    gl_Position = projection * view * model * vec4(aPos, 1.0f); 
+    gl_Position = projection * view * pointModel * vec4(aPos, 1.0f); 
 }

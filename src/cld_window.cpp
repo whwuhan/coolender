@@ -1,6 +1,7 @@
 #include <cld_window.h>
 using namespace std;
 using namespace coolender;
+using namespace glm;
 //static变量初始化
 GLFWwindow* Window::glfwWindow = nullptr;//glfw window
 bool Window::cursorDisable = false;//是否进入光标不可显示模式
@@ -179,7 +180,9 @@ void Window::initAndRun()
                 {
                     if(it->second.show)
                     {   
-                        // pointCloudTypeShpereShader.setMat4("model", it->second.model);
+                        mat4 pointModel(1.0f);
+                        pointModel = scale(pointModel, vec3(it->second.pointSize));
+                        pointCloudTypeShpereShader.setMat4("pointModel", pointModel);
                         pointCloudTypePointShader.setMat4("model", it->second.model);
                         pointCloudTypeShpereShader.setFloat("pointSize", it->second.pointSize);
                         pointCloudTypeShpereShader.setVec4("pointCloudColor", it->second.color);

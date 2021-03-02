@@ -38,8 +38,8 @@ void Render::renderPointCloudTypePoint(PointCloud &pointCloud)
 //准备渲染球状点云
 void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud)
 {
-    Sphere::createSphere();//画一个球
-
+    Sphere::createSphere();//生成一个球模型
+    
 
     // unsigned int pointAmount = pointCloud.size;//点云点的数量
     // mat4 modelMatrices[pointAmount];//每个球状点云的model矩阵
