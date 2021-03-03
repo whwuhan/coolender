@@ -90,7 +90,5 @@ void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
     glBindVertexArray(sphere.VAO);
     //注意绘制类型是GL_TRIANGLE_STRIP 不是GL_TRIANGLES
     glDrawElementsInstanced(GL_TRIANGLE_STRIP, sphere.indexCount, GL_UNSIGNED_INT, 0, pointCloud.size);
-    // glBindVertexArray(Sphere::VAO);
-    // glDrawElements(GL_TRIANGLE_STRIP, Sphere::indexCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
