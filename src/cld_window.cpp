@@ -180,11 +180,8 @@ void Window::initAndRun()
                 {
                     if(it->second.show)
                     {   
-                        mat4 pointModel(1.0f);
-                        pointModel = scale(pointModel, vec3(it->second.pointSize));
-                        pointCloudTypeShpereShader.setMat4("pointModel", pointModel);
-                        pointCloudTypePointShader.setMat4("model", it->second.model);
-                        pointCloudTypeShpereShader.setFloat("pointSize", it->second.pointSize);
+                        // pointCloudTypePointShader.setMat4("model", it->second.model);
+                        // pointCloudTypeShpereShader.setFloat("pointSize", it->second.pointSize);
                         pointCloudTypeShpereShader.setVec4("pointCloudColor", it->second.color);
                         
                         Render::renderPointCloudTypeSphere(it->second);

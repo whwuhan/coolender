@@ -15,9 +15,10 @@ namespace coolender
         static unsigned int VAO;
         static unsigned int VBO;
         static unsigned int EBO;//Element Buffer Object
+        static double radius;//半径
         static unsigned int indexCount;//坐标的数量
-        static unsigned int xSegments;//x轴上的分割数量
-        static unsigned int ySegments;//y轴上的分割数量
+        static unsigned int X_SEGMENTS;//x轴上的分割数量
+        static unsigned int Y_SEGMENTS;//y轴上的分割数量
         static unsigned int createSphere();//产生球的mesh,返回VAO
     };
 }
