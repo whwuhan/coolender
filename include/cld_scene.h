@@ -13,16 +13,13 @@ namespace coolender
     {
     public:
         Scene();
-
+        static Light  parallelLight;//场景平行光
         //场景的属性
         static glm::vec4 clearColor;//背景颜色
         static bool showFloor;//显示地板
         static bool phongLightingModel;//Phong光照模型
         static POINT_TYPE pointType;//点云点的绘制类型
         static LIGHT_MODEL lightModel;//光照模型
-
-
-
 
         // void init();
         //场景中的物体

@@ -77,6 +77,7 @@ void Window::initAndRun()
     glEnable(GL_DEPTH_TEST); //开启深度测试
     glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
     glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_CULL_FACE);//开启面剔除
     //glPointSize(25);
     //======================glfw glad opengl 初始化结束======================
 
@@ -87,13 +88,11 @@ void Window::initAndRun()
 
 
     //shader
-    Shader test("shader/test.vs.glsl", "shader/test.fs.glsl");
+    Shader floorShader("shader/floor.vs.glsl", "shader/floor_blinn_phong.fs.glsl");
     Plane floor;
     floor.init();
-    test.use();
-    test.setInt("floorTexture", 0);
-    // lighting info
-    glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+    floorShader.use();
+    floorShader.setInt("floorTexture", 0);
 
     //点状点云shader
     Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
@@ -102,7 +101,6 @@ void Window::initAndRun()
     //球状点云shader blinn-phong光照模型
     // Shader pointCloudSphereBlinnPhong("shader/point_cloud_sphere.vs.glsl", "shader/blinn_phong.fs.glsl");
 
-    bool blinn = true;
 
     //渲染循环
     // Main loop
@@ -136,13 +134,15 @@ void Window::initAndRun()
         //渲染地板
         if(Scene::showFloor)
         {
-            test.use();
-            test.setMat4("projection", projection);
-            test.setMat4("view", view);
+            floorShader.use();
+            floorShader.setMat4("projection", projection);
+            floorShader.setMat4("view", view);
             // set light uniforms
-            test.setVec3("viewPos", camera.Position);
-            test.setVec3("lightPos", lightPos);
-            test.setInt("blinn", blinn);
+            floorShader.setVec3("viewPos", camera.Position);
+            floorShader.setVec3("lightPos", Scene::parallelLight.pos);
+            floorShader.setFloat("intensity", Scene::parallelLight.intensity);//光照强度
+            floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
+
             // floor
             glBindVertexArray(floor.VAO);
             glActiveTexture(GL_TEXTURE0);

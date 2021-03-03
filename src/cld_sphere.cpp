@@ -138,4 +138,7 @@ void Sphere::setRadiusAndSegmentsByPointSize(float pointSize)
     cout << "xSegments : " << xSegments << endl;
     cout << "ySegments : " << ySegments << endl;
     createSphere();
+    // cout << "VBO : " << VBO << endl;
+    // cout << "EBO : " << EBO << endl;
+    // cout << "VAO : " << VAO << endl;
 }

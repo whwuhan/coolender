@@ -36,7 +36,6 @@ void Plane::init()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
-    TextureLoader texLoader;
-    texture = texLoader.loadTexture2D(texturePath.c_str());
+    texture = TextureLoader::loadTexture2D(texturePath.c_str());
     return ;
 }

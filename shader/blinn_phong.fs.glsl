@@ -5,7 +5,8 @@ Blinn-phong光照模型
 out vec4 FragColor;
 
 // 注意这里要重新声明一次VS_OUT
-in VsOut{
+in VsOut
+{
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;

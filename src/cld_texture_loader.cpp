@@ -2,9 +2,6 @@
 using namespace std;
 using namespace coolender;
 
-TextureLoader::TextureLoader()
-{}
-
 // utility function for loading a 2D texture from file
 // ---------------------------------------------------
 unsigned int TextureLoader::loadTexture2D(char const *path)
@@ -40,6 +37,5 @@ unsigned int TextureLoader::loadTexture2D(char const *path)
         cout << "Texture failed to load at path: " << path << endl;
         stbi_image_free(data);
     }
-
     return textureID;
 }

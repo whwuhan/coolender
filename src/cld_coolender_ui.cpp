@@ -513,14 +513,16 @@ void CoolenderUI::renderFileChooseDialog()
             //读取点云数据
             PointCloud pointCloud;
             loadPointCloudObj(filePathName, &pointCloud);
+
             //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
+
             //传输数据给GPU
             Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[filePathName]);//点状点云
             //球状点云准备
             Sphere sphere;
             sphere.createSphere(); 
-            Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName], sphere);//初始化球状点云，并返回对应的球面
+            Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName], sphere);//初始化球状点云
             Scene::addSphere(filePathName, sphere);//将对应的球体添加到场景中
             
             // switch(Scene::pointType)

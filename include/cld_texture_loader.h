@@ -7,7 +7,6 @@ namespace coolender
     class TextureLoader
     {
     public:
-        TextureLoader();
-        unsigned int loadTexture2D(char const *path);
+        static unsigned int loadTexture2D(char const *path);
     };
 }
