@@ -36,10 +36,8 @@ void Render::renderPointCloudTypePoint(PointCloud &pointCloud)
 }
 
 //准备渲染球状点云
-Sphere Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud)
+void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sphere)
 {
-    Sphere sphere;
-    sphere.createSphere();//生成一个球模型 注意里面绑定了一个VBO
     glBindVertexArray(sphere.VAO);
     unsigned int pointAmount = pointCloud.size;//点云点的数量
     mat4 pointModelMatrices[pointAmount];//每个球状点云的model矩阵
@@ -84,7 +82,6 @@ Sphere Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud)
     glVertexAttribDivisor(6, 1);
 
     glBindVertexArray(0);
-    return sphere;
 }
 
 //渲染球状点云

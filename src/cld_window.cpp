@@ -182,12 +182,12 @@ void Window::initAndRun()
                     {   
                         pointCloudTypePointShader.setMat4("model", it->second.model);
                         //判断是否改变了球状点云的半径
-                        if(Scene::changeRadius[it->first])
+                        if(it->second.changePointSize)
                         {
                             Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
+                            Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]);//重新初始化
                         }
                         pointCloudTypeShpereShader.setVec4("pointCloudColor", it->second.color);
-                        
                         Render::renderPointCloudTypeSphere(it->second,Scene::sphereCollection[it->first]);
                     }
                 }

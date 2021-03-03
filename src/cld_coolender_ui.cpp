@@ -356,13 +356,13 @@ void CoolenderUI::renderRightSideBar()
                         
                         //pointSize
                         float pointSize = it->second.pointSize;//用于判断是否改变了point size
-                        Scene::changeRadius[it->first] = 0;
+                        it->second.changePointSize = false;
                         ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
                         //ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 10.f, "Point size = %.3f");
                         //判断是否改变了球面的半径
-                        if(it->second.pointSize - pointSize > 0.001)
+                        if(abs(it->second.pointSize - pointSize) > 0.001)
                         {
-                            Scene::changeRadius[it->first] = 1;
+                            it->second.changePointSize = true;
                         }
                         //color
                         float pointColor[4] = 
@@ -516,9 +516,12 @@ void CoolenderUI::renderFileChooseDialog()
             //将点云添加到场景中
             Scene::addPointCloud(filePathName, pointCloud);
             //传输数据给GPU
-            Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[filePathName]);
-            Sphere sphere = Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName]);//初始化球状点云，并返回对应的球面
-            Scene::addSphere(filePathName, sphere);
+            Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[filePathName]);//点状点云
+            //球状点云准备
+            Sphere sphere;
+            sphere.createSphere(); 
+            Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName], sphere);//初始化球状点云，并返回对应的球面
+            Scene::addSphere(filePathName, sphere);//将对应的球体添加到场景中
             
             // switch(Scene::pointType)
             // {
