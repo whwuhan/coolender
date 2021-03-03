@@ -30,18 +30,22 @@ namespace coolender
         static std::map<std::string, wh::basic::PointCloud> pointCloudCollection;//点云
         static std::map<std::string, wh::basic::PolygonMesh> polygonMeshCollection;//Mesh网格
         static std::map<std::string, coolender::Sphere> sphereCollection;//球状点云对应的球
+        static std::map<std::string, int> changeRadius;//是否改变了球状点云的半径
 
         //给场景中添加物体
         static void addLight(std::string lightName, coolender::Light &light);
         static void addPointCloud(std::string pointCloudName, wh::basic::PointCloud &pointCloud);
         static void addPolygonMesh(std::string polygonMeshName, wh::basic::PolygonMesh &polygonMesh);
         static void addSphere(std::string sphereName, coolender::Sphere& sphere);
+        static void addChangeRadius(std::string sphereName, int);
+
 
         //删除场景中的物体
         static void deleteLight(std::string lightName);
         static void deletePointCloud(std::string pointCloudName);
         static void deletePolygonMesh(std::string polygonMeshName);
         static void deleteSphere(std::string sphereName);
+        static void deleteChangeRadius(std::string sphereName);
 
         //渲染场景
         static void renderScene();

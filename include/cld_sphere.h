@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 #include <vector>
+#include <iostream>
 namespace coolender
 {
     class Sphere
@@ -22,8 +23,6 @@ namespace coolender
 
         Sphere();
         void createSphere();//生成一个球
-        void setRadiusBySize(float size);//根据size设置球的半径（同时会更新分割数量）
-        void destroy();//删除VAO VBO EBO
-        
+        void setRadiusAndSegmentsByPointSize(float pointSize);//根据point size设置球的半径和分割数量
     };
 }

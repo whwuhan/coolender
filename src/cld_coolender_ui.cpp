@@ -348,14 +348,22 @@ void CoolenderUI::renderRightSideBar()
                 {   
                     ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
                     if (ImGui::TreeNode(it->first.c_str()))
-                    {
+                    {   
+                        
+                        
                         //checkbox
                         ImGui::Checkbox("Show point cloud", &it->second.show);
                         
                         //pointSize
-                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: s%.3f");
+                        float pointSize = it->second.pointSize;//用于判断是否改变了point size
+                        Scene::changeRadius[it->first] = 0;
+                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
                         //ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 10.f, "Point size = %.3f");
-                        
+                        //判断是否改变了球面的半径
+                        if(it->second.pointSize - pointSize > 0.001)
+                        {
+                            Scene::changeRadius[it->first] = 1;
+                        }
                         //color
                         float pointColor[4] = 
                         {
@@ -371,7 +379,6 @@ void CoolenderUI::renderRightSideBar()
                         it->second.color.w = pointColor[3];
                         
                         //注意glm::mat4是按照列优选的顺序来的
-
                         //缩放
                         ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
                         it->second.model =
@@ -416,9 +423,6 @@ void CoolenderUI::renderRightSideBar()
                                 glm::radians(it->second.rotateZ), 
                                 glm::vec3(0.0f, 0.0f, 1.0f));
 
-
-
-                        
                         //delete button 
                         ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
                         if(ImGui::Button("Delete", buttonSize))

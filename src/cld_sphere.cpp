@@ -118,3 +118,9 @@ void Sphere::createSphere()
     // glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
     return ;//返回VAO
 }
+
+//根据pointSize设置球的半径和分割数量
+void Sphere::setRadiusAndSegmentsByPointSize(float pointSize)
+{
+    cout << "哼哼哈嘿" << endl;
+}
