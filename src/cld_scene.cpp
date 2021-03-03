@@ -14,6 +14,8 @@ LIGHT_MODEL Scene::lightModel = BLINN_PHONG;//场景光照模型
 map<string, Light> Scene::lightCollection;//光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云
 map<string, PolygonMesh> Scene::polygonMeshCollection;//Mesh网格
+map<string, Sphere> Scene::sphereCollection;//球状点云对应的球
+
 
 Scene::Scene()
 {}
@@ -42,6 +44,13 @@ void Scene::addPolygonMesh(string polygonMeshName, PolygonMesh &polygonMesh)
     cout << "Add polygonmesh successfully." << endl;
 }
 
+//添加球面
+void Scene::addSphere(string sphereName, Sphere& sphere)
+{
+    sphereCollection[sphereName] = sphere;
+    cout << "Add sphere successfully." << endl;
+}
+
 //删除光源
 void Scene::deleteLight(string lightName)
 {
@@ -55,6 +64,8 @@ void Scene::deletePointCloud(string pointCloudName)
     //先删VBO VAO
     glDeleteBuffers(1, &pointCloudCollection[pointCloudName].VBO);
     glDeleteVertexArrays(1, &pointCloudCollection[pointCloudName].VAO);
+    //删除对应的球面
+    deleteSphere(pointCloudName);
     //再删除场景中的点云
     pointCloudCollection.erase(pointCloudName);
     cout << "Delete point cloud successfully." << endl;
@@ -65,4 +76,15 @@ void Scene::deletePolygonMesh(string polygonMeshName)
 {
     polygonMeshCollection.erase(polygonMeshName);
     cout << "Delete polygonmesh successfully." << endl;
+}
+
+//删除球面
+void Scene::deleteSphere(string sphereName)
+{
+    //先删VBO EBO VAO
+    glDeleteBuffers(1, &sphereCollection[sphereName].VBO);
+    glDeleteBuffers(1, &sphereCollection[sphereName].EBO);
+    glDeleteVertexArrays(1, &sphereCollection[sphereName].VAO);
+    sphereCollection.erase(sphereName);
+    cout << "Delete sphere successfully." << endl;
 }

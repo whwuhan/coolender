@@ -370,12 +370,13 @@ void CoolenderUI::renderRightSideBar()
                         it->second.color.z = pointColor[2];
                         it->second.color.w = pointColor[3];
                         
-                        //注意glm是按照列优选的顺序来的
+                        //注意glm::mat4是按照列优选的顺序来的
+
                         //缩放
                         ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
                         it->second.model =
                             glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale));
-                        
+
                         //平移 
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("transX", &it->second.transX, 0.01f);
@@ -387,7 +388,7 @@ void CoolenderUI::renderRightSideBar()
                         ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
                         it->second.model =
                             glm::translate(
-                                it->second.model, 
+                                it->second.model,
                                 glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
                         
                         //旋转
@@ -401,19 +402,22 @@ void CoolenderUI::renderRightSideBar()
                         ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
                         it->second.model =  
                             glm::rotate(
-                                it->second.model, 
+                                it->second.model,
                                 glm::radians(it->second.rotateX), 
                                 glm::vec3(1.0f, 0.0f, 0.0f));
                         it->second.model= 
                             glm::rotate(
-                                it->second.model, 
+                                it->second.model,
                                 glm::radians(it->second.rotateY), 
                                 glm::vec3(0.0f, 1.0f, 0.0f));
                         it->second.model= 
                             glm::rotate(
-                                it->second.model, 
+                                it->second.model,
                                 glm::radians(it->second.rotateZ), 
                                 glm::vec3(0.0f, 0.0f, 1.0f));
+
+
+
                         
                         //delete button 
                         ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
@@ -509,7 +513,9 @@ void CoolenderUI::renderFileChooseDialog()
             Scene::addPointCloud(filePathName, pointCloud);
             //传输数据给GPU
             Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[filePathName]);
-            Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName]);
+            Sphere sphere = Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName]);//初始化球状点云，并返回对应的球面
+            Scene::addSphere(filePathName, sphere);
+            
             // switch(Scene::pointType)
             // {
             //     case POINT:

@@ -36,10 +36,11 @@ void Render::renderPointCloudTypePoint(PointCloud &pointCloud)
 }
 
 //准备渲染球状点云
-void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud)
+Sphere Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud)
 {
-    Sphere::createSphere();//生成一个球模型 注意里面绑定了一个VBO
-    glBindVertexArray(Sphere::VAO);
+    Sphere sphere;
+    sphere.createSphere();//生成一个球模型 注意里面绑定了一个VBO
+    glBindVertexArray(sphere.VAO);
     unsigned int pointAmount = pointCloud.size;//点云点的数量
     mat4 pointModelMatrices[pointAmount];//每个球状点云的model矩阵
     for(int i = 0; i < pointAmount; i++)
@@ -83,15 +84,15 @@ void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud)
     glVertexAttribDivisor(6, 1);
 
     glBindVertexArray(0);
-
+    return sphere;
 }
 
 //渲染球状点云
-void Render::renderPointCloudTypeSphere(PointCloud &pointCloud)
+void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
 {   
-    glBindVertexArray(Sphere::VAO);
+    glBindVertexArray(sphere.VAO);
     //注意绘制类型是GL_TRIANGLE_STRIP 不是GL_TRIANGLES
-    glDrawElementsInstanced(GL_TRIANGLE_STRIP, Sphere::indexCount, GL_UNSIGNED_INT, 0, pointCloud.size);
+    glDrawElementsInstanced(GL_TRIANGLE_STRIP, sphere.indexCount, GL_UNSIGNED_INT, 0, pointCloud.size);
     // glBindVertexArray(Sphere::VAO);
     // glDrawElements(GL_TRIANGLE_STRIP, Sphere::indexCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

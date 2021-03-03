@@ -3,16 +3,26 @@ using namespace std;
 using namespace coolender;
 using namespace glm;
 
-unsigned int Sphere::VAO = 0;
-unsigned int Sphere::VBO = 0;
-unsigned int Sphere::EBO = 0;//Element Buffer Object
-double Sphere::radius = 0.005;//y轴上的分割数量
-unsigned int Sphere::indexCount = 0;//坐标的数量
-unsigned int Sphere::X_SEGMENTS = 8;//x轴上的分割数量
-unsigned int Sphere::Y_SEGMENTS = 8;//y轴上的分割数量
+// unsigned int Sphere::VAO = 0;
+// unsigned int Sphere::VBO = 0;
+// unsigned int Sphere::EBO = 0;//Element Buffer Object
+// double Sphere::radius = 0.005;//半径
+// unsigned int Sphere::indexCount = 0;//坐标的数量
+// unsigned int Sphere::xSegments = 4;//x轴上的分割数量
+// unsigned int Sphere::ySegments = 4;//y轴上的分割数量
+
+Sphere::Sphere():
+VAO(0),
+VBO(0),
+EBO(0),
+radius(0.01),
+indexCount(0),
+xSegments(4),
+ySegments(4)
+{}
 
 //产生球的mesh,返回VAO
-unsigned int Sphere::createSphere()
+void Sphere::createSphere()
 {
     if(0 == VAO)
     {
@@ -28,16 +38,16 @@ unsigned int Sphere::createSphere()
 
         //生成球的坐标信息
         float PI = 3.14159265359;
-        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        for (unsigned int y = 0; y <= ySegments; ++y)
         {
-            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            for (unsigned int x = 0; x <= xSegments; ++x)
             {
                 // 绘制球面上的点
-                float xSegment = (float)x / (float)X_SEGMENTS;
-                float ySegment = (float)y / (float)Y_SEGMENTS;
-                float xPos = cos(xSegment * 2.0f * PI) * sin(ySegment * PI);
-                float yPos = cos(ySegment * PI) ;
-                float zPos = sin(xSegment * 2.0f * PI) * sin(ySegment * PI) ;
+                float xSegment = (float)x / (float)xSegments;
+                float ySegment = (float)y / (float)ySegments;
+                float xPos = cos(xSegment * 2.0f * PI) * sin(ySegment * PI) * radius;
+                float yPos = cos(ySegment * PI) * radius;
+                float zPos = sin(xSegment * 2.0f * PI) * sin(ySegment * PI) * radius;
 
                 positions.push_back(glm::vec3(xPos, yPos, zPos));
                 uv.push_back(glm::vec2(xSegment, ySegment));
@@ -48,22 +58,22 @@ unsigned int Sphere::createSphere()
         //生成EBO
         // 将三个点绘制成一个面
         bool oddRow = false; //是否是奇数行
-        for (unsigned int y = 0; y < Y_SEGMENTS; ++y)
+        for (unsigned int y = 0; y < ySegments; ++y)
         {
             if (!oddRow) // even rows: y == 0, y == 2; and so on
             {
-                for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+                for (unsigned int x = 0; x <= xSegments; ++x)
                 {
-                    indices.push_back(y * (X_SEGMENTS + 1) + x);
-                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                    indices.push_back(y * (xSegments + 1) + x);
+                    indices.push_back((y + 1) * (xSegments + 1) + x);
                 }
             }
             else
             {
-                for (int x = X_SEGMENTS; x >= 0; --x) // 注意这里是int类型而不是unsigned int 如果是unsigned int会陷入死循环，因为无符号数不会小于0
+                for (int x = xSegments; x >= 0; --x) // 注意这里是int类型而不是unsigned int 如果是unsigned int会陷入死循环，因为无符号数不会小于0
                 {
-                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
-                    indices.push_back(y * (X_SEGMENTS + 1) + x);
+                    indices.push_back((y + 1) * (xSegments + 1) + x);
+                    indices.push_back(y * (xSegments + 1) + x);
                 }
             }
             oddRow = !oddRow;
@@ -106,5 +116,5 @@ unsigned int Sphere::createSphere()
     //绘制组成球面的三角形
     // glBindVertexArray(VAO);
     // glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
-    return VAO;//返回VAO
+    return ;//返回VAO
 }

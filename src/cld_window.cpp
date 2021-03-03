@@ -180,11 +180,11 @@ void Window::initAndRun()
                 {
                     if(it->second.show)
                     {   
-                        // pointCloudTypePointShader.setMat4("model", it->second.model);
+                        pointCloudTypePointShader.setMat4("model", it->second.model);
                         // pointCloudTypeShpereShader.setFloat("pointSize", it->second.pointSize);
                         pointCloudTypeShpereShader.setVec4("pointCloudColor", it->second.color);
                         
-                        Render::renderPointCloudTypeSphere(it->second);
+                        Render::renderPointCloudTypeSphere(it->second,Scene::sphereCollection[it->first]);
                     }
                 }
                 break;
