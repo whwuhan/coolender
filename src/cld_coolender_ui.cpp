@@ -277,32 +277,70 @@ void CoolenderUI::renderRightSideBar()
         if(ImGui::CollapsingHeader("Global Setting"))
         {   
             //UI风格设置
-            if (ImGui::Combo("Theme", &CoolenderUI::style, "Dark\0Light\0Classic"))
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("UI theme settings"))
             {
-                switch (CoolenderUI::style)
+                if (ImGui::Combo("Theme", &CoolenderUI::style, "Dark\0Light\0Classic"))
                 {
-                    case 0: 
-                        ImGui::StyleColorsDark(); 
-                        break;
-                    case 1: 
-                        ImGui::StyleColorsLight(); 
-                        break;
-                    case 2: 
-                        ImGui::StyleColorsClassic(); 
-                        break;
+                    switch (CoolenderUI::style)
+                    {
+                        case 0: 
+                            ImGui::StyleColorsDark(); 
+                            break;
+                        case 1: 
+                            ImGui::StyleColorsLight(); 
+                            break;
+                        case 2: 
+                            ImGui::StyleColorsClassic(); 
+                            break;
+                    }
                 }
+                ImGui::TreePop();
             }
-            //相机速度
-            ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
+            ImGui::Separator();
+            
+            //相机设置
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("Camera settings"))
+            {
+                ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
+                ImGui::TreePop();
+            }
             ImGui::Separator();
 
-            //点云绘制类型
-            int pointType = Scene::pointType;//enum强制转换为int
-            ImGui::Text("Point cloud point type:");
-            ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
-            ImGui::RadioButton("Sphere", &pointType, 1);
-            Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
+            //场景平行光源信息
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("Parallel ambient light settings"))
+            {
+                //平行光环境光强度
+                ImGui::SliderFloat("Ambient light intensity:", &Scene::ambientIntensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
+                
+                //平行光的方向
+                ImGui::Text("Parallel ambient light direction:");
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("directionX", &Scene::parallelLight.direction.x, 0.1f);ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("directionY", &Scene::parallelLight.direction.y, 0.1f);ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("directionZ", &Scene::parallelLight.direction.z, 0.1f);   
+                ImGui::TreePop();
+            }
             ImGui::Separator();
+
+            //点云全局设置
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("Point cloud global settings"))
+            {
+                //设置点云类型
+                int pointType = Scene::pointType;//enum强制转换为int
+                ImGui::Text("Point cloud point type:");ImGui::SameLine();
+                ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
+                ImGui::RadioButton("Sphere", &pointType, 1);
+                Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
+                ImGui::TreePop();
+            }
+            ImGui::Separator();
+            
             //MSAA
             // ImGui::Checkbox("MSAA", &Window::useMSAA);
             // if(Window::useMSAA)

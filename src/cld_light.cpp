@@ -2,13 +2,13 @@
 using namespace coolender;
 using namespace glm;
 Light::Light():
-pos(0.0f, 0.0f, 0.0f),
-color(0.0f, 0.0f, 0.0f, 0.0f),
-intensity(0.3)
+position(0.0f, 1.0f, 0.0f),
+color(1.0f, 1.0f, 1.0f, 1.0f),
+direction(1.0f, 1.0f, 0.0f)
 {}
 
-Light::Light(vec3 pos, vec4 color, float intensity):
-pos(pos),
+Light::Light(vec3 position, vec4 color, vec3 direction):
+position(position),
 color(color),
-intensity(intensity)
+direction(direction)
 {}

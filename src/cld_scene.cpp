@@ -4,11 +4,12 @@ using namespace coolender;
 using namespace wh::basic;
 using namespace glm;
 vec4 Scene::clearColor(1.0f, 1.0f, 1.0f, 1.0f);//clear color
-bool Scene::showFloor = true;//是否显示地板
+float Scene::ambientIntensity = 0.35;//场景的环境光
+bool Scene::showFloor = false;//是否显示地板
 bool Scene::phongLightingModel = true;//是否使用phone光照模型
 POINT_TYPE Scene::pointType = POINT;//点云绘制类型
 LIGHT_MODEL Scene::lightModel = BLINN_PHONG;//场景光照模型
-Light Scene::parallelLight(vec3(1.0f, 1.0f, 0.0f), vec4(0.5f, 0.5f, 0.5f, 1.0f), 0.05);//场景平行光
+Light Scene::parallelLight(vec3(0.0f, 0.0f, 0.0f), vec4(0.5f, 0.5f, 0.5f, 1.0f), vec3(0.0f, 1.0f, 1.0f));//场景平行光
 
 
 //注意static变量要先初始化 否则链接失败

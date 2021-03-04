@@ -11,9 +11,10 @@ namespace coolender
     {
     public:
         Light();
-        Light(glm::vec3 pos, glm::vec4 color, float intensity = 0.3);
-        glm::vec3 pos;//位置
+        Light(glm::vec3 position, glm::vec4 color, glm::vec3 direction = glm::vec3(0.0f, 1.0f, 1.0f));
+
+        glm::vec3 position;//位置
         glm::vec4 color;//颜色
-        float intensity;
+        glm::vec3 direction;//方向
     };
 }

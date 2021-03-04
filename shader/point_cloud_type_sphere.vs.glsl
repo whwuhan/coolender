@@ -13,13 +13,9 @@ out VsOut
     vec3 Normal;
 } vsOut;
 
-// uniform mat4 pointModel;//点的model矩阵
 uniform mat4 model;//点云的model矩阵
 uniform mat4 view;
 uniform mat4 projection;
-
-// uniform float pointSize;
-
 
 void main()
 {

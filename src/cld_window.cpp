@@ -3,15 +3,15 @@ using namespace std;
 using namespace coolender;
 using namespace glm;
 //static变量初始化
-GLFWwindow* Window::glfwWindow = nullptr;//glfw window
-bool Window::cursorDisable = false;//是否进入光标不可显示模式
-bool Window::changeOperateModeKeyPressed = false;//更换操作模式按键是否被按下
-double Window::cursorPosX = Window::width / 2.0f;//鼠标位置X
-double Window::cursorPosY = Window::height / 2.0f;//鼠标位置Y
-Camera Window::camera;//相机
-float Window::cameraSpeedScale = 1.0f;//相机移速比例
+GLFWwindow *Window::glfwWindow = nullptr;          //glfw window
+bool Window::cursorDisable = false;                //是否进入光标不可显示模式
+bool Window::changeOperateModeKeyPressed = false;  //更换操作模式按键是否被按下
+double Window::cursorPosX = Window::width / 2.0f;  //鼠标位置X
+double Window::cursorPosY = Window::height / 2.0f; //鼠标位置Y
+Camera Window::camera;                             //相机
+float Window::cameraSpeedScale = 1.0f;             //相机移速比例
 bool Window::useMSAA = true;
-int Window::MSAALevel = 8;
+int Window::MSAALevel = 0; //MSAA采样数量
 unsigned int Window::width = 1600;
 unsigned int Window::height = 900;
 //timing
@@ -22,9 +22,7 @@ float Window::lastFrame = 0.0f;
 // float Window::lastY = Window::height / 2.0f;
 bool Window::firstMouse = true;
 
-
 //其他static变量初始化
-
 
 //默认构造函数
 // Window::Window()
@@ -33,15 +31,15 @@ void Window::initAndRun()
 {
     //======================glfw glad opengl 初始化======================
     glfwInit(); //初始化GLFW
-    
+
     //通过glfwWindowHint()函数来设置参数，前面是参数名称，后面是值
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //设置主版本
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //设置次版本
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);                 //设置主版本
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);                 //设置次版本
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //设置使用核心模式
-    glfwWindowHint(GLFW_SAMPLES, Window::MSAALevel);//MSAA采样数
-    #ifdef __APPLE__
+    glfwWindowHint(GLFW_SAMPLES, Window::MSAALevel);               //MSAA采样数
+#ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //mac用户需要设置，初始化才能有效
-    #endif
+#endif
     //创建一个窗口对象
     string windowTitle = "Coolender Version " + Coolender::version;
     Window::glfwWindow = glfwCreateWindow(Window::width, Window::height, windowTitle.c_str(), NULL, NULL);
@@ -51,7 +49,7 @@ void Window::initAndRun()
     {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
-        return ;
+        return;
     }
     //将窗口的上下文设置成主线程的上下文
     glfwMakeContextCurrent(Window::glfwWindow);
@@ -64,7 +62,6 @@ void Window::initAndRun()
     //告诉GLFW选中窗口不显示鼠标
     //glfwSetInputMode(Window::glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-
     //GLAD是用来管理OpenGL的函数指针
     //初始化GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -74,33 +71,29 @@ void Window::initAndRun()
         return;
     }
     //openGL全局配置
-    glEnable(GL_DEPTH_TEST); //开启深度测试
-    glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
-    glEnable(GL_PROGRAM_POINT_SIZE);//开启改变点的大小（暂时无用）
-    
+    glEnable(GL_DEPTH_TEST);         //开启深度测试
+    glEnable(GL_MULTISAMPLE);        // 开启MSAA通常都是默认开启的
+    glEnable(GL_PROGRAM_POINT_SIZE); //开启改变点的大小（暂时无用）
+
     //glPointSize(25);
     //======================glfw glad opengl 初始化结束======================
-
-
 
     //CoolenderUI初始化
     CoolenderUI::init(Window::glfwWindow);
 
-
     //shader
+    //地板
     Shader floorShader("shader/floor.vs.glsl", "shader/floor_blinn_phong.fs.glsl");
     Plane floor;
     floor.init();
     floorShader.use();
     floorShader.setInt("floorTexture", 0);
-
     //点状点云shader
     Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
     //绘制球状点云
     Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");
     //球状点云shader blinn-phong光照模型
     // Shader pointCloudSphereBlinnPhong("shader/point_cloud_sphere.vs.glsl", "shader/blinn_phong.fs.glsl");
-
 
     //渲染循环
     // Main loop
@@ -112,38 +105,37 @@ void Window::initAndRun()
         Window::deltaTime = currentFrame - Window::lastFrame;
         Window::lastFrame = currentFrame;
         //初始设置
-        
+
         //input
         processInput(Window::glfwWindow);
 
         //开始渲染场景
         //背景颜色
-        glClearColor
-        (
+        glClearColor(
             Scene::clearColor.x,
             Scene::clearColor.y,
             Scene::clearColor.z,
-            Scene::clearColor.w
-        );
+            Scene::clearColor.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //获取投影矩阵和相机矩阵
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        
+
         //渲染地板
-        if(Scene::showFloor)
+        if (Scene::showFloor)
         {
             floorShader.use();
-            floorShader.setMat4("projection", projection);
+            // vs uniform
+            //暂时不需要model矩阵
             floorShader.setMat4("view", view);
+            floorShader.setMat4("projection", projection);
+            // fs uniform
             // set light uniforms
             floorShader.setVec3("viewPos", camera.Position);
-            floorShader.setVec3("lightPos", Scene::parallelLight.pos);
-            floorShader.setFloat("intensity", Scene::parallelLight.intensity);//光照强度
-            //cout << Scene::parallelLight.intensity << endl;
             floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
-
+            floorShader.setFloat("ambientIntensity", Scene::ambientIntensity); //环境光强度
+            floorShader.setVec3("parallelLightDir", Scene::parallelLight.direction);
             // floor
             glBindVertexArray(floor.VAO);
             glActiveTexture(GL_TEXTURE0);
@@ -151,61 +143,69 @@ void Window::initAndRun()
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
-
         //场景渲染
         //渲染点云
-        glEnable(GL_CULL_FACE);//开启面剔除
-        switch(Scene::pointType)
+        glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
+        //glCullFace(GL_FRONT);//设置剔除正面
+        glFrontFace(GL_CW); //设置顺时针的面为正面
+        switch (Scene::pointType)
         {
-            //绘制成点
-            case POINT:
-                pointCloudTypePointShader.use();
-                pointCloudTypePointShader.setMat4("view", view);
-                pointCloudTypePointShader.setMat4("projection", projection);
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+        //绘制成点
+        case POINT:
+            for (auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+            {
+                //判断是否显示点云模型
+                if (it->second.show)
                 {
-                    if(it->second.show)
-                    {   
-                        pointCloudTypePointShader.setMat4("model", it->second.model);
-                        pointCloudTypePointShader.setFloat("pointSize", it->second.pointSize);
-                        pointCloudTypePointShader.setVec4("pointCloudColor", it->second.color);
-                        Render::renderPointCloudTypePoint(it->second);
-                    }
+                    pointCloudTypePointShader.use();
+                    //vs uniform
+                    pointCloudTypePointShader.setMat4("model", it->second.model);
+                    pointCloudTypePointShader.setMat4("view", view);
+                    pointCloudTypePointShader.setMat4("projection", projection);
+                    //fs uniform
+                    pointCloudTypePointShader.setFloat("pointSize", it->second.pointSize);
+                    pointCloudTypePointShader.setVec4("pointCloudColor", it->second.color);
+                    //渲染点云
+                    Render::renderPointCloudTypePoint(it->second);
                 }
-                break;
-            //将点绘制成球
-            case SPHERE:
-                pointCloudTypeShpereShader.use();
-                pointCloudTypeShpereShader.setMat4("view", view);
-                pointCloudTypeShpereShader.setMat4("projection", projection);
-                // set light uniforms
-                pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
-                pointCloudTypeShpereShader.setVec3("lightPos", Scene::parallelLight.pos);
-                pointCloudTypeShpereShader.setFloat("ambientIntensity", 0.2f);//光照强度
-                
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+            }
+            break;
+        //将点绘制成球
+        case SPHERE:
+            for (auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+            {
+                //判断是否显示球状点云
+                if (it->second.show)
                 {
-                    if(it->second.show)
-                    {       
-                        pointCloudTypePointShader.setMat4("model", it->second.model);
-                        //判断是否改变了球状点云的半径
-                        if(it->second.changePointSize)
-                        {
-                            Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
-                            Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]);//重新初始化
-                        }
-                        pointCloudTypeShpereShader.setVec4("pointCloudColor", it->second.color);
-                        Render::renderPointCloudTypeSphere(it->second,Scene::sphereCollection[it->first]);
+                    pointCloudTypeShpereShader.use();
+                    // vs uniform
+                    pointCloudTypePointShader.setMat4("model", it->second.model);
+                    pointCloudTypeShpereShader.setMat4("view", view);
+                    pointCloudTypeShpereShader.setMat4("projection", projection);
+                    // fs uniform
+                    // set light uniforms
+                    pointCloudTypeShpereShader.setVec3("pointCloudColor", vec3(it->second.color));
+                    pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
+                    pointCloudTypeShpereShader.setVec3("lightColor", vec3(Scene::parallelLight.color));//平行光颜色
+                    pointCloudTypeShpereShader.setFloat("ambientIntensity", Scene::ambientIntensity);//平行光环境光强度
+                    pointCloudTypeShpereShader.setVec3("parallelLightDir2", Scene::parallelLight.direction);
+                    //判断是否改变了球状点云的半径
+                    if (it->second.changePointSize)
+                    {
+                        Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
+                        Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化
                     }
+                    //渲染球状点云
+                    Render::renderPointCloudTypeSphere(it->second, Scene::sphereCollection[it->first]);
                 }
-                break;
-            // 绘制成错误类型
-            default:
-                cerr << "Render Point Cloud Type Wrong!" << endl;
-                exit(0);
+            }
+            break;
+        // 绘制成错误类型
+        default:
+            cerr << "Render Point Cloud Type Wrong!" << endl;
+            exit(0);
         }
-        glDisable(GL_CULL_FACE);//关闭面剔除
-
+        glDisable(GL_CULL_FACE); //关闭面剔除
 
         //根据场景渲染UI
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
@@ -215,7 +215,7 @@ void Window::initAndRun()
         glfwSwapBuffers(Window::glfwWindow);
         glfwPollEvents();
     }
-    
+
     //UI cleanup
     CoolenderUI::destroy();
 
@@ -227,7 +227,7 @@ void Window::initAndRun()
 }
 
 //回调函数声明，更改窗口大小的时候，更改视口大小
-void coolender::framebufferSizeCallback(GLFWwindow* glfwWindow, int width, int height)
+void coolender::framebufferSizeCallback(GLFWwindow *glfwWindow, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
@@ -252,9 +252,8 @@ void coolender::processInput(GLFWwindow *glfwWindow)
         Window::changeOperateModeKeyPressed = false;
     }
 
-
     //移动模式下的键盘监听
-    if(Window::cursorDisable)
+    if (Window::cursorDisable)
     {
         //相机移动
         //向前
@@ -281,7 +280,7 @@ void coolender::processInput(GLFWwindow *glfwWindow)
         if (glfwGetKey(glfwWindow, GLFW_KEY_SPACE))
         {
             Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime * Window::cameraSpeedScale);
-        } 
+        }
     }
 }
 
@@ -289,18 +288,18 @@ void coolender::processInput(GLFWwindow *glfwWindow)
 void coolender::changeOperateMode(GLFWwindow *glfwWindow)
 {
     Window::cursorDisable = !Window::cursorDisable;
-    if(Window::cursorDisable)
-    {       
+    if (Window::cursorDisable)
+    {
         //新增监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(glfwWindow,mouseCallback);
-        glfwSetScrollCallback(glfwWindow,scrollCallback);
+        glfwSetCursorPosCallback(glfwWindow, mouseCallback);
+        glfwSetScrollCallback(glfwWindow, scrollCallback);
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else
-    {   
+    {
         //取消监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(glfwWindow,getCursorPos);//获取鼠标位置
-        glfwSetScrollCallback(glfwWindow,nullptr);
+        glfwSetCursorPosCallback(glfwWindow, getCursorPos); //获取鼠标位置
+        glfwSetScrollCallback(glfwWindow, nullptr);
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
@@ -313,7 +312,7 @@ void coolender::scrollCallback(GLFWwindow *winglfwWindowdow, double xoffset, dou
 }
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void coolender::mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
+void coolender::mouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
 {
     if (Window::firstMouse)
     {
@@ -321,7 +320,7 @@ void coolender::mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
         Window::cursorPosY = ypos;
         Window::firstMouse = false;
     }
-    
+
     float xoffset = xpos - Window::cursorPosX;
     float yoffset = Window::cursorPosY - ypos; // reversed since y-coordinates go from bottom to top
 
@@ -332,7 +331,7 @@ void coolender::mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
 }
 
 //获取当前指针的位置
-void coolender::getCursorPos(GLFWwindow* glfwWindow, double xpos, double ypos)
+void coolender::getCursorPos(GLFWwindow *glfwWindow, double xpos, double ypos)
 {
     Window::cursorPosX = xpos;
     Window::cursorPosY = ypos;

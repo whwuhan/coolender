@@ -10,9 +10,13 @@ in VsOut
 } fsIn;
 
 uniform sampler2D floorTexture;
+
 uniform vec3 viewPos;
-uniform float intensity;
+
+//平行光源信息
 uniform vec3 lightColor;
+uniform float ambientIntensity;
+uniform vec3 parallelLightDir;//平行光源方向
 
 
 void main()
@@ -20,10 +24,10 @@ void main()
     vec3 color = texture(floorTexture,fsIn.TexCoords).rgb;
 
     // ambient 环境光
-    vec3 ambient = intensity * color;
+    vec3 ambient = ambientIntensity * color;
 
     // diffuse 漫反射
-    vec3 lightDir = normalize(vec3(1.0f, 1.0f, 0.0f));
+    vec3 lightDir = normalize(parallelLightDir);
     vec3 normal = normalize(fsIn.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;

@@ -14,6 +14,7 @@ namespace coolender
     public:
         Scene();
         static Light  parallelLight;//场景平行光
+        static float ambientIntensity;//场景的环境光强度
         //场景的属性
         static glm::vec4 clearColor;//背景颜色
         static bool showFloor;//显示地板
