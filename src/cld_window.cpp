@@ -76,8 +76,8 @@ void Window::initAndRun()
     //openGL全局配置
     glEnable(GL_DEPTH_TEST); //开启深度测试
     glEnable(GL_MULTISAMPLE); // 开启MSAA通常都是默认开启的
-    glEnable(GL_PROGRAM_POINT_SIZE);
-    glEnable(GL_CULL_FACE);//开启面剔除
+    glEnable(GL_PROGRAM_POINT_SIZE);//开启改变点的大小（暂时无用）
+    
     //glPointSize(25);
     //======================glfw glad opengl 初始化结束======================
 
@@ -141,6 +141,7 @@ void Window::initAndRun()
             floorShader.setVec3("viewPos", camera.Position);
             floorShader.setVec3("lightPos", Scene::parallelLight.pos);
             floorShader.setFloat("intensity", Scene::parallelLight.intensity);//光照强度
+            //cout << Scene::parallelLight.intensity << endl;
             floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
 
             // floor
@@ -153,6 +154,7 @@ void Window::initAndRun()
 
         //场景渲染
         //渲染点云
+        glEnable(GL_CULL_FACE);//开启面剔除
         switch(Scene::pointType)
         {
             //绘制成点
@@ -176,10 +178,15 @@ void Window::initAndRun()
                 pointCloudTypeShpereShader.use();
                 pointCloudTypeShpereShader.setMat4("view", view);
                 pointCloudTypeShpereShader.setMat4("projection", projection);
+                // set light uniforms
+                pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
+                pointCloudTypeShpereShader.setVec3("lightPos", Scene::parallelLight.pos);
+                pointCloudTypeShpereShader.setFloat("ambientIntensity", 0.2f);//光照强度
+                
                 for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                 {
                     if(it->second.show)
-                    {   
+                    {       
                         pointCloudTypePointShader.setMat4("model", it->second.model);
                         //判断是否改变了球状点云的半径
                         if(it->second.changePointSize)
@@ -197,7 +204,7 @@ void Window::initAndRun()
                 cerr << "Render Point Cloud Type Wrong!" << endl;
                 exit(0);
         }
-        
+        glDisable(GL_CULL_FACE);//关闭面剔除
 
 
         //根据场景渲染UI

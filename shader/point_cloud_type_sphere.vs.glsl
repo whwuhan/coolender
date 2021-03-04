@@ -24,7 +24,7 @@ uniform mat4 projection;
 void main()
 {
     vsOut.FragPos = aPos;
-    vsOut.Normal = aNormal;
     vsOut.TexCoords = aTexCoords;
+    vsOut.Normal = aNormal;
     gl_Position = projection * view * model * ainstanceMatrix * vec4(aPos, 1.0f); 
 }
