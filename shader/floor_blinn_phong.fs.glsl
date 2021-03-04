@@ -16,7 +16,7 @@ uniform vec3 viewPos;
 //平行光源信息
 uniform vec3 lightColor;
 uniform float ambientIntensity;
-uniform vec3 parallelLightDir;//平行光源方向
+uniform vec3 parallelLightDir;//平行光源的方向
 
 
 void main()
@@ -39,10 +39,6 @@ void main()
     vec3 specular = lightColor * spec;
     
     color = ambient + diffuse + specular;
-    // // HDR tonemapping
-    // color = color / (color + vec3(1.0));
-    // // gamma correct
-    // color = pow(color, vec3(1.0/2.2)); 
 
     FragColor = vec4(color, 1.0);
 }

@@ -145,9 +145,9 @@ void Window::initAndRun()
 
         //场景渲染
         //渲染点云
-        // glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
-        // //glCullFace(GL_FRONT);//设置剔除正面
-        // glFrontFace(GL_CW); //设置顺时针的面为正面
+        glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
+        //glCullFace(GL_FRONT);//设置剔除正面
+        glFrontFace(GL_CW); //设置顺时针的面为正面
         switch (Scene::pointType)
         {
         //绘制成点
@@ -188,7 +188,8 @@ void Window::initAndRun()
                     pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
                     pointCloudTypeShpereShader.setVec3("lightColor", vec3(Scene::parallelLight.color));//平行光颜色
                     pointCloudTypeShpereShader.setFloat("ambientIntensity", Scene::ambientIntensity);//平行光环境光强度
-                    pointCloudTypeShpereShader.setVec3("parallelLightDir", Scene::parallelLight.direction);
+                    pointCloudTypeShpereShader.setVec3("parallelLightDir2", Scene::parallelLight.direction);
+                    // cout << glGetUniformLocation(pointCloudTypeShpereShader.ID, "parallelLightDir2") << endl;
                     //判断是否改变了球状点云的半径
                     if (it->second.changePointSize)
                     {
@@ -205,7 +206,7 @@ void Window::initAndRun()
             cerr << "Render Point Cloud Type Wrong!" << endl;
             exit(0);
         }
-        // glDisable(GL_CULL_FACE); //关闭面剔除
+        glDisable(GL_CULL_FACE); //关闭面剔除
 
         //根据场景渲染UI
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖

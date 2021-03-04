@@ -3,7 +3,6 @@
 绘制球状的点云
 */
 out vec4 FragColor;
-
 in VsOut
 {
     vec3 FragPos;
@@ -20,7 +19,7 @@ uniform vec3 viewPos;
 //平行光源信息
 uniform vec3 lightColor;
 uniform float ambientIntensity;
-uniform vec3 parallelLightDir;//平行光源的方向
+uniform vec3 parallelLightDir2;//平行光源的方向
 
 void main()
 {
@@ -30,7 +29,7 @@ void main()
     vec3 ambient = ambientIntensity * color;
 
     // diffuse 漫反射
-    vec3 lightDir = normalize(parallelLightDir);
+    vec3 lightDir = normalize(parallelLightDir2);
     vec3 normal = normalize(fsIn.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
@@ -42,10 +41,6 @@ void main()
     vec3 specular = lightColor * spec;
     
     color = ambient + diffuse + specular;
-    // // HDR tonemapping
-    // color = color / (color + vec3(1.0));
-    // // gamma correct
-    // color = pow(color, vec3(1.0/2.2)); 
 
     FragColor = vec4(color, 1.0f);
 }

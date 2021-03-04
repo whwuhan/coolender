@@ -4,11 +4,11 @@
 */
 layout(location = 0) in vec3 aPos;//点云点的坐标
 
-
-uniform mat4 model;
-uniform mat4 view;
 uniform mat4 projection;
-uniform float pointSize;
+uniform mat4 view;
+uniform mat4 model;
+
+uniform float pointSize;//点的大小
 
 void main()
 {
