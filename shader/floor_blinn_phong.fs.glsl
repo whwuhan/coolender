@@ -36,14 +36,13 @@ void main()
     vec3 viewDir = normalize(viewPos - fsIn.FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec3 specular = lightColor * spec;// assuming bright white light color
+    vec3 specular = lightColor * spec;
     
     color = ambient + diffuse + specular;
-    // HDR tonemapping
+    // // HDR tonemapping
     // color = color / (color + vec3(1.0));
-    // gamma correct
+    // // gamma correct
     // color = pow(color, vec3(1.0/2.2)); 
 
     FragColor = vec4(color, 1.0);
-    // FragColor = vec4(1.0f, 0.0f, 0.0f, 0.0f);
 }
