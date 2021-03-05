@@ -181,7 +181,7 @@ void Window::initAndRun()
                     // vs uniform
                     pointCloudTypeShpereShader.setMat4("projection", projection);
                     pointCloudTypeShpereShader.setMat4("view", view);
-                    pointCloudTypePointShader.setMat4("model", it->second.model);
+                    pointCloudTypeShpereShader.setMat4("model", it->second.model);
                     // fs uniform
                     // set light uniforms
                     pointCloudTypeShpereShader.setVec3("pointCloudColor", vec3(it->second.color));
@@ -194,10 +194,8 @@ void Window::initAndRun()
                     //判断是否改变了球状点云的半径
                     if (it->second.changePointSize)
                     {
-                        
                         Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
                         Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化（因为球的大小变了，要更新VAO）
-                        
                     }
                     //渲染球状点云
                     Render::renderPointCloudTypeSphere(it->second, Scene::sphereCollection[it->first]);

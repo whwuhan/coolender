@@ -3,8 +3,6 @@ using namespace coolender;
 using namespace wh::basic;
 using namespace std;
 using namespace glm;
-Render::Render()
-{}
 //准备渲染点状点云
 void Render::renderPointCloudTypePointInit(PointCloud &pointCloud)
 {
@@ -56,10 +54,12 @@ void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sphe
     } 
 
     // configure instanced array 注意开始配置instanced array(实际就是把这些model矩阵先放到缓存里面)
-    unsigned int pointModelMatricesBuffer;
-    glGenBuffers(1,&pointModelMatricesBuffer);
-    cout << pointModelMatricesBuffer << endl;
-    glBindBuffer(GL_ARRAY_BUFFER, pointModelMatricesBuffer);
+    if(0 == pointCloud.pointModelMatricesBuffer)
+    {
+        glGenBuffers(1,&pointCloud.pointModelMatricesBuffer);
+    }
+    // cout << pointCloud.pointModelMatricesBuffer << endl;
+    glBindBuffer(GL_ARRAY_BUFFER, pointCloud.pointModelMatricesBuffer);
     glBufferData(GL_ARRAY_BUFFER, pointAmount * sizeof(mat4), &pointModelMatrices[0], GL_STATIC_DRAW);
     
 

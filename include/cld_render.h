@@ -18,8 +18,6 @@ namespace coolender
     class Render
     {
     public:
-        Render();
-
         //渲染点云
         static void renderPointCloudTypePointInit(wh::basic::PointCloud &pointCloud);//准备渲染点状点云
         static void renderPointCloudTypePoint(wh::basic::PointCloud &pointCloud);//渲染点状点云
