@@ -128,14 +128,14 @@ void Window::initAndRun()
             floorShader.use();
             // vs uniform
             //暂时不需要model矩阵
-            floorShader.setMat4("view", view);
             floorShader.setMat4("projection", projection);
+            floorShader.setMat4("view", view);
             // fs uniform
             // set light uniforms
             floorShader.setVec3("viewPos", camera.Position);
             floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
             floorShader.setFloat("ambientIntensity", Scene::ambientIntensity); //环境光强度
-            floorShader.setVec3("parallelLightDir", Scene::parallelLight.direction);
+            floorShader.setVec3("parallelLightDir", Scene::parallelLight.direction);//平行光的方向
             // floor
             glBindVertexArray(floor.VAO);
             glActiveTexture(GL_TEXTURE0);
@@ -158,10 +158,10 @@ void Window::initAndRun()
                 if (it->second.show)
                 {
                     pointCloudTypePointShader.use();
-                    //vs uniform
-                    pointCloudTypePointShader.setMat4("model", it->second.model);
-                    pointCloudTypePointShader.setMat4("view", view);
+                    //vs uniform                   
                     pointCloudTypePointShader.setMat4("projection", projection);
+                    pointCloudTypePointShader.setMat4("view", view);
+                    pointCloudTypePointShader.setMat4("model", it->second.model);
                     //fs uniform
                     pointCloudTypePointShader.setFloat("pointSize", it->second.pointSize);
                     pointCloudTypePointShader.setVec4("pointCloudColor", it->second.color);
@@ -179,22 +179,23 @@ void Window::initAndRun()
                 {
                     pointCloudTypeShpereShader.use();
                     // vs uniform
-                    pointCloudTypePointShader.setMat4("model", it->second.model);
-                    pointCloudTypeShpereShader.setMat4("view", view);
                     pointCloudTypeShpereShader.setMat4("projection", projection);
+                    pointCloudTypeShpereShader.setMat4("view", view);
+                    pointCloudTypePointShader.setMat4("model", it->second.model);
                     // fs uniform
                     // set light uniforms
                     pointCloudTypeShpereShader.setVec3("pointCloudColor", vec3(it->second.color));
                     pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
                     pointCloudTypeShpereShader.setVec3("lightColor", vec3(Scene::parallelLight.color));//平行光颜色
                     pointCloudTypeShpereShader.setFloat("ambientIntensity", Scene::ambientIntensity);//平行光环境光强度
-                    pointCloudTypeShpereShader.setVec3("parallelLightDir2", Scene::parallelLight.direction);
+                    pointCloudTypeShpereShader.setVec3("parallelLightDir2", Scene::parallelLight.direction);//平行光的方向
+
                     // cout << glGetUniformLocation(pointCloudTypeShpereShader.ID, "parallelLightDir2") << endl;
                     //判断是否改变了球状点云的半径
                     if (it->second.changePointSize)
                     {
                         Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
-                        Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化
+                        Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化（因为球的大小变了，要更新VAO）
                     }
                     //渲染球状点云
                     Render::renderPointCloudTypeSphere(it->second, Scene::sphereCollection[it->first]);

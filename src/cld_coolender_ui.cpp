@@ -323,6 +323,20 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::DragFloat("directionY", &Scene::parallelLight.direction.y, 0.1f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
                 ImGui::DragFloat("directionZ", &Scene::parallelLight.direction.z, 0.1f);   
+
+                //光线颜色
+                float parallelLightColor[4] = 
+                {
+                    Scene::parallelLight.color.x,
+                    Scene::parallelLight.color.y,
+                    Scene::parallelLight.color.z,
+                    Scene::parallelLight.color.w
+                };
+                ImGui::ColorEdit3("Parallel light color", parallelLightColor);
+                Scene::parallelLight.color.x = parallelLightColor[0];
+                Scene::parallelLight.color.y = parallelLightColor[1];
+                Scene::parallelLight.color.z = parallelLightColor[2];
+                Scene::parallelLight.color.w = 1.0f;
                 ImGui::TreePop();
             }
             ImGui::Separator();
@@ -408,13 +422,12 @@ void CoolenderUI::renderRightSideBar()
                             it->second.color.x,
                             it->second.color.y,
                             it->second.color.z,
-                            it->second.color.w,
                         };
-                        ImGui::ColorEdit4("Point color", pointColor);
+                        ImGui::ColorEdit3("Point color", pointColor);
                         it->second.color.x = pointColor[0];
                         it->second.color.y = pointColor[1];
                         it->second.color.z = pointColor[2];
-                        it->second.color.w = pointColor[3];
+                        it->second.color.w = 1.0;
                         
                         //注意glm::mat4是按照列优选的顺序来的
                         //缩放

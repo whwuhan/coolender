@@ -30,7 +30,7 @@ void main()
     vec3 lightDir = normalize(parallelLightDir);
     vec3 normal = normalize(fsIn.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
-    vec3 diffuse = diff * color;
+    vec3 diffuse = diff * color * lightColor;
 
     // specular 镜面光
     vec3 viewDir = normalize(viewPos - fsIn.FragPos);

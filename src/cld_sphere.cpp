@@ -116,6 +116,7 @@ void Sphere::createSphere()
     //绘制组成球面的三角形
     // glBindVertexArray(VAO);
     // glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
     return ;//返回VAO
 }
 
