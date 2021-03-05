@@ -274,7 +274,7 @@ void CoolenderUI::renderRightSideBar()
     {
         //全局设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-        if(ImGui::CollapsingHeader("Global Setting"))
+        if(ImGui::CollapsingHeader("Global Settings"))
         {   
             //UI风格设置
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
@@ -310,7 +310,7 @@ void CoolenderUI::renderRightSideBar()
 
             //场景平行光源信息
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Parallel ambient light settings"))
+            if (ImGui::TreeNode("Parallel light settings"))
             {
                 //平行光环境光强度
                 ImGui::SliderFloat("Ambient light intensity:", &Scene::ambientIntensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
@@ -369,7 +369,7 @@ void CoolenderUI::renderRightSideBar()
 
         //场景设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-        if(ImGui::CollapsingHeader("Scene Setting"))
+        if(ImGui::CollapsingHeader("Scene Settings"))
         {   
             //背景颜色调整框
             float clearColor[4] = 
