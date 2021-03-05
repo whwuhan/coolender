@@ -117,7 +117,7 @@ void Sphere::createSphere()
     // glBindVertexArray(VAO);
     // glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    return ;//返回VAO
+    return ;
 }
 
 //根据pointSize设置球的半径和分割数量

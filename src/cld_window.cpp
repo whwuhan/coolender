@@ -188,14 +188,16 @@ void Window::initAndRun()
                     pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
                     pointCloudTypeShpereShader.setVec3("lightColor", vec3(Scene::parallelLight.color));//平行光颜色
                     pointCloudTypeShpereShader.setFloat("ambientIntensity", Scene::ambientIntensity);//平行光环境光强度
-                    pointCloudTypeShpereShader.setVec3("parallelLightDir2", Scene::parallelLight.direction);//平行光的方向
+                    pointCloudTypeShpereShader.setVec3("parallelLightDir", Scene::parallelLight.direction);//平行光的方向
 
                     // cout << glGetUniformLocation(pointCloudTypeShpereShader.ID, "parallelLightDir2") << endl;
                     //判断是否改变了球状点云的半径
                     if (it->second.changePointSize)
                     {
+                        
                         Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
                         Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化（因为球的大小变了，要更新VAO）
+                        
                     }
                     //渲染球状点云
                     Render::renderPointCloudTypeSphere(it->second, Scene::sphereCollection[it->first]);
