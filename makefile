@@ -5,6 +5,7 @@ objs/cld_main.o \
 objs/cld_camera.o \
 objs/cld_coolender_ui.o \
 objs/cld_coolender.o \
+objs/cld_function.o \
 objs/cld_light.o \
 objs/cld_mesh.o \
 objs/cld_model.o \
@@ -15,6 +16,7 @@ objs/cld_shader.o \
 objs/cld_sphere.o \
 objs/cld_texture_loader.o \
 objs/cld_window.o \
+objs/stb_image_write.o \
 objs/stb_image.o 
 
 
@@ -41,6 +43,9 @@ objs/cld_coolender_ui.o : include/cld_coolender_ui.h src/cld_coolender_ui.cpp
 
 objs/cld_coolender.o : include/cld_coolender.h src/cld_coolender.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_coolender.cpp -o $@
+
+objs/cld_function.o : include/cld_function.h src/cld_function.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_function.cpp -o $@
 
 objs/cld_light.o : include/cld_light.h src/cld_light.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_light.cpp -o $@
@@ -71,6 +76,9 @@ objs/cld_texture_loader.o : include/cld_texture_loader.h src/cld_texture_loader.
 
 objs/cld_window.o : include/cld_window.h src/cld_window.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_window.cpp -o $@
+
+objs/stb_image_write.o : src/stb_image_write.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/stb_image_write.cpp -o $@
 
 objs/stb_image.o : src/stb_image.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/stb_image.cpp -o $@

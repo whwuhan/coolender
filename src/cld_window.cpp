@@ -14,6 +14,8 @@ bool Window::useMSAA = true;
 int Window::MSAALevel = 0; //MSAA采样数量
 unsigned int Window::width = 1600;
 unsigned int Window::height = 900;
+//功能
+bool Window::screenShot = false;
 //timing
 float Window::deltaTime = 0.0f;
 float Window::lastFrame = 0.0f;
@@ -206,14 +208,24 @@ void Window::initAndRun()
         default:
             cerr << "Render Point Cloud Type Wrong!" << endl;
             exit(0);
-        }
+        } 
         glDisable(GL_CULL_FACE); //关闭面剔除
+
+        //场景截图
+        if(Window::screenShot)
+        {
+            string curTime = Function::getCurTime();
+            Function::screenShot(string("screenshot") + curTime + string(".png"));
+        }
+        
+
 
         //根据场景渲染UI
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
         //CoolenderUI.renderDemoUI();
         CoolenderUI::render();
-
+        
+        //交换buffer
         glfwSwapBuffers(Window::glfwWindow);
         glfwPollEvents();
     }

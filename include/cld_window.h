@@ -10,7 +10,9 @@
 #include <cld_texture_loader.h>
 #include <cld_plane.h>
 #include <cld_render.h>
+#include <cld_function.h>
 #include <stb_image.h>
+#include <stb_image_write.h>
 namespace coolender
 {
     class Window
@@ -28,6 +30,8 @@ namespace coolender
         static float cameraSpeedScale;//相机移速比例
         static bool useMSAA;//是否使用MSAA抗锯齿
         static int MSAALevel;//抗锯齿级别
+        //功能
+        static bool screenShot;
         //timing
         static float deltaTime;
         static float lastFrame;

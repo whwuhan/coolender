@@ -424,7 +424,10 @@ void CoolenderUI::renderRightSideBar()
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Function"))
         {
-            
+            if(ImGui::Button("Screen shot"))
+            {
+                Window::screenShot = true;
+            }
         }
 
         //场景设置
