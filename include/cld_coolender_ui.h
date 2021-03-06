@@ -62,5 +62,9 @@ namespace coolender
 
         //隐藏UI
         static void renderFileChooseDialog();//渲染文件选择对话框
+
+        //其他UI
+        static void warningMarker(const char* desc);//警告标志
+        
     };
 }

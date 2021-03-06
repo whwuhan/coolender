@@ -147,8 +147,6 @@ void CoolenderUI::render()
         }
         //初始显示部分结束
 
-
-
         //界面隐藏部分
         //显示文件选择框
         if(CoolenderUI::showFileChooseDialog)
@@ -169,7 +167,7 @@ void CoolenderUI::renderMenu()
         //File
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("open", "CTRL+O"))
+            if (ImGui::MenuItem("Import point clouds .obj", ""))
             {
                 CoolenderUI::showFileChooseDialog = true;
             }
@@ -376,6 +374,8 @@ void CoolenderUI::renderRightSideBar()
                 }
                 float pointCloudPointSize = Scene::pointCloudPointSize;
                 ImGui::DragFloat("Global point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                ImGui::SameLine();
+                warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type, your PC will explode!!!");
                 if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)
                 {
                     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
@@ -420,6 +420,13 @@ void CoolenderUI::renderRightSideBar()
 
         }
 
+        //功能
+        ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+        if(ImGui::CollapsingHeader("Function"))
+        {
+            
+        }
+
         //场景设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Scene Settings"))
@@ -443,14 +450,16 @@ void CoolenderUI::renderRightSideBar()
             //ImGui::TableNextColumn();
             ImGui::Checkbox("Show floor", &Scene::showFloor);ImGui::SameLine();
             //所有点云显示设置
+            bool flag = true;
             for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
             {
                 //如果有一个点云不显示，设置Scene::showAllPointCloud为false
                 if(!it->second.show)
                 {
-                    Scene::showAllPointCloud = false;
+                    flag = false;
                 }
             }
+            Scene::showAllPointCloud = flag;
             //判断是否显示所有点云
             bool showAllPointCloud = Scene::showAllPointCloud;
             ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
@@ -650,6 +659,20 @@ void CoolenderUI::renderFileChooseDialog()
         ImGuiFileDialog::Instance()->Close();
         CoolenderUI::showFileChooseDialog = false;
     }        
+}
+
+
+void CoolenderUI::warningMarker(const char* desc)
+{
+    ImGui::TextDisabled("(!!!)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
 }
 
 //cleanup
