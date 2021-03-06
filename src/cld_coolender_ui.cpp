@@ -405,6 +405,7 @@ void CoolenderUI::renderRightSideBar()
                 Scene::pointCloudPointColor.x = pointCloudPointColor[0];
                 Scene::pointCloudPointColor.y = pointCloudPointColor[1];
                 Scene::pointCloudPointColor.z = pointCloudPointColor[2];
+                //判断是否更改了全局点云颜色
                 if(
                     abs(Scene::pointCloudPointColor.x - pointCloudColorR) >  0.001 ||
                     abs(Scene::pointCloudPointColor.y - pointCloudColorG) >  0.001 ||
