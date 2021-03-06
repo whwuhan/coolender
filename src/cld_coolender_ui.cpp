@@ -392,6 +392,9 @@ void CoolenderUI::renderRightSideBar()
                 }
 
                 //设置所有点云的颜色
+                float pointCloudColorR = Scene::pointCloudPointColor.x;
+                float pointCloudColorG = Scene::pointCloudPointColor.y;
+                float pointCloudColorB = Scene::pointCloudPointColor.z;
                 float pointCloudPointColor[3] = 
                 {
                     Scene::pointCloudPointColor.x,
@@ -402,14 +405,22 @@ void CoolenderUI::renderRightSideBar()
                 Scene::pointCloudPointColor.x = pointCloudPointColor[0];
                 Scene::pointCloudPointColor.y = pointCloudPointColor[1];
                 Scene::pointCloudPointColor.z = pointCloudPointColor[2];
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                if(
+                    abs(Scene::pointCloudPointColor.x - pointCloudColorR) >  0.001 ||
+                    abs(Scene::pointCloudPointColor.y - pointCloudColorG) >  0.001 ||
+                    abs(Scene::pointCloudPointColor.z - pointCloudColorB) >  0.001 
+                )
                 {
-                    //color
-                    it->second.color.x = pointCloudPointColor[0];
-                    it->second.color.y = pointCloudPointColor[1];
-                    it->second.color.z = pointCloudPointColor[2];
-                    it->second.color.w = 1.0;
+                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                    {
+                        //color
+                        it->second.color.x = pointCloudPointColor[0];
+                        it->second.color.y = pointCloudPointColor[1];
+                        it->second.color.z = pointCloudPointColor[2];
+                        it->second.color.w = 1.0;
+                    }
                 }
+                
                 ImGui::TreePop();
             }
             ImGui::Separator();
@@ -708,10 +719,6 @@ void CoolenderUI::renderScreenshotSaveDirChooseDialog()
         CoolenderUI::showScreenshotSaveDirChooseDialog = false;
     }        
 }
-
-
-
-
 
 //warning 提示
 void CoolenderUI::warningMarker(const char* desc)
