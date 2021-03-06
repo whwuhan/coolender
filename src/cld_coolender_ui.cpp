@@ -306,20 +306,16 @@ void CoolenderUI::renderRightSideBar()
                 //相机位置
                 ImGui::Text("Camera information:");
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("posX", &Window::camera.Position.x, 0.01f);
-                ImGui::SameLine();
+                ImGui::DragFloat("posX", &Window::camera.Position.x, 0.01f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("posY", &Window::camera.Position.y, 0.01f);
-                ImGui::SameLine();
+                ImGui::DragFloat("posY", &Window::camera.Position.y, 0.01f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
                 ImGui::DragFloat("posZ", &Window::camera.Position.z, 0.01f);
                 //相机朝向
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("frontX", &Window::camera.Front.x, 0.01f);
-                ImGui::SameLine();
+                ImGui::DragFloat("frontX", &Window::camera.Front.x, 0.01f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("frontY", &Window::camera.Front.y, 0.01f);
-                ImGui::SameLine();
+                ImGui::DragFloat("frontY", &Window::camera.Front.y, 0.01f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
                 ImGui::DragFloat("frontZ", &Window::camera.Front.z, 0.01f);
                 //相机移动速度
@@ -443,9 +439,29 @@ void CoolenderUI::renderRightSideBar()
             Scene::clearColor.w = 1.0f;
             
 
-            //地板设置
-            ImGui::TableNextColumn();
-            ImGui::Checkbox("Show floor", &Scene::showFloor);
+            //地板显示设置
+            //ImGui::TableNextColumn();
+            ImGui::Checkbox("Show floor", &Scene::showFloor);ImGui::SameLine();
+            //所有点云显示设置
+            for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+            {
+                //如果有一个点云不显示，设置Scene::showAllPointCloud为false
+                if(!it->second.show)
+                {
+                    Scene::showAllPointCloud = false;
+                }
+            }
+            //判断是否显示所有点云
+            bool showAllPointCloud = Scene::showAllPointCloud;
+            ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
+            if(showAllPointCloud != Scene::showAllPointCloud)
+            {
+                //如果改变了Scene::showAllPointCloud，将所有点云的show属性设置为Scene::showAllPointCloud
+                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                {
+                    it->second.show = Scene::showAllPointCloud;
+                }
+            }
             ImGui::Separator();
 
             //根据场景中数据渲染UI
@@ -458,8 +474,6 @@ void CoolenderUI::renderRightSideBar()
                     ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
                     if (ImGui::TreeNode(it->first.c_str()))
                     {   
-                        
-                        
                         //checkbox
                         ImGui::Checkbox("Show point cloud", &it->second.show);
                         
@@ -493,11 +507,9 @@ void CoolenderUI::renderRightSideBar()
 
                         //平移 
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transX", &it->second.transX, 0.01f);
-                        ImGui::SameLine();
+                        ImGui::DragFloat("transX", &it->second.transX, 0.01f);ImGui::SameLine();                        
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transY", &it->second.transY, 0.01f);
-                        ImGui::SameLine();
+                        ImGui::DragFloat("transY", &it->second.transY, 0.01f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
                         it->second.model =
@@ -507,11 +519,9 @@ void CoolenderUI::renderRightSideBar()
                         
                         //旋转
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);
-                        ImGui::SameLine();
+                        ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);
-                        ImGui::SameLine();
+                        ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
                         it->second.model =  

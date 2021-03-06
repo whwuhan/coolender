@@ -13,9 +13,9 @@ namespace coolender
     {
     public:
         Scene();
+        //场景的属性
         static Light  parallelLight;//场景平行光
         static float ambientIntensity;//场景的环境光强度
-        //场景的属性
         static glm::vec4 clearColor;//背景颜色
         static bool showFloor;//显示地板
         static bool phongLightingModel;//Phong光照模型
@@ -23,6 +23,7 @@ namespace coolender
         static LIGHT_MODEL lightModel;//光照模型
         static float pointCloudPointSize;//场景所有点云的大小
         static glm::vec4 pointCloudPointColor;//场景所有点云的颜色
+        static bool showAllPointCloud;//显示所有点云
 
         // void init();
         //场景中的物体
