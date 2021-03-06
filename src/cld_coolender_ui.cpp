@@ -257,8 +257,8 @@ void CoolenderUI::renderRightSideBar()
     ImGui::SetNextWindowPos
     (
         ImVec2
-        (   // 注意FramebufferSize是窗口实际长度的2倍
-            mainViewport->WorkPos.x + winWidth / 2.0 - CoolenderUI::rightSidebarWidth - CoolenderUI::rightSidebarPosX, 
+        (   // 注意FramebufferSize是窗口实际长度的2倍（??）
+            mainViewport->WorkPos.x + winWidth - CoolenderUI::rightSidebarWidth - CoolenderUI::rightSidebarPosX, 
             mainViewport->WorkPos.y + CoolenderUI::rightSidebarPosY
         ), 
         ImGuiCond_FirstUseEver
@@ -570,7 +570,8 @@ void CoolenderUI::renderMessageBox()
     ImGui::SetNextWindowPos
     (
         ImVec2
-        (   // 注意FramebufferSize是窗口实际长度的2倍
+        (   
+            // 注意FramebufferSize是窗口实际长度的2倍(?????)
             mainViewport->WorkPos.x + CoolenderUI::messageBoxPosX, 
             mainViewport->WorkPos.y + CoolenderUI::messageBoxPosY
         ), 
@@ -603,7 +604,7 @@ void CoolenderUI::renderFileChooseDialog()
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
-    ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDialog", "Choose File", ".obj", "");
+    ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDialog", "Choose File", ".obj", ".", 0);
     
     // display
     if (ImGuiFileDialog::Instance()->Display("ChooseFileDialog")) 
@@ -612,40 +613,25 @@ void CoolenderUI::renderFileChooseDialog()
         if (ImGuiFileDialog::Instance()->IsOk())
         {
             //获取的路径和文件名称
-            string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-            string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-            // action
-            cout << "You choose file:" << filePathName << endl;
-            cout << "Your choosed file’s path is " << filePath << endl;
-            //读取点云数据
-            PointCloud pointCloud;
-            loadPointCloudObj(filePathName, &pointCloud);
-
-            //将点云添加到场景中
-            Scene::addPointCloud(filePathName, pointCloud);
-
-            //传输数据给GPU
-            Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[filePathName]);//点状点云
-            //球状点云准备
-            Sphere sphere;
-            sphere.createSphere(); 
-            Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[filePathName], sphere);//初始化球状点云
-            Scene::addSphere(filePathName, sphere);//将对应的球体添加到场景中
-            
-            // switch(Scene::pointType)
-            // {
-            //     case POINT:
-            //         //并做渲染初始化
-            //         Render::renderPointCloudPointInit(Scene::pointCloudCollection[filePathName]);
-            //         break;
-            //     case SPHERE:
-            //         Render::renderPointCloudSphereInit(Scene::pointCloudCollection[filePathName]);
-            //         break;
-            //     default:
-            //         cerr << "Render Point Cloud Type Wrong!" << endl;
-            //         exit(0);
-            // }
-            
+            auto fileMap = ImGuiFileDialog::Instance()->GetSelection();//返回一个map<string, string> key是文件名，value是路径
+            for(auto it = fileMap.begin(); it != fileMap.end(); it++)
+            {
+                // action
+                cout << "You choose file:" << it->first << endl;
+                cout << "Your choosed file’s path is " << it->second << endl;
+                //读取点云数据
+                PointCloud pointCloud;
+                loadPointCloudObj(it->second, &pointCloud);
+                //将点云添加到场景中
+                Scene::addPointCloud(it->second, pointCloud);
+                //传输数据给GPU
+                Render::renderPointCloudTypePointInit(Scene::pointCloudCollection[it->second]);//点状点云
+                //球状点云准备
+                Sphere sphere;
+                sphere.createSphere(); 
+                Render::renderPointCloudTypeSphereInit(Scene::pointCloudCollection[it->second], sphere);//初始化球状点云
+                Scene::addSphere(it->second, sphere);//将对应的球体添加到场景中
+            }
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showFileChooseDialog = false;
