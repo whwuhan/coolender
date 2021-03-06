@@ -21,7 +21,6 @@ namespace coolender
     public:
        
         static  GLFWwindow* glfwWindow;//glfw window
-
         
         static void init(GLFWwindow* glfwWindow);//初始化，在渲染循环外
         static void renderDemoUI();//渲染imgui demo
@@ -35,7 +34,8 @@ namespace coolender
         static float windowRounding;//窗口的圆角
         static float frameRounding;//内部图标的圆角
 
-        static bool showFileChooseDialog;//文件选择对话框
+        static bool showPointCloudObjFileChooseDialog;//obj点云文件选择框
+        static bool showScreenshotSaveDirChooseDialog;//截图保存路径选择选择框
         static bool showUsage;//显示操作手册
         static bool showRightSideBar;//显示右边Sidebar
         static bool showMessageBox;//信息窗口
@@ -61,7 +61,8 @@ namespace coolender
         static void renderMessageBox();//信息框
 
         //隐藏UI
-        static void renderFileChooseDialog();//渲染文件选择对话框
+        static void renderPointCloudObjFileChooseDialog();//渲染文件选择对话框
+        static void renderScreenshotSaveDirChooseDialog();//选择渲染截图保存文件夹对话框
 
         //其他UI
         static void warningMarker(const char* desc);//警告标志

@@ -215,7 +215,7 @@ void Window::initAndRun()
         if(Window::screenShot)
         {
             string curTime = Function::getCurTime();
-            Function::screenShot("cld_screenshot_" + curTime + ".png");
+            Function::screenShot("cld_screenshot_" + curTime + "_" + to_string(glfwGetTime()) +".png");
         }
         
         //根据场景渲染UI

@@ -50,5 +50,6 @@ string Function::getCurTime()
     {
         curSec = "0" + curSec;
     }
-    return to_string(1900 + loc_time->tm_year) + curMonth + curDay + curHour + curMin + curSec;
+
+    return to_string(1900 + loc_time->tm_year) + curMonth + curDay + "_" +curHour + curMin + curSec;
 }

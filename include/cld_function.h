@@ -2,6 +2,8 @@
 /**
  *封装功能函数 
 */
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <cld_window.h>
 #include <stb_image_write.h>
 #include <glad/glad.h>

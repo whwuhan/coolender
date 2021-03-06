@@ -14,7 +14,8 @@ float CoolenderUI::frameRounding = 3.0;//内部图标的圆角
 bool CoolenderUI::showRightSideBar = true;
 bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showMessageBox = true;
-bool CoolenderUI::showFileChooseDialog = false;
+bool CoolenderUI::showPointCloudObjFileChooseDialog = false;
+bool CoolenderUI::showScreenshotSaveDirChooseDialog = false;
 int CoolenderUI::style = 0;
 
 float CoolenderUI::usagePosX = 3;//usage位置的X坐标
@@ -148,10 +149,15 @@ void CoolenderUI::render()
         //初始显示部分结束
 
         //界面隐藏部分
-        //显示文件选择框
-        if(CoolenderUI::showFileChooseDialog)
+        //显示obj点云文件选择框
+        if(CoolenderUI::showPointCloudObjFileChooseDialog)
         {
-            CoolenderUI::renderFileChooseDialog();
+            CoolenderUI::renderPointCloudObjFileChooseDialog();
+        }
+
+        if(CoolenderUI::showScreenshotSaveDirChooseDialog)
+        {
+            CoolenderUI::renderScreenshotSaveDirChooseDialog();
         }
         
         ImGui::Render();
@@ -169,7 +175,7 @@ void CoolenderUI::renderMenu()
         {
             if (ImGui::MenuItem("Import point clouds .obj", ""))
             {
-                CoolenderUI::showFileChooseDialog = true;
+                CoolenderUI::showPointCloudObjFileChooseDialog = true;
             }
             ImGui::EndMenu();
         }
@@ -424,9 +430,21 @@ void CoolenderUI::renderRightSideBar()
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Function"))
         {
-            if(ImGui::Button("Screen shot"))
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if(ImGui::TreeNode("Screen shot"))
             {
-                Window::screenShot = true;
+                ImGui::Text("Screen shot save path:");ImGui::SameLine();
+                //注意ImGui使用的format string 最好这样写，否则会出现warning
+                ImGui::Text("%s", (Function::screenShotOutPath).c_str());ImGui::SameLine();
+                if(ImGui::Button("Change path"))
+                {
+                    CoolenderUI::showScreenshotSaveDirChooseDialog = true;
+                }
+                if(ImGui::Button("Screen shot"))
+                {
+                    Window::screenShot = true;
+                }
+                ImGui::TreePop();
             }
         }
 
@@ -620,16 +638,16 @@ void CoolenderUI::renderMessageBox()
 }
 
 //渲染文件选择框
-void CoolenderUI::renderFileChooseDialog()
+void CoolenderUI::renderPointCloudObjFileChooseDialog()
 {
     //设置大小和位置
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
-    ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDialog", "Choose File", ".obj", ".", 0);
+    ImGuiFileDialog::Instance()->OpenDialog("PointCloudObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
     
     // display
-    if (ImGuiFileDialog::Instance()->Display("ChooseFileDialog")) 
+    if (ImGuiFileDialog::Instance()->Display("PointCloudObjFileChooseDialog")) 
     {
         // action if OK 点击OK
         if (ImGuiFileDialog::Instance()->IsOk())
@@ -656,15 +674,46 @@ void CoolenderUI::renderFileChooseDialog()
             }
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
-            CoolenderUI::showFileChooseDialog = false;
+            CoolenderUI::showPointCloudObjFileChooseDialog = false;
         }
         // close
         ImGuiFileDialog::Instance()->Close();
-        CoolenderUI::showFileChooseDialog = false;
+        CoolenderUI::showPointCloudObjFileChooseDialog = false;
+    }        
+}
+
+//截图保存路径选择对话框
+void CoolenderUI::renderScreenshotSaveDirChooseDialog()
+{
+    //设置大小和位置
+    const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
+    ImGuiFileDialog::Instance()->OpenDialog("ScreenshotSaveDirChooseDialog", "Choose Directory", nullptr, ".", 0);
+    
+    // display
+    if (ImGuiFileDialog::Instance()->Display("ScreenshotSaveDirChooseDialog")) 
+    {
+        // action if OK 点击OK
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+            
+            Function::screenShotOutPath = ImGuiFileDialog::Instance()->GetCurrentPath();
+            //关闭窗口
+            ImGuiFileDialog::Instance()->Close();
+            CoolenderUI::showScreenshotSaveDirChooseDialog = false;
+        }
+        // close
+        ImGuiFileDialog::Instance()->Close();
+        CoolenderUI::showScreenshotSaveDirChooseDialog = false;
     }        
 }
 
 
+
+
+
+//warning 提示
 void CoolenderUI::warningMarker(const char* desc)
 {
     ImGui::TextDisabled("(!!!)");
@@ -677,6 +726,8 @@ void CoolenderUI::warningMarker(const char* desc)
         ImGui::EndTooltip();
     }
 }
+
+
 
 //cleanup
 void CoolenderUI::destroy()
