@@ -10,8 +10,8 @@ bool Scene::phongLightingModel = true;//是否使用phone光照模型
 POINT_TYPE Scene::pointType = POINT;//点云绘制类型
 LIGHT_MODEL Scene::lightModel = BLINN_PHONG;//场景光照模型
 Light Scene::parallelLight(vec3(0.0f, 0.0f, 0.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, 1.0f, 1.0f));//场景平行光
-
-
+float Scene::pointCloudPointSize = 1.0f;
+vec4 Scene::pointCloudPointColor(0.06f, 0.729f, 0.941f, 1.0f);
 //注意static变量要先初始化 否则链接失败
 map<string, Light> Scene::lightCollection;//光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云

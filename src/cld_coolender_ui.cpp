@@ -263,7 +263,7 @@ void CoolenderUI::renderRightSideBar()
         ), 
         ImGuiCond_FirstUseEver
     );
-    //设置大小
+    //设置Sidebar大小
     ImGui::SetNextWindowSize
     (
         ImVec2(CoolenderUI::rightSidebarWidth, CoolenderUI::rightSidebarHeight), 
@@ -301,9 +301,29 @@ void CoolenderUI::renderRightSideBar()
             
             //相机设置
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Camera settings"))
+            if (ImGui::TreeNode("Camera settings and information"))
             {
-                ImGui::SliderFloat("Camera speed", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
+                //相机位置
+                ImGui::Text("Camera information:");
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("posX", &Window::camera.Position.x, 0.01f);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("posY", &Window::camera.Position.y, 0.01f);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("posZ", &Window::camera.Position.z, 0.01f);
+                //相机朝向
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("frontX", &Window::camera.Front.x, 0.01f);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("frontY", &Window::camera.Front.y, 0.01f);
+                ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("frontZ", &Window::camera.Front.z, 0.01f);
+                //相机移动速度
+                ImGui::SliderFloat("Speed scale", &Window::cameraSpeedScale, 0.0f, 5.0f, "Speed scale = %.3f");
                 ImGui::TreePop();
             }
             ImGui::Separator();
@@ -313,7 +333,7 @@ void CoolenderUI::renderRightSideBar()
             if (ImGui::TreeNode("Parallel light settings"))
             {
                 //平行光环境光强度
-                ImGui::SliderFloat("Ambient light intensity:", &Scene::ambientIntensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
+                ImGui::SliderFloat("Ambient light intensity", &Scene::ambientIntensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
                 
                 //平行光的方向
                 ImGui::Text("Parallel ambient light direction:");
@@ -351,6 +371,43 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
                 ImGui::RadioButton("Sphere", &pointType, 1);
                 Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
+
+                //设置所有点云的point size
+                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                {
+                    // 将所有点云的changePointSize设置为false
+                    it->second.changePointSize = false;
+                }
+                float pointCloudPointSize = Scene::pointCloudPointSize;
+                ImGui::DragFloat("Global point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)
+                {
+                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                    {
+                        it->second.pointSize = Scene::pointCloudPointSize;
+                        it->second.changePointSize = true;
+                    }
+                }
+
+                //设置所有点云的颜色
+                float pointCloudPointColor[3] = 
+                {
+                    Scene::pointCloudPointColor.x,
+                    Scene::pointCloudPointColor.y,
+                    Scene::pointCloudPointColor.z
+                };
+                ImGui::ColorEdit3("Global point color", pointCloudPointColor);
+                Scene::pointCloudPointColor.x = pointCloudPointColor[0];
+                Scene::pointCloudPointColor.y = pointCloudPointColor[1];
+                Scene::pointCloudPointColor.z = pointCloudPointColor[2];
+                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                {
+                    //color
+                    it->second.color.x = pointCloudPointColor[0];
+                    it->second.color.y = pointCloudPointColor[1];
+                    it->second.color.z = pointCloudPointColor[2];
+                    it->second.color.w = 1.0;
+                }
                 ImGui::TreePop();
             }
             ImGui::Separator();
@@ -406,9 +463,8 @@ void CoolenderUI::renderRightSideBar()
                         //checkbox
                         ImGui::Checkbox("Show point cloud", &it->second.show);
                         
-                        //pointSize
+                        //设置pointSize
                         float pointSize = it->second.pointSize;//用于判断是否改变了point size
-                        it->second.changePointSize = false;
                         ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
                         //ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 10.f, "Point size = %.3f");
                         //判断是否改变了球面的半径
@@ -417,7 +473,7 @@ void CoolenderUI::renderRightSideBar()
                             it->second.changePointSize = true;
                         }
                         //color
-                        float pointColor[4] = 
+                        float pointColor[3] = 
                         {
                             it->second.color.x,
                             it->second.color.y,

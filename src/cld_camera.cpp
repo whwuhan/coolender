@@ -17,11 +17,11 @@ Camera::Camera(glm::vec3 position,glm::vec3 up,float yaw,float pitch):
     WorldUp = up;
     Yaw = yaw;
     Pitch = pitch;
-    std::cout<<"Camera init information:"<<std::endl;
-    std::cout<<"position:["<<position.x<<","<<position.y<<","<<position.z<<"]"<<std::endl;
-    std::cout<<"up:["<<up.x<<","<<up.y<<","<<up.z<<"]"<<std::endl;
-    std::cout <<"Yaw:"<<Yaw<<"°"<<std::endl;
-    std::cout <<"Pitch:"<<Pitch<<"°"<<std::endl;
+    cout<<"Camera init information:"<<endl;
+    cout<<"position:["<<position.x<<","<<position.y<<","<<position.z<<"]"<<endl;
+    cout<<"up:["<<up.x<<","<<up.y<<","<<up.z<<"]"<<endl;
+    cout <<"Yaw:"<<Yaw<<"°"<<endl;
+    cout <<"Pitch:"<<Pitch<<"°"<<endl;
     updateCameraVectors();
 }
 
@@ -132,15 +132,15 @@ void Camera::updateCameraVectors()
 //显示相机信息
 void Camera::showInf()
 {
-    std::cout<<"-----------------------------------------"<<std::endl;
-    std::cout<<"Camera information:"<<std::endl;
-    std::cout<<"Position:["<<Position.x<<","<<Position.y<<","<<Position.z<<"]"<<std::endl;
-    std::cout<<"Up:["<<Up.x<<","<<Up.y<<","<<Up.z<<"]"<<std::endl;
-    std::cout<<"Front:["<<Front.x<<","<<Front.y<<","<<Front.z<<"]"<<std::endl;
-    std::cout<<"Right:["<<Right.x<<","<<Right.y<<","<<Right.z<<"]"<<std::endl;
-    std::cout<<"Yaw:"<<Yaw<<"°"<<std::endl;
-    std::cout<<"Pitch:"<<Pitch<<"°"<<std::endl;
-    std::cout<<"MovementSpeed:"<<MovementSpeed<<std::endl;
-    std::cout<<"MouseSensitivity:"<<MouseSensitivity<<std::endl;
-    std::cout<<"Zoom:"<<Zoom<<"°"<<std::endl;
+    cout<<"-----------------------------------------"<<endl;
+    cout<<"Camera information:"<<endl;
+    cout<<"Position:["<<Position.x<<","<<Position.y<<","<<Position.z<<"]"<<endl;
+    cout<<"Up:["<<Up.x<<","<<Up.y<<","<<Up.z<<"]"<<endl;
+    cout<<"Front:["<<Front.x<<","<<Front.y<<","<<Front.z<<"]"<<endl;
+    cout<<"Right:["<<Right.x<<","<<Right.y<<","<<Right.z<<"]"<<endl;
+    cout<<"Yaw:"<<Yaw<<"°"<<endl;
+    cout<<"Pitch:"<<Pitch<<"°"<<endl;
+    cout<<"MovementSpeed:"<<MovementSpeed<<endl;
+    cout<<"MouseSensitivity:"<<MouseSensitivity<<endl;
+    cout<<"Zoom:"<<Zoom<<"°"<<endl;
 }

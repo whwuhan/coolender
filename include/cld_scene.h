@@ -21,6 +21,8 @@ namespace coolender
         static bool phongLightingModel;//Phong光照模型
         static POINT_TYPE pointType;//点云点的绘制类型
         static LIGHT_MODEL lightModel;//光照模型
+        static float pointCloudPointSize;//场景所有点云的大小
+        static glm::vec4 pointCloudPointColor;//场景所有点云的颜色
 
         // void init();
         //场景中的物体

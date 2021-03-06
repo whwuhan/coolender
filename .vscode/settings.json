@@ -103,7 +103,8 @@
         "*.expression": "cpp",
         "alignedvector3": "cpp",
         "fft": "cpp",
-        "dense": "cpp"
+        "dense": "cpp",
+        "hash_set": "cpp"
     },
     "git.ignoreLimitWarning": true
 }
