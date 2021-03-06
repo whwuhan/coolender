@@ -1,7 +1,7 @@
 #include <cld_function.h>
 using namespace std;
 using namespace coolender;
-string Function::screenShotOutPath("screenshot");//截图存放路径
+string Function::screenShotOutPath("./screenshot");//截图存放路径
 
 //当前画面截图
 void Function::screenShot(string fileName)
@@ -15,6 +15,7 @@ void Function::screenShot(string fileName)
     string finalPath = Function::screenShotOutPath + "/" + fileName;
     stbi_write_png(finalPath.c_str(), Window::width, Window::height, 3, data, 0);
     //stbi_image_free(data);//释放资源
+    cout << "Screenshot successfully! Save path:"<< finalPath << endl;
     Window::screenShot = false;//设置点前帧不再截图
 }
 
@@ -46,10 +47,10 @@ string Function::getCurTime()
     {
         curMin = "0" + curMin;
     }
-    if(loc_time->tm_hour < 10)
-    {
-        curSec = "0" + curSec;
-    }
+    // if(loc_time->tm_sec < 10)
+    // {
+    //     curSec = "0" + curSec;
+    // }
 
-    return to_string(1900 + loc_time->tm_year) + curMonth + curDay + "_" +curHour + curMin + curSec;
+    return to_string(1900 + loc_time->tm_year) + curMonth + curDay + "_" +curHour + curMin;
 }

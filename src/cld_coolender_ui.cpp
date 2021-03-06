@@ -645,7 +645,7 @@ void CoolenderUI::renderPointCloudObjFileChooseDialog()
     ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
     ImGuiFileDialog::Instance()->OpenDialog("PointCloudObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
-    
+    ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
     // display
     if (ImGuiFileDialog::Instance()->Display("PointCloudObjFileChooseDialog")) 
     {
