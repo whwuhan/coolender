@@ -25,15 +25,30 @@ string Function::getCurTime()
 	tm *loc_time = localtime(&now);	//转化成当地时间
 
     //格式化时间字符串
-    string curMonth = to_string(1 + loc_time->tm_mon);
-    string curDay = to_string(loc_time->tm_mday);
+    string curMonth = to_string(1 + loc_time->tm_mon);//月份
+    string curDay = to_string(loc_time->tm_mday);//日
+    string curHour = to_string(loc_time->tm_hour);//时
+    string curMin = to_string(loc_time->tm_min);//分
+    string curSec = to_string(loc_time->tm_sec);
     if(1 + loc_time->tm_mon < 10)
     {
-        curMonth = string("0") + to_string(1 + loc_time->tm_mon);
+        curMonth = "0" + curMonth;
     }
     if(loc_time->tm_mday < 10)
     {
-        curDay = string("0") + to_string(loc_time->tm_mday);
+        curDay = "0" + curDay;
     }
-    return to_string(1900 + loc_time->tm_year) + curMonth + curDay;
+    if(loc_time->tm_hour < 10)
+    {
+        curHour = "0" + curHour;
+    }
+    if(loc_time->tm_min < 10)
+    {
+        curMin = "0" + curMin;
+    }
+    if(loc_time->tm_hour < 10)
+    {
+        curSec = "0" + curSec;
+    }
+    return to_string(1900 + loc_time->tm_year) + curMonth + curDay + curHour + curMin + curSec;
 }

@@ -215,11 +215,9 @@ void Window::initAndRun()
         if(Window::screenShot)
         {
             string curTime = Function::getCurTime();
-            Function::screenShot(string("screenshot") + curTime + string(".png"));
+            Function::screenShot("cld_screenshot_" + curTime + ".png");
         }
         
-
-
         //根据场景渲染UI
         //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
         //CoolenderUI.renderDemoUI();
