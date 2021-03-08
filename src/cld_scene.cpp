@@ -5,7 +5,9 @@ using namespace wh::basic;
 using namespace glm;
 vec4 Scene::clearColor(1.0f, 1.0f, 1.0f, 1.0f);//clear color
 float Scene::ambientIntensity = 0.35;//场景的环境光
+Plane Scene::floor;
 bool Scene::showFloor = false;//是否显示地板
+bool Scene::floorUseTex = false;//地板是否使用纹理
 bool Scene::phongLightingModel = true;//是否使用phone光照模型
 POINT_TYPE Scene::pointType = POINT;//点云绘制类型
 LIGHT_MODEL Scene::lightModel = BLINN_PHONG;//场景光照模型
@@ -14,11 +16,11 @@ float Scene::pointCloudPointSize = 1.0f;
 vec4 Scene::pointCloudPointColor(0.06f, 0.729f, 0.941f, 1.0f);
 bool Scene::showAllPointCloud = true;
 //注意static变量要先初始化 否则链接失败
-map<string, Light> Scene::lightCollection;//光源
+// map<string, Light> Scene::lightCollection;//光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云
 map<string, PolygonMesh> Scene::polygonMeshCollection;//Mesh网格
 map<string, Sphere> Scene::sphereCollection;//球状点云对应的球
-
+map<string, Light> Scene::pointLightCollection;//点光源
 
 Scene::Scene()
 {}
@@ -27,10 +29,17 @@ Scene::Scene()
 // {}
 
 //添加光源
-void Scene::addLight(string lightName, Light &light)
+// void Scene::addLight(string lightName, Light &light)
+// {
+//     lightCollection[lightName] = light;
+//     cout << "Add light successfully." << endl;
+// }
+
+//增加点光源
+void Scene::addPointLight(std::string pointLightName, coolender::Light &pointLight)
 {
-    lightCollection[lightName] = light;
-    cout << "Add light successfully." << endl;
+    pointLightCollection[pointLightName] = pointLight;
+    cout << "Add point light successfully." << endl;
 }
 
 //添加点云
@@ -55,10 +64,17 @@ void Scene::addSphere(string sphereName, Sphere& sphere)
 }
 
 //删除光源
-void Scene::deleteLight(string lightName)
+// void Scene::deleteLight(string lightName)
+// {
+//     lightCollection.erase(lightName);
+//     cout << "Delete light successfully." << endl;
+// }
+
+//删除点光源
+void Scene::deletePointLight(std::string pointLightName)
 {
-    lightCollection.erase(lightName);
-    cout << "Delete light successfully." << endl;
+    polygonMeshCollection.erase(pointLightName);
+    cout << "Delete point light successfully." << endl;
 }
 
 //删除点云

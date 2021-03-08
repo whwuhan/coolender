@@ -11,10 +11,15 @@ namespace coolender
     {
     public:
         Light();
-        Light(glm::vec3 position, glm::vec4 color, glm::vec3 direction = glm::vec3(0.0f, 1.0f, 1.0f));
+        Light(
+            glm::vec3 position,     //位置
+            glm::vec4 color,        //HDR颜色
+            glm::vec3 direction     //方向
+        );
 
         glm::vec3 position;//位置
         glm::vec4 color;//颜色
         glm::vec3 direction;//方向
+
     };
 }

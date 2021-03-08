@@ -2,11 +2,11 @@
 #include <cld_plane.h>
 using namespace std;
 using namespace coolender;
-
-Plane::Plane():texturePath("img/wood.png")
+using namespace glm;
+Plane::Plane():color(1.0f, 1.0f, 1.0f, 1.0f), texturePath("img/wood.png")
 {}
 
-Plane::Plane(string texturePath):texturePath(texturePath)
+Plane::Plane(vec4 color, string texturePath):color(color), texturePath(texturePath)
 {}
 
 void Plane::init()

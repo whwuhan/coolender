@@ -16,7 +16,7 @@ bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showMessageBox = true;
 bool CoolenderUI::showPointCloudObjFileChooseDialog = false;
 bool CoolenderUI::showScreenshotSaveDirChooseDialog = false;
-int CoolenderUI::style = 0;
+int CoolenderUI::style = 0;//UI风格
 
 float CoolenderUI::usagePosX = 3;//usage位置的X坐标
 float CoolenderUI::usagePosY = 22;//usage位置的Y坐标
@@ -328,9 +328,9 @@ void CoolenderUI::renderRightSideBar()
             }
             ImGui::Separator();
 
-            //场景平行光源信息
+            //全局光照信息
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Parallel light settings"))
+            if (ImGui::TreeNode("Global illumination settings"))
             {
                 //平行光环境光强度
                 ImGui::SliderFloat("Ambient light intensity", &Scene::ambientIntensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
@@ -464,49 +464,79 @@ void CoolenderUI::renderRightSideBar()
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Scene Settings"))
         {   
-            //背景颜色调整框
-            float clearColor[4] = 
-            {
-                Scene::clearColor.x,
-                Scene::clearColor.y,
-                Scene::clearColor.z,
-                Scene::clearColor.w
-            };
-            ImGui::ColorEdit3("Background color", clearColor);
-            Scene::clearColor.x = clearColor[0];
-            Scene::clearColor.y = clearColor[1];
-            Scene::clearColor.z = clearColor[2];
-            Scene::clearColor.w = 1.0f;
+            //全局场景设置
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if(ImGui::TreeNode("Global scene settings"))
+            {   
+                //背景颜色调整框
+                float clearColor[4] = 
+                {
+                    Scene::clearColor.x,
+                    Scene::clearColor.y,
+                    Scene::clearColor.z,
+                    Scene::clearColor.w
+                };
+                ImGui::ColorEdit3("Background color", clearColor);
+                Scene::clearColor.x = clearColor[0];
+                Scene::clearColor.y = clearColor[1];
+                Scene::clearColor.z = clearColor[2];
+                Scene::clearColor.w = 1.0f;
+                
+                //所有点云显示设置
+                bool flag = true;
+                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                {
+                    //如果有一个点云不显示，设置Scene::showAllPointCloud为false
+                    if(!it->second.show)
+                    {
+                        flag = false;
+                    }
+                }
+                Scene::showAllPointCloud = flag;
+                //判断是否显示所有点云
+                bool showAllPointCloud = Scene::showAllPointCloud;
+                ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
+                if(showAllPointCloud != Scene::showAllPointCloud)
+                {
+                    //如果改变了Scene::showAllPointCloud，将所有点云的show属性设置为Scene::showAllPointCloud
+                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                    {
+                        it->second.show = Scene::showAllPointCloud;
+                    }
+                }
+                ImGui::TreePop();
+            }
             
+            ImGui::Separator();
 
             //地板显示设置
             //ImGui::TableNextColumn();
-            ImGui::Checkbox("Show floor", &Scene::showFloor);ImGui::SameLine();
-            //所有点云显示设置
-            bool flag = true;
-            for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("Floor:"))
             {
-                //如果有一个点云不显示，设置Scene::showAllPointCloud为false
-                if(!it->second.show)
+                ImGui::Checkbox("Show floor", &Scene::showFloor);ImGui::SameLine();
+                ImGui::Checkbox("Use texture", &Scene::floorUseTex);
+                if(!Scene::showFloor) Scene::floorUseTex = false;
+                if(Scene::showFloor && !Scene::floorUseTex)//地板不使用纹理，使用纯色
                 {
-                    flag = false;
+                    float floorColor[] = 
+                    {
+                        Scene::floor.color.x,
+                        Scene::floor.color.y,
+                        Scene::floor.color.z
+                    };
+                    ImGui::ColorEdit3("Floor color", floorColor);
+                    Scene::floor.color.x = floorColor[0];
+                    Scene::floor.color.y = floorColor[1];
+                    Scene::floor.color.z = floorColor[2];
                 }
-            }
-            Scene::showAllPointCloud = flag;
-            //判断是否显示所有点云
-            bool showAllPointCloud = Scene::showAllPointCloud;
-            ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
-            if(showAllPointCloud != Scene::showAllPointCloud)
-            {
-                //如果改变了Scene::showAllPointCloud，将所有点云的show属性设置为Scene::showAllPointCloud
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                {
-                    it->second.show = Scene::showAllPointCloud;
-                }
+                ImGui::TreePop();
             }
             ImGui::Separator();
 
+
             //根据场景中数据渲染UI
+            //点云数据
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
             if (ImGui::TreeNode("Point Cloud:"))
             {

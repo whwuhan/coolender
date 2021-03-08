@@ -104,7 +104,12 @@
         "alignedvector3": "cpp",
         "fft": "cpp",
         "dense": "cpp",
-        "hash_set": "cpp"
+        "hash_set": "cpp",
+        "compare": "cpp",
+        "scoped_allocator": "cpp",
+        "concepts": "cpp",
+        "ranges": "cpp",
+        "stop_token": "cpp"
     },
     "git.ignoreLimitWarning": true
 }

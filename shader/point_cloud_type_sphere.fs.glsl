@@ -42,5 +42,8 @@ void main()
     
     color = ambient + diffuse + specular;
 
+    //HDR
+    // color = color / (vec3(1.0f) + color);
+
     FragColor = vec4(color, 1.0);
 }

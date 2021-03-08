@@ -16,7 +16,7 @@ void Function::screenShot(string fileName)
     stbi_write_png(finalPath.c_str(), Window::width, Window::height, 3, data, 0);
     //stbi_image_free(data);//释放资源
     cout << "Screenshot successfully! Save path:"<< finalPath << endl;
-    Window::screenShot = false;//设置点前帧不再截图
+    Window::screenShot = false;//设置当前帧不再截图
 }
 
 //获取当前时间
@@ -30,7 +30,7 @@ string Function::getCurTime()
     string curDay = to_string(loc_time->tm_mday);//日
     string curHour = to_string(loc_time->tm_hour);//时
     string curMin = to_string(loc_time->tm_min);//分
-    string curSec = to_string(loc_time->tm_sec);
+    string curSec = to_string(loc_time->tm_sec);//秒
     if(1 + loc_time->tm_mon < 10)
     {
         curMonth = "0" + curMonth;

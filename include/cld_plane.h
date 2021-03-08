@@ -13,11 +13,12 @@ namespace coolender
     {
     public:
         Plane();
-        Plane(std::string texturePath);
+        Plane(glm::vec4 color, std::string texturePath);
         void init();
         unsigned int VAO;
         unsigned int VBO;
         unsigned int texture;
+        glm::vec4 color;//颜色
     private:
         std::string texturePath;//纹理路径
     };

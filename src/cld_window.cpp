@@ -90,6 +90,7 @@ void Window::initAndRun()
     floor.init();
     floorShader.use();
     floorShader.setInt("floorTexture", 0);
+    Scene::floor = floor;
     //点状点云shader
     Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
     //绘制球状点云
@@ -138,6 +139,8 @@ void Window::initAndRun()
             floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
             floorShader.setFloat("ambientIntensity", Scene::ambientIntensity); //环境光强度
             floorShader.setVec3("parallelLightDir", Scene::parallelLight.direction);//平行光的方向
+            floorShader.setBool("floorUseTex", Scene::floorUseTex);
+            floorShader.setVec4("floorColor", Scene::floor.color);
             // floor
             glBindVertexArray(floor.VAO);
             glActiveTexture(GL_TEXTURE0);
