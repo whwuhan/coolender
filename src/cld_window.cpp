@@ -102,7 +102,7 @@ void Window::initAndRun()
     // Main loop
     while (!glfwWindowShouldClose(Window::glfwWindow))
     {
-
+        
         // per-frame time logic
         float currentFrame = glfwGetTime();
         Window::deltaTime = currentFrame - Window::lastFrame;

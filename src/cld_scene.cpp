@@ -6,7 +6,7 @@ using namespace glm;
 vec4 Scene::clearColor(1.0f, 1.0f, 1.0f, 1.0f);//clear color
 float Scene::ambientIntensity = 0.35;//场景的环境光
 Plane Scene::floor;
-bool Scene::showFloor = false;//是否显示地板
+bool Scene::showFloor = true;//是否显示地板
 bool Scene::floorUseTex = false;//地板是否使用纹理
 bool Scene::phongLightingModel = true;//是否使用phone光照模型
 POINT_TYPE Scene::pointType = POINT;//点云绘制类型

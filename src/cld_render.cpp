@@ -34,7 +34,7 @@ void Render::renderPointCloudTypePoint(PointCloud &pointCloud)
 }
 
 //准备渲染球状点云
-void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sphere)
+void Render:: renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sphere)
 {
     glBindVertexArray(sphere.VAO);
     unsigned int pointAmount = pointCloud.size;//点云点的数量
@@ -48,7 +48,7 @@ void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sphe
             pointModel, 
             vec3(pointCloud.points.row(i)[0], pointCloud.points.row(i)[1], pointCloud.points.row(i)[2])
         );//平移
-        pointModel = scale(pointModel, vec3(pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05));//缩放
+        pointModel = scale(pointModel, vec3(pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05));//QIU D缩放
         //不需要旋转
         pointModelMatrices[i] = pointModel;
     } 
@@ -81,7 +81,6 @@ void Render::renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sphe
     glVertexAttribDivisor(4, 1);
     glVertexAttribDivisor(5, 1);
     glVertexAttribDivisor(6, 1);
-
     glBindVertexArray(0);
 }
 

@@ -276,7 +276,7 @@ void CoolenderUI::renderRightSideBar()
     //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
-        //全局设置
+        //整体全局设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Global Settings"))
         {   
@@ -361,73 +361,11 @@ void CoolenderUI::renderRightSideBar()
             }
             ImGui::Separator();
 
-            //点云全局设置
-            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Point cloud global settings"))
-            {
-                //设置点云类型
-                int pointType = Scene::pointType;//enum强制转换为int
-                ImGui::Text("Point cloud point type:");ImGui::SameLine();
-                ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
-                ImGui::RadioButton("Sphere", &pointType, 1);
-                Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
-
-                //设置所有点云的point size
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                {
-                    // 将所有点云的changePointSize设置为false
-                    it->second.changePointSize = false;
-                }
-                float pointCloudPointSize = Scene::pointCloudPointSize;
-                ImGui::DragFloat("Global point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
-                ImGui::SameLine();
-                warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type, your PC will explode!!!");
-                if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)
-                {
-                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                    {
-                        it->second.pointSize = Scene::pointCloudPointSize;
-                        it->second.changePointSize = true;
-                    }
-                }
-
-                //设置所有点云的颜色
-                float pointCloudColorR = Scene::pointCloudPointColor.x;
-                float pointCloudColorG = Scene::pointCloudPointColor.y;
-                float pointCloudColorB = Scene::pointCloudPointColor.z;
-                float pointCloudPointColor[3] = 
-                {
-                    Scene::pointCloudPointColor.x,
-                    Scene::pointCloudPointColor.y,
-                    Scene::pointCloudPointColor.z
-                };
-                ImGui::ColorEdit3("Global point color", pointCloudPointColor);
-                Scene::pointCloudPointColor.x = pointCloudPointColor[0];
-                Scene::pointCloudPointColor.y = pointCloudPointColor[1];
-                Scene::pointCloudPointColor.z = pointCloudPointColor[2];
-                //判断是否更改了全局点云颜色
-                if(
-                    abs(Scene::pointCloudPointColor.x - pointCloudColorR) >  0.001 ||
-                    abs(Scene::pointCloudPointColor.y - pointCloudColorG) >  0.001 ||
-                    abs(Scene::pointCloudPointColor.z - pointCloudColorB) >  0.001 
-                )
-                {
-                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                    {
-                        //color
-                        it->second.color.x = pointCloudPointColor[0];
-                        it->second.color.y = pointCloudPointColor[1];
-                        it->second.color.z = pointCloudPointColor[2];
-                        it->second.color.w = 1.0;
-                    }
-                }
-                
-                ImGui::TreePop();
-            }
-            ImGui::Separator();
             
-            //MSAA
+            
+            //MSAA 暂时无法动态变更
             // ImGui::Checkbox("MSAA", &Window::useMSAA);
+            // int MSAALevel = Window::MSAALevel;
             // if(Window::useMSAA)
             // {
             //     ImGui::RadioButton("MSAA x0", &Window::MSAALevel, 0); ImGui::SameLine();
@@ -435,10 +373,24 @@ void CoolenderUI::renderRightSideBar()
             //     ImGui::RadioButton("MSAA x16", &Window::MSAALevel, 16); ImGui::SameLine();
             //     ImGui::RadioButton("MSAA x32", &Window::MSAALevel, 32);
             // }
-
+            // if(Window::MSAALevel != MSAALevel)
+            // {
+            //     glfwWindowHint(GLFW_SAMPLES, Window::MSAALevel);               //MSAA采样数
+            //     string windowTitle = "Coolender Version " + Coolender::version;
+            //     Window::glfwWindow = glfwCreateWindow(Window::width, Window::height, windowTitle.c_str(), NULL, NULL);
+            //     //参数依次是长，宽，名称，后两个参数忽略
+            //     if (Window::glfwWindow == nullptr)
+            //     {
+            //         cout << "Failed to create GLFW window" << endl;
+            //         glfwTerminate();
+            //         return;
+            //     }
+            // }
         }
+        
 
-        //功能
+        //========================================================================================================
+        //功能相关UI
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Function"))
         {
@@ -460,6 +412,8 @@ void CoolenderUI::renderRightSideBar()
             }
         }
 
+
+        //========================================================================================================
         //场景设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Scene Settings"))
@@ -481,32 +435,94 @@ void CoolenderUI::renderRightSideBar()
                 Scene::clearColor.y = clearColor[1];
                 Scene::clearColor.z = clearColor[2];
                 Scene::clearColor.w = 1.0f;
-                
-                //所有点云显示设置
-                bool flag = true;
-                for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                ImGui::Separator();
+                //点云全局设置
+                ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+                if (ImGui::TreeNode("Point cloud global settings"))
                 {
-                    //如果有一个点云不显示，设置Scene::showAllPointCloud为false
-                    if(!it->second.show)
-                    {
-                        flag = false;
-                    }
-                }
-                Scene::showAllPointCloud = flag;
-                //判断是否显示所有点云
-                bool showAllPointCloud = Scene::showAllPointCloud;
-                ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
-                if(showAllPointCloud != Scene::showAllPointCloud)
-                {
-                    //如果改变了Scene::showAllPointCloud，将所有点云的show属性设置为Scene::showAllPointCloud
+                    //所有点云显示设置
+                    bool flag = true;
                     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                     {
-                        it->second.show = Scene::showAllPointCloud;
+                        //如果有一个点云不显示，设置Scene::showAllPointCloud为false
+                        if(!it->second.show)
+                        {
+                            flag = false;
+                        }
                     }
+                    Scene::showAllPointCloud = flag;
+                    //判断是否显示所有点云
+                    bool showAllPointCloud = Scene::showAllPointCloud;
+                    ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
+                    if(showAllPointCloud != Scene::showAllPointCloud)
+                    {
+                        //如果改变了Scene::showAllPointCloud，将所有点云的show属性设置为Scene::showAllPointCloud
+                        for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                        {
+                            it->second.show = Scene::showAllPointCloud;
+                        }
+                    }
+
+                    //设置点云类型
+                    int pointType = Scene::pointType;//enum强制转换为int
+                    ImGui::Text("Point cloud point type:");ImGui::SameLine();
+                    ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
+                    ImGui::RadioButton("Sphere", &pointType, 1);
+                    Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
+
+                    //设置所有点云的point size
+                    for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                    {
+                        // 将所有点云的changePointSize设置为false
+                        it->second.changePointSize = false;
+                    }
+                    float pointCloudPointSize = Scene::pointCloudPointSize;
+                    ImGui::DragFloat("Global point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                    ImGui::SameLine();
+                    warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type, your PC will explode!!!");
+                    if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)//如果改变的点云球面的大小
+                    {
+                        for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                        {
+                            it->second.pointSize = Scene::pointCloudPointSize;
+                            it->second.changePointSize = true;
+                        }
+                    }
+
+                    //设置所有点云的颜色
+                    float pointCloudColorR = Scene::pointCloudPointColor.x;
+                    float pointCloudColorG = Scene::pointCloudPointColor.y;
+                    float pointCloudColorB = Scene::pointCloudPointColor.z;
+                    float pointCloudPointColor[3] = 
+                    {
+                        Scene::pointCloudPointColor.x,
+                        Scene::pointCloudPointColor.y,
+                        Scene::pointCloudPointColor.z
+                    };
+                    ImGui::ColorEdit3("Global point color", pointCloudPointColor);
+                    Scene::pointCloudPointColor.x = pointCloudPointColor[0];
+                    Scene::pointCloudPointColor.y = pointCloudPointColor[1];
+                    Scene::pointCloudPointColor.z = pointCloudPointColor[2];
+                    //判断是否更改了全局点云颜色
+                    if(
+                        abs(Scene::pointCloudPointColor.x - pointCloudColorR) >  0.001 ||
+                        abs(Scene::pointCloudPointColor.y - pointCloudColorG) >  0.001 ||
+                        abs(Scene::pointCloudPointColor.z - pointCloudColorB) >  0.001 
+                    )
+                    {
+                        for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                        {
+                            //color
+                            it->second.color.x = pointCloudPointColor[0];
+                            it->second.color.y = pointCloudPointColor[1];
+                            it->second.color.z = pointCloudPointColor[2];
+                            // it->second.color.w = 1.0;
+                        }
+                    }
+                    ImGui::TreePop();
                 }
                 ImGui::TreePop();
             }
-            
             ImGui::Separator();
 
             //地板显示设置
