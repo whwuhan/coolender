@@ -338,11 +338,11 @@ void CoolenderUI::renderRightSideBar()
                 //平行光的方向
                 ImGui::Text("Parallel ambient light direction:");
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("directionX", &Scene::parallelLight.direction.x, 0.1f);ImGui::SameLine();
+                ImGui::DragFloat("positionX", &Scene::parallelLight.position.x, 0.1f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("directionY", &Scene::parallelLight.direction.y, 0.1f);ImGui::SameLine();
+                ImGui::DragFloat("positionY", &Scene::parallelLight.position.y, 0.1f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("directionZ", &Scene::parallelLight.direction.z, 0.1f);   
+                ImGui::DragFloat("positionZ", &Scene::parallelLight.position.z, 0.1f);   
 
                 //光线颜色
                 float parallelLightColor[4] = 
@@ -422,6 +422,10 @@ void CoolenderUI::renderRightSideBar()
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
             if(ImGui::TreeNode("Global scene settings"))
             {   
+                //调节阴影细腻程度
+                int shadowMappingScale = Scene::shadowMappingScale;
+                ImGui::DragInt("Shadow mapping scale", &shadowMappingScale, 0.2f, 1.0f, 20.0f, "Shadow mapping scale: %i");
+                Scene::shadowMappingScale = shadowMappingScale;
                 //背景颜色调整框
                 float clearColor[4] = 
                 {

@@ -13,6 +13,7 @@ objs/cld_plane.o \
 objs/cld_render.o \
 objs/cld_scene.o \
 objs/cld_shader.o \
+objs/cld_shadow_mapping.o \
 objs/cld_sphere.o \
 objs/cld_texture_loader.o \
 objs/cld_window.o \
@@ -67,6 +68,9 @@ objs/cld_scene.o : include/cld_scene.h src/cld_scene.cpp
 
 objs/cld_shader.o : include/cld_shader.h src/cld_shader.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_shader.cpp -o $@
+
+objs/cld_shadow_mapping.o : include/cld_shadow_mapping.h src/cld_shadow_mapping.cpp
+	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_shadow_mapping.cpp -o $@
 
 objs/cld_sphere.o : include/cld_sphere.h src/cld_sphere.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/cld_sphere.cpp -o $@

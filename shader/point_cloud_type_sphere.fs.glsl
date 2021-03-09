@@ -29,7 +29,7 @@ void main()
     vec3 ambient = ambientIntensity * color * lightColor;
 
     // diffuse 漫反射
-    vec3 lightDir = normalize(parallelLightDir);
+    vec3 lightDir = -normalize(parallelLightDir);
     vec3 normal = normalize(fsIn.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color * lightColor;

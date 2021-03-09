@@ -11,6 +11,7 @@
 #include <cld_plane.h>
 #include <cld_render.h>
 #include <cld_function.h>
+#include <cld_shadow_mapping.h>
 #include <stb_image.h>
 #include <stb_image_write.h>
 namespace coolender

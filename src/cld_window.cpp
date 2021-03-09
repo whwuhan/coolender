@@ -90,13 +90,18 @@ void Window::initAndRun()
     floor.init();
     floorShader.use();
     floorShader.setInt("floorTexture", 0);
+    floorShader.setInt("shadowMap", 1);
     Scene::floor = floor;
     //点状点云shader
     Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
     //绘制球状点云
     Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");
-    //球状点云shader blinn-phong光照模型
-    // Shader pointCloudSphereBlinnPhong("shader/point_cloud_sphere.vs.glsl", "shader/blinn_phong.fs.glsl");
+    //shadow mapping depth map shader
+    Shader simpleDepthShader("shader/shadow_mapping_depth.vs.glsl", "shader/shadow_mapping_depth.fs.glsl");
+
+    //ShadowMapping
+    ShadowMapping shadowMapping;
+    shadowMapping.init();
 
     //渲染循环
     // Main loop
@@ -118,12 +123,17 @@ void Window::initAndRun()
             Scene::clearColor.x,
             Scene::clearColor.y,
             Scene::clearColor.z,
-            Scene::clearColor.w);
+            Scene::clearColor.w
+        );
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //渲染shawdow mapping depth map
+        shadowMapping.renderDepthMap(simpleDepthShader);
+
+        
         //获取投影矩阵和相机矩阵
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
+        mat4 projection = perspective(radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
+        mat4 view = camera.GetViewMatrix();
 
         //渲染地板
         if (Scene::showFloor)
@@ -133,6 +143,14 @@ void Window::initAndRun()
             //暂时不需要model矩阵
             floorShader.setMat4("projection", projection);
             floorShader.setMat4("view", view);
+            mat4 lightProjection, lightView;
+            mat4 lightSpaceMatrix;
+            // 正交投影矩阵  参数 左 右 下 上 远 近平面
+            lightProjection = ortho(-10.0f, 10.0f, -10.0f, 10.0f, shadowMapping.nearPlane, shadowMapping.farPlane);
+            // 从光照位置生成的观察矩阵
+            lightView = lookAt(Scene::parallelLight.position, vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f,1.0f,0.0));
+            lightSpaceMatrix = lightProjection * lightView; //可以将世界坐标系中的点转换到光照空间中
+            floorShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
             // fs uniform
             // set light uniforms
             floorShader.setVec3("viewPos", camera.Position);
@@ -145,6 +163,8 @@ void Window::initAndRun()
             glBindVertexArray(floor.VAO);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, floor.texture);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, shadowMapping.depthMap);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
