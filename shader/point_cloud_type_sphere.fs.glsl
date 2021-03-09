@@ -18,9 +18,10 @@ uniform vec3 viewPos;
 
 //平行光源信息
 uniform vec3 lightColor;
-uniform float ambientIntensity;
-uniform vec3 parallelLightDir;//平行光源的方向
+uniform vec3 lightPos;//光源位置
+uniform vec3 lightLookAt;//光源聚焦位置
 
+uniform float ambientIntensity;
 void main()
 {
     vec3 color = pointCloudColor;
@@ -29,7 +30,7 @@ void main()
     vec3 ambient = ambientIntensity * color * lightColor;
 
     // diffuse 漫反射
-    vec3 lightDir = -normalize(parallelLightDir);
+    vec3 lightDir = normalize(lightPos - lightLookAt);
     vec3 normal = normalize(fsIn.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color * lightColor;

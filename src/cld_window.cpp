@@ -155,8 +155,11 @@ void Window::initAndRun()
             // set light uniforms
             floorShader.setVec3("viewPos", camera.Position);
             floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
+            floorShader.setVec3("lightPos", Scene::parallelLight.position);//光源位置
+            floorShader.setVec3("lightLookAt", Scene::parallelLight.lookAt);//光源位置
+
             floorShader.setFloat("ambientIntensity", Scene::ambientIntensity); //环境光强度
-            floorShader.setVec3("parallelLightDir", Scene::parallelLight.direction);//平行光的方向
+            
             floorShader.setBool("floorUseTex", Scene::floorUseTex);
             floorShader.setVec4("floorColor", Scene::floor.color);
             // floor
@@ -213,7 +216,8 @@ void Window::initAndRun()
                     pointCloudTypeShpereShader.setVec3("viewPos", camera.Position);
                     pointCloudTypeShpereShader.setVec3("lightColor", vec3(Scene::parallelLight.color));//平行光颜色
                     pointCloudTypeShpereShader.setFloat("ambientIntensity", Scene::ambientIntensity);//平行光环境光强度
-                    pointCloudTypeShpereShader.setVec3("parallelLightDir", Scene::parallelLight.direction);//平行光的方向
+                    pointCloudTypeShpereShader.setVec3("lightPos", Scene::parallelLight.position);//光源位置
+                    pointCloudTypeShpereShader.setVec3("lightLookAt", Scene::parallelLight.lookAt);//光源位置
 
                     // cout << glGetUniformLocation(pointCloudTypeShpereShader.ID, "parallelLightDir2") << endl;
                     //判断是否改变了球状点云的半径

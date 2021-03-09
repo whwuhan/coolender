@@ -336,13 +336,22 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::SliderFloat("Ambient light intensity", &Scene::ambientIntensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
                 
                 //平行光的方向
-                ImGui::Text("Parallel ambient light direction:");
+                ImGui::Text("Parallel ambient light look at position:");
                 ImGui::SetNextItemWidth(80);
                 ImGui::DragFloat("positionX", &Scene::parallelLight.position.x, 0.1f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
                 ImGui::DragFloat("positionY", &Scene::parallelLight.position.y, 0.1f);ImGui::SameLine();
                 ImGui::SetNextItemWidth(80);
-                ImGui::DragFloat("positionZ", &Scene::parallelLight.position.z, 0.1f);   
+                ImGui::DragFloat("positionZ", &Scene::parallelLight.position.z, 0.1f);
+
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("lookAtX", &Scene::parallelLight.lookAt.x, 0.1f);ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("lookAtY", &Scene::parallelLight.lookAt.y, 0.1f);ImGui::SameLine();
+                ImGui::SetNextItemWidth(80);
+                ImGui::DragFloat("lookAtZ", &Scene::parallelLight.lookAt.z, 0.1f);   
+
+                
 
                 //光线颜色
                 float parallelLightColor[4] = 
