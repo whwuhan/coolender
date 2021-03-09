@@ -49,9 +49,9 @@ void Sphere::createSphere()
                 float yPos = cos(ySegment * PI) * radius;
                 float zPos = sin(xSegment * 2.0f * PI) * sin(ySegment * PI) * radius;
 
-                positions.push_back(glm::vec3(xPos, yPos, zPos));
-                uv.push_back(glm::vec2(xSegment, ySegment));
-                normals.push_back(glm::vec3(xPos, yPos, zPos));
+                positions.push_back(vec3(xPos, yPos, zPos));
+                uv.push_back(vec2(xSegment, ySegment));
+                normals.push_back(vec3(xPos, yPos, zPos));
             }
         }
 

@@ -27,6 +27,7 @@ namespace coolender
         bool gammaCorrection;                    //
 
         //构造函数加载模型
+        Model();
         Model(std::string const &path, bool gamma = false);
 
         //遍历所有网格，并且绘制他们

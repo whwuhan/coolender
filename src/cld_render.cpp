@@ -92,3 +92,15 @@ void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
     glDrawElementsInstanced(GL_TRIANGLE_STRIP, sphere.indexCount, GL_UNSIGNED_INT, 0, pointCloud.size);
     glBindVertexArray(0);
 }
+
+// //渲染mesh准备
+// void Render::renderPolygonMeshInit(PolygonMesh &mesh)
+// {
+
+// }
+
+// //渲染mesh
+// void Render::renderPolygonMesh(PolygonMesh &mesh)
+// {
+
+// }

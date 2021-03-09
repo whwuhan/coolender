@@ -3,6 +3,8 @@ using namespace std;
 using namespace coolender;
 
 //构造函数加载模型
+Model::Model()
+{}
 Model::Model(string const &path, bool gamma) : gammaCorrection(gamma)
 {
     loadModel(path);

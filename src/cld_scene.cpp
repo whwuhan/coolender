@@ -18,8 +18,9 @@ bool Scene::showAllPointCloud = true;
 //注意static变量要先初始化 否则链接失败
 // map<string, Light> Scene::lightCollection;//光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云
-map<string, PolygonMesh> Scene::polygonMeshCollection;//Mesh网格
 map<string, Sphere> Scene::sphereCollection;//球状点云对应的球
+map<string, Model> Scene::modelCollection;//Mesh网格
+
 map<string, Light> Scene::pointLightCollection;//点光源
 
 Scene::Scene()
@@ -49,11 +50,11 @@ void Scene::addPointCloud(string pointCloudName, PointCloud &pointCloud)
     cout << "Add point cloud successfully." << endl;
 }
 
-//添加Mesh
-void Scene::addPolygonMesh(string polygonMeshName, PolygonMesh &polygonMesh)
+//添加Model
+void Scene::addModel(string modelName, Model &model)
 {
-    polygonMeshCollection[polygonMeshName] = polygonMesh;
-    cout << "Add polygonmesh successfully." << endl;
+    modelCollection[modelName] = model;
+    cout << "Add model successfully." << endl;
 }
 
 //添加球面
@@ -73,7 +74,7 @@ void Scene::addSphere(string sphereName, Sphere& sphere)
 //删除点光源
 void Scene::deletePointLight(std::string pointLightName)
 {
-    polygonMeshCollection.erase(pointLightName);
+    pointLightCollection.erase(pointLightName);
     cout << "Delete point light successfully." << endl;
 }
 
@@ -92,10 +93,10 @@ void Scene::deletePointCloud(string pointCloudName)
 }
 
 //删除Mesh
-void Scene::deletePolygonMesh(string polygonMeshName)
+void Scene::deleteModel(string modelName)
 {
-    polygonMeshCollection.erase(polygonMeshName);
-    cout << "Delete polygonmesh successfully." << endl;
+    modelCollection.erase(modelName);
+    cout << "Delete model successfully." << endl;
 }
 
 //删除球面
