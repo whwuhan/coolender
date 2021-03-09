@@ -11,7 +11,7 @@ double Window::cursorPosY = Window::height / 2.0f; //鼠标位置Y
 Camera Window::camera;                             //相机
 float Window::cameraSpeedScale = 1.0f;             //相机移速比例
 bool Window::useMSAA = true;
-int Window::MSAALevel = 0; //MSAA采样数量
+int Window::MSAALevel = 8;                          //MSAA采样数量
 unsigned int Window::width = 1600;
 unsigned int Window::height = 900;
 //功能
@@ -129,7 +129,6 @@ void Window::initAndRun()
 
         //渲染shawdow mapping depth map
         shadowMapping.renderDepthMap(simpleDepthShader);
-
         
         //获取投影矩阵和相机矩阵
         mat4 projection = perspective(radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
@@ -146,7 +145,7 @@ void Window::initAndRun()
             mat4 lightProjection, lightView;
             mat4 lightSpaceMatrix;
             // 正交投影矩阵  参数 左 右 下 上 远 近平面
-            lightProjection = ortho(-10.0f, 10.0f, -10.0f, 10.0f, shadowMapping.nearPlane, shadowMapping.farPlane);
+            lightProjection = ortho(-5.0f, 5.0f, -5.0f, 5.0f, shadowMapping.nearPlane, shadowMapping.farPlane);
             // 从光照位置生成的观察矩阵
             lightView = lookAt(Scene::parallelLight.position, vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f,1.0f,0.0));
             lightSpaceMatrix = lightProjection * lightView; //可以将世界坐标系中的点转换到光照空间中
@@ -156,7 +155,7 @@ void Window::initAndRun()
             floorShader.setVec3("viewPos", camera.Position);
             floorShader.setVec3("lightColor", vec3(Scene::parallelLight.color));
             floorShader.setVec3("lightPos", Scene::parallelLight.position);//光源位置
-            floorShader.setVec3("lightLookAt", Scene::parallelLight.lookAt);//光源位置
+            floorShader.setVec3("lightLookAt", Scene::parallelLight.lookAt);
 
             floorShader.setFloat("ambientIntensity", Scene::ambientIntensity); //环境光强度
             

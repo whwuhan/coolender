@@ -3,7 +3,7 @@
 using namespace std;
 using namespace coolender;
 using namespace glm;
-Plane::Plane():color(1.0f, 1.0f, 1.0f, 1.0f), texturePath("img/wood.png")
+Plane::Plane():color(1.0f, 1.0f, 1.0f, 1.0f), texturePath("img/concrete_seamless.jpg")
 {}
 
 Plane::Plane(vec4 color, string texturePath):color(color), texturePath(texturePath)

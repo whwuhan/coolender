@@ -19,9 +19,10 @@ namespace coolender
         ShadowMapping(unsigned int width, unsigned int height, float nearPlane, float farPlane);
 
         //FrameBuffer Object的分辨率
+        unsigned int shadowMappingScale;//shadow mapping分辨率缩放
         unsigned int width;
         unsigned int height;
-
+        
         
         unsigned int depthMapFBO;// 创建 depth map framebuffer object
         unsigned int depthMap;// create depth texture 将深度信息放在纹理上

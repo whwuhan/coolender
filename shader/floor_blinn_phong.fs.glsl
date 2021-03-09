@@ -40,18 +40,34 @@ float ShadowCalculation(vec4 fragPosLightSpace){
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    float bias = 0.0005; // 加一个bias防止摩尔纹
+    float bias = 0.005; // 加一个bias防止摩尔纹
 
     // 或者通过视角与fragment的法线计算bias
     // vec3 lightDir = normalize(lightPos - fsIn.FragPos);
     // vec3 normal = normalize(fsIn.Normal);
     // float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005); 
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0); //textureSize()返回shadow map第0级的分辨率 之所以除1，是因为下面的projCoords.xy已经是标准坐标了
+    for(int x = -1; x <= 1; ++x)// x = -1,0,1
+    {
+        for(int y = -1; y <= 1; ++y)// y = -1,0,1 一共采样9次
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0; //一共采样9次，所以除以9
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0) shadow = 0.0;
+        
     return shadow;
 }
 
-
-void main()
+void blinPhong(float intensity)
 {
     //地板颜色
     vec3 color;
@@ -88,5 +104,21 @@ void main()
     //HDR
     // color = color / (vec3(1.0f) + color);
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));
-    FragColor = vec4(lighting, 1.0);
+    FragColor = vec4(lighting, 1.0) * intensity;
+}
+void main()
+{
+    float disFragPosToCen = distance(fsIn.FragPos, vec3(0.0f, -1.0f, 0.0f));//FragPos到场景中心的距离
+    if(disFragPosToCen > 10)//地面绘制成圆形
+    {
+        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+    else if(disFragPosToCen > 6.5)
+    {
+        blinPhong(1 + (5 / 3.5 * (disFragPosToCen - 6.5)));
+    }
+    else
+    {
+        blinPhong(1);
+    }
 }

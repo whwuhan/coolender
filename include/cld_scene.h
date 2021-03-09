@@ -22,7 +22,6 @@ namespace coolender
         static coolender::Plane floor;//地板
         static bool showFloor;//显示地板
         static bool floorUseTex;//地板是否使用纹理
-        static unsigned int shadowMappingScale;//shadow mapping的缩放大小
         static bool phongLightingModel;//Phong光照模型
         static POINT_TYPE pointType;//点云点的绘制类型
         static LIGHT_MODEL lightModel;//光照模型

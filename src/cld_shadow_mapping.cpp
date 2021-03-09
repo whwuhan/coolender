@@ -4,8 +4,9 @@ using namespace coolender;
 using namespace glm;
 
 ShadowMapping::ShadowMapping():
-width(Window::width * Scene::shadowMappingScale),
-height(Window::height * Scene::shadowMappingScale),
+shadowMappingScale(5),
+width(Window::width * shadowMappingScale),
+height(Window::height * shadowMappingScale),
 nearPlane(0.1f),
 farPlane(100.0f),
 depthMapFBO(0),
@@ -32,8 +33,13 @@ void ShadowMapping::init()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    //防止视锥外的部分被视作阴影 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     // attach depth texture as FBO's depth buffer 将纹理绑定在帧缓冲上
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
@@ -47,9 +53,9 @@ void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
     mat4 lightProjection, lightView;
     mat4 lightSpaceMatrix;
     // 正交投影矩阵  参数 左 右 下 上 远 近平面
-    lightProjection = ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+    lightProjection = ortho(-5.0f, 5.0f, -5.0f, 5.0f, nearPlane, farPlane);
     // 从光照位置生成的观察矩阵
-    lightView = lookAt(Scene::parallelLight.position, vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f,1.0f,0.0));
+    lightView = lookAt(Scene::parallelLight.position, Scene::parallelLight.lookAt, glm::vec3(0.0f,1.0f,0.0));
     lightSpaceMatrix = lightProjection * lightView; //可以将世界坐标系中的点转换到光照空间中
 
     // 开始渲染从光照位置的depth map
@@ -63,7 +69,8 @@ void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
     //渲染球状点云shadow mapping的depth map
     renderPointCloudTypeSphereDepthMap(simpleDepthShader, lightSpaceMatrix);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);// 解绑帧缓冲
+    // 解绑帧缓冲
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // reset viewport
     glViewport(0, 0, Window::width, Window::height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
