@@ -6,6 +6,8 @@ using namespace glm;
 GLFWwindow *Window::glfwWindow = nullptr;          //glfw window
 bool Window::cursorDisable = false;                //是否进入光标不可显示模式
 bool Window::changeOperateModeKeyPressed = false;  //更换操作模式按键是否被按下
+bool Window::mouseButtonRightFirstPressed = true;  //鼠标右键是否第一次被按下
+bool Window::mouseButtonRightFirstRlease = true;    //鼠标右键是否是第一次被松开
 double Window::cursorPosX = Window::width / 2.0f;  //鼠标位置X
 double Window::cursorPosY = Window::height / 2.0f; //鼠标位置Y
 Camera Window::camera;                             //相机
@@ -59,6 +61,12 @@ void Window::initAndRun()
     //注册回调函数，告诉GLFW窗口大小调整时，调用这个回调函数
     glfwSetFramebufferSizeCallback(Window::glfwWindow, framebufferSizeCallback);
     //新增监听鼠标和鼠标滚轮事件
+    glfwSetScrollCallback(Window::glfwWindow, scrollCallback);
+    //鼠标点击回调函数
+    glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallBack);
+    //鼠标移动回调函数 模式是WOW风格
+    glfwSetCursorPosCallback(glfwWindow, cursorModelMouseCallback);
+
     // glfwSetCursorPosCallback(Window::glfwWindow,mouseCallback);
     // glfwSetScrollCallback(Window::glfwWindow,scrollCallback);
     //告诉GLFW选中窗口不显示鼠标
@@ -118,7 +126,7 @@ void Window::initAndRun()
         Window::lastFrame = currentFrame;
         //初始设置
 
-        //input
+        //键盘鼠标事件监听
         processInput(Window::glfwWindow);
 
         //开始渲染场景
@@ -341,7 +349,7 @@ void coolender::processInput(GLFWwindow *glfwWindow)
         glfwSetWindowShouldClose(glfwWindow, true);
     }
 
-    //按Q切换操作模式
+    //按左边ctrl切换操作模式
     if (glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_PRESS && !Window::changeOperateModeKeyPressed)
     {
         Window::changeOperateModeKeyPressed = true;
@@ -352,35 +360,32 @@ void coolender::processInput(GLFWwindow *glfwWindow)
         Window::changeOperateModeKeyPressed = false;
     }
 
-    //移动模式下的键盘监听
-    if (Window::cursorDisable)
+    //键盘监听
+    //相机移动
+    //向前
+    if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
     {
-        //相机移动
-        //向前
-        if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
-        {
-            Window::camera.ProcessKeyboard(FORWARD, Window::deltaTime * Window::cameraSpeedScale);
-        }
-        //向后
-        if (glfwGetKey(glfwWindow, GLFW_KEY_S) == GLFW_PRESS)
-        {
-            Window::camera.ProcessKeyboard(BACKWARD, Window::deltaTime * Window::cameraSpeedScale);
-        }
-        //向左
-        if (glfwGetKey(glfwWindow, GLFW_KEY_A) == GLFW_PRESS)
-        {
-            Window::camera.ProcessKeyboard(LEFT, Window::deltaTime * Window::cameraSpeedScale);
-        }
-        //向右
-        if (glfwGetKey(glfwWindow, GLFW_KEY_D) == GLFW_PRESS)
-        {
-            Window::camera.ProcessKeyboard(RIGHT, Window::deltaTime * Window::cameraSpeedScale);
-        }
-        //向上
-        if (glfwGetKey(glfwWindow, GLFW_KEY_SPACE))
-        {
-            Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime * Window::cameraSpeedScale);
-        }
+        Window::camera.ProcessKeyboard(FORWARD, Window::deltaTime * Window::cameraSpeedScale);
+    }
+    //向后
+    if (glfwGetKey(glfwWindow, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        Window::camera.ProcessKeyboard(BACKWARD, Window::deltaTime * Window::cameraSpeedScale);
+    }
+    //向左
+    if (glfwGetKey(glfwWindow, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        Window::camera.ProcessKeyboard(LEFT, Window::deltaTime * Window::cameraSpeedScale);
+    }
+    //向右
+    if (glfwGetKey(glfwWindow, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        Window::camera.ProcessKeyboard(RIGHT, Window::deltaTime * Window::cameraSpeedScale);
+    }
+    //向上
+    if (glfwGetKey(glfwWindow, GLFW_KEY_SPACE))
+    {
+        Window::camera.ProcessKeyboard(UPWARD, Window::deltaTime * Window::cameraSpeedScale);
     }
 }
 
@@ -390,16 +395,17 @@ void coolender::changeOperateMode(GLFWwindow *glfwWindow)
     Window::cursorDisable = !Window::cursorDisable;
     if (Window::cursorDisable)
     {
+        //FPS风格
         //新增监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(glfwWindow, mouseCallback);
-        glfwSetScrollCallback(glfwWindow, scrollCallback);
+        Window::firstMouse = true;
+        glfwSetCursorPosCallback(glfwWindow, moveModelMouseCallback);//移动模式
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else
-    {
-        //取消监听鼠标和鼠标滚轮事件
-        glfwSetCursorPosCallback(glfwWindow, getCursorPos); //获取鼠标位置
-        glfwSetScrollCallback(glfwWindow, nullptr);
+    {   
+        //wow风格
+        Window::mouseButtonRightFirstPressed = true;
+        glfwSetCursorPosCallback(glfwWindow, cursorModelMouseCallback);
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
@@ -410,10 +416,13 @@ void coolender::scrollCallback(GLFWwindow *winglfwWindowdow, double xoffset, dou
 {
     Window::camera.ProcessMouseScroll(yoffset);
 }
+
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void coolender::mouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
-{
+//移动模式下的鼠标移动回调函数 类似FPS游戏
+void coolender::moveModelMouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
+{   
+    //防止镜头抖动
     if (Window::firstMouse)
     {
         Window::cursorPosX = xpos;
@@ -428,6 +437,52 @@ void coolender::mouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
     Window::cursorPosY = ypos;
 
     Window::camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+//鼠标点击回调函数
+void coolender::mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int action, int mods)
+{
+    if (action == GLFW_PRESS)
+    {
+        switch(button)
+        {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
+            break;
+        }
+    }
+}
+
+//鼠标模式下的鼠标移动回调函数 类似WOW
+void coolender::cursorModelMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
+{
+    if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    { 
+        //防止镜头抖动
+        if (Window::mouseButtonRightFirstPressed)
+        {
+            Window::cursorPosX = xpos;
+            Window::cursorPosY = ypos;
+            Window::mouseButtonRightFirstPressed = false;
+            Window::mouseButtonRightFirstRlease = true;
+        }
+        
+        float xoffset = xpos - Window::cursorPosX;
+        float yoffset = Window::cursorPosY - ypos; // reversed since y-coordinates go from bottom to top
+
+        Window::cursorPosX = xpos;
+        Window::cursorPosY = ypos;
+
+        Window::camera.ProcessMouseMovement(xoffset, yoffset); 
+    }
+    if(glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
+    {
+        Window::mouseButtonRightFirstPressed = true;
+        Window::mouseButtonRightFirstRlease = false;
+        //松开右键，显示指针
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    
 }
 
 //获取当前指针的位置

@@ -182,6 +182,7 @@ void CoolenderUI::renderMenu()
     //顶部菜单栏
     if (ImGui::BeginMainMenuBar())
     {   
+        
         //File
         if (ImGui::BeginMenu("File"))
         {
@@ -296,6 +297,16 @@ void CoolenderUI::renderRightSideBar()
     //右侧Sidebar开始
     ImGui::Begin("Coolender", &CoolenderUI::showRightSideBar, ImGuiWindowFlags_None);
     {
+        //被选中时禁用滚轮调整视角
+        if(ImGui::IsWindowFocused())
+        {
+            glfwSetScrollCallback(Window::glfwWindow, nullptr);
+        }
+        else
+        {
+            glfwSetScrollCallback(Window::glfwWindow, scrollCallback);
+        }
+
         //整体全局设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
         if(ImGui::CollapsingHeader("Global Settings"))
@@ -509,7 +520,7 @@ void CoolenderUI::renderRightSideBar()
                     float pointCloudPointSize = Scene::pointCloudPointSize;
                     ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
                     ImGui::SameLine();
-                    warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type, your PC will explode!!!");
+                    warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type with too many point cloud models, \nyour PC will explode!!!");
                     if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)//如果改变的点云球面的大小
                     {
                         for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
@@ -551,16 +562,17 @@ void CoolenderUI::renderRightSideBar()
                     }
                     ImGui::TreePop();
                 }
+                //point cloud 全局设置结束
 
                 //Polygon mesh全局设置
                 ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
                 if (ImGui::TreeNode("Polygon mesh global settings"))
                 {
-                    //所有点云显示设置
+                    //所有polygon mesh显示设置
                     bool flag = true;
                     for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                     {
-                        //如果有一个点云不显示，设置Scene::showAllPointCloud为false
+                        //如果有一个polygon mesh不显示，设置Scene::showAllPolygonMesh为false
                         if(!it->second.show)
                         {
                             flag = false;
@@ -588,16 +600,10 @@ void CoolenderUI::renderRightSideBar()
                     ImGui::RadioButton("Light", &polygonMeshType, 3);
                     Scene::polygonMeshType = POLYGON_MESH_TYPE(polygonMeshType);//int强制转化为enum
 
-                    //设置所有点云的point size
-                    // for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-                    // {
-                    //     // 将所有点云的changePointSize设置为false
-                    //     it->second.changePointSize = false;
-                    // }
                     float polygonMeshPointSize = Scene::polygonMeshPointSize;
                     ImGui::DragFloat("Global polygon mesh point size", &Scene::polygonMeshPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
                     ImGui::SameLine();
-                    if(abs(Scene::polygonMeshPointSize - polygonMeshPointSize) > 0.001)//如果改变的点云球面的大小
+                    if(abs(Scene::polygonMeshPointSize - polygonMeshPointSize) > 0.001)//如果改变了polygon mesh顶点的大小
                     {
                         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                         {
@@ -606,42 +612,42 @@ void CoolenderUI::renderRightSideBar()
                     }
 
                     //设置所有点云的颜色
-                    float pointCloudColorR = Scene::pointCloudPointColor.x;
-                    float pointCloudColorG = Scene::pointCloudPointColor.y;
-                    float pointCloudColorB = Scene::pointCloudPointColor.z;
-                    float pointCloudPointColor[3] = 
+                    float polygonMeshColorR = Scene::polygonMeshColor.x;
+                    float polygonMeshColorG = Scene::polygonMeshColor.y;
+                    float polygonMeshColorB = Scene::polygonMeshColor.z;
+                    float polygonMeshColor[3] = 
                     {
-                        Scene::pointCloudPointColor.x,
-                        Scene::pointCloudPointColor.y,
-                        Scene::pointCloudPointColor.z
+                        Scene::polygonMeshColor.x,
+                        Scene::polygonMeshColor.y,
+                        Scene::polygonMeshColor.z
                     };
-                    ImGui::ColorEdit3("Global point color", pointCloudPointColor);
-                    Scene::pointCloudPointColor.x = pointCloudPointColor[0];
-                    Scene::pointCloudPointColor.y = pointCloudPointColor[1];
-                    Scene::pointCloudPointColor.z = pointCloudPointColor[2];
+                    ImGui::ColorEdit3("Global point color", polygonMeshColor);
+                    Scene::polygonMeshColor.x = polygonMeshColor[0];
+                    Scene::polygonMeshColor.y = polygonMeshColor[1];
+                    Scene::polygonMeshColor.z = polygonMeshColor[2];
                     //判断是否更改了全局点云颜色
                     if(
-                        abs(Scene::pointCloudPointColor.x - pointCloudColorR) >  0.001 ||
-                        abs(Scene::pointCloudPointColor.y - pointCloudColorG) >  0.001 ||
-                        abs(Scene::pointCloudPointColor.z - pointCloudColorB) >  0.001 
+                        abs(Scene::polygonMeshColor.x - polygonMeshColorR) >  0.001 ||
+                        abs(Scene::polygonMeshColor.y - polygonMeshColorG) >  0.001 ||
+                        abs(Scene::polygonMeshColor.z - polygonMeshColorB) >  0.001 
                     )
                     {
                         for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                         {
                             //color
-                            it->second.color.x = pointCloudPointColor[0];
-                            it->second.color.y = pointCloudPointColor[1];
-                            it->second.color.z = pointCloudPointColor[2];
+                            it->second.color.x = polygonMeshColor[0];
+                            it->second.color.y = polygonMeshColor[1];
+                            it->second.color.z = polygonMeshColor[2];
                             // it->second.color.w = 1.0;
                         }
                     }
                     ImGui::TreePop();
                 }
-
-
                 ImGui::TreePop();
             }
             ImGui::Separator();
+            //polygon mesh 全局设置结束
+
 
             //地板显示设置
             //ImGui::TableNextColumn();
@@ -667,7 +673,7 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::TreePop();
             }
             ImGui::Separator();
-
+            //地板设置结束
 
             //======================根据场景中数据渲染UI======================
             //点云数据
@@ -762,6 +768,8 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::TreePop();
             }
             ImGui::Separator();
+            //场景点云数据UI绘制结束
+
 
             //polygon mesh的相关UI
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
@@ -849,13 +857,12 @@ void CoolenderUI::renderRightSideBar()
                 }
                 ImGui::TreePop();
             }
-
-
-
+            ImGui::Separator();
+            //场景polygon mesh设置UI结束
             //======================根据场景中数据渲染UI结束======================
         }
     }
-    ImGui::End();
+    ImGui::End();//sidebar结束
 }
 
 //message信息框

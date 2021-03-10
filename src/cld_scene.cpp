@@ -6,17 +6,19 @@ using namespace glm;
 Light Scene::parallelLight(vec3(0.0f, 10.0f, 10.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(0.0f, -1.0f, 0.0f));//场景平行光
 float Scene::ambientIntensity = 0.35;//场景的环境光
 vec4 Scene::clearColor(1.0f, 1.0f, 1.0f, 1.0f);//clear color
+LIGHT_MODEL Scene::lightModel = BLINN_PHONG;//场景光照模型
 
+//地板
 Plane Scene::floor;
 bool Scene::showFloor = false;//是否显示地板
 bool Scene::floorUseTex = false;//地板是否使用纹理
 bool Scene::phongLightingModel = true;//是否使用phone光照模型
-LIGHT_MODEL Scene::lightModel = BLINN_PHONG;//场景光照模型
+
 
 //点云
 bool Scene::showAllPointCloud = true;
 POINT_TYPE Scene::pointType = POINT;//点云绘制类型
-float Scene::pointCloudPointSize = 5.0f;
+float Scene::pointCloudPointSize = 1.0f;
 vec4 Scene::pointCloudPointColor(0.06f, 0.729f, 0.941f, 1.0f);
 
 //mesh
@@ -27,11 +29,12 @@ vec4 Scene::polygonMeshColor = vec4(0.6, 0.6, 0.6, 1.0f);//场景所有mesh的�
 
 //注意static变量要先初始化 否则链接失败
 // map<string, Light> Scene::lightCollection;//光源
+map<string, Light> Scene::pointLightCollection;//点光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云
 map<string, Sphere> Scene::sphereCollection;//球状点云对应的球
 map<string, PolygonMesh> Scene::polygonMeshCollection;//mesh
 map<string, Model> Scene::modelCollection;//Mesh网格
-map<string, Light> Scene::pointLightCollection;//点光源
+
 
 Scene::Scene()
 {}

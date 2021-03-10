@@ -4,7 +4,7 @@ using namespace coolender;
 using namespace glm;
 
 ShadowMapping::ShadowMapping():
-shadowMappingScale(5),
+shadowMappingScale(1),
 width(Window::width * shadowMappingScale),
 height(Window::height * shadowMappingScale),
 nearPlane(0.1f),

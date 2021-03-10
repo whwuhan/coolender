@@ -25,6 +25,8 @@ namespace coolender
         static GLFWwindow *glfwWindow;//glfw window
         static bool cursorDisable;//是否进入光标不可显示模式
         static bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
+        static bool mouseButtonRightFirstRlease;//鼠标右键是否第一次松开
+        static bool mouseButtonRightFirstPressed;//鼠标右键是否第一次按下
         static double cursorPosX;//鼠标位置X
         static double cursorPosY;//鼠标位置Y
         static unsigned int width;//window 宽
@@ -52,8 +54,11 @@ namespace coolender
     void changeOperateMode(GLFWwindow *glfwWindow);//修改操作模式
     //鼠标滚轮操作
     void scrollCallback(GLFWwindow *glfwWindow, double xoffset, double yoffset);
+    //鼠标点击回调函数
+    void mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int action, int mods);
     //鼠标移动
-    void mouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);
+    void moveModelMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//移动模式下的鼠标移动回调函数 类似FPS游戏
+    void cursorModelMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//鼠标模式下的鼠标移动回调函数 类似WOW
     //获取鼠标位置
     void getCursorPos(GLFWwindow* glfwWindow, double xpos, double ypos);
 }
