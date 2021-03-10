@@ -14,5 +14,5 @@ uniform float pointSize;//mesh点的大小
 void main()
 {
     gl_Position = projection * view *  model * vec4(aPos, 1.0);
-    gl_PointSize = 5;
+    gl_PointSize = pointSize;
 }

@@ -12,6 +12,7 @@ namespace coolender
 {
     enum POINT_TYPE{POINT, SPHERE};//点的绘制类型
     enum LIGHT_MODEL{PHONG, BLINN_PHONG, PBR};//场景使用的光照模型
+    enum POLYGON_MESH_TYPE{LINE, FILL, LINE_AND_FILL, LIGHT};//mesh的渲染模式
     class Scene
     {
     public:
@@ -20,16 +21,24 @@ namespace coolender
         static Light  parallelLight;//场景平行光
         static float ambientIntensity;//场景的环境光强度
         static glm::vec4 clearColor;//背景颜色
+
         static coolender::Plane floor;//地板
         static bool showFloor;//显示地板
         static bool floorUseTex;//地板是否使用纹理
         static bool phongLightingModel;//Phong光照模型
-        static POINT_TYPE pointType;//点云点的绘制类型
         static LIGHT_MODEL lightModel;//光照模型
+
+        //点云
+        static bool showAllPointCloud;//显示所有点云
+        static POINT_TYPE pointType;//点云点的绘制类型
         static float pointCloudPointSize;//场景所有点云的大小
         static glm::vec4 pointCloudPointColor;//场景所有点云的颜色
-        static bool showAllPointCloud;//显示所有点云
-
+        
+        //mesh
+        static bool showAllPolygonMesh;//显示所有mesh
+        static POLYGON_MESH_TYPE polygonMeshType;
+        static float polygonMeshPointSize;//场景所有mesh点的大小
+        static glm::vec4 polygonMeshColor;//场景所有点云的颜色
         // void init();
         //场景中的物体
         // static std::map<std::string, coolender::Light> lightCollection;//光源

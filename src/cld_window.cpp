@@ -96,9 +96,10 @@ void Window::initAndRun()
     Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
     //绘制球状点云
     Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");
+    
     //polygon mesh shader
-    Shader polygonMeshShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh.fs.glsl");
-
+    Shader polygonMeshTypeLineShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_line.fs.glsl");
+    Shader polygonMeshTypeFillShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_fill.fs.glsl");
     //shadow mapping depth map shader
     Shader simpleDepthShader("shader/shadow_mapping_depth.vs.glsl", "shader/shadow_mapping_depth.fs.glsl");
 
@@ -244,11 +245,51 @@ void Window::initAndRun()
         //渲染polygon mesh
         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
         {
-            polygonMeshShader.use();
-            polygonMeshShader.setMat4("projection", projection);
-            polygonMeshShader.setMat4("view", view);
-            polygonMeshShader.setMat4("model" , it->second.model);
-            Render::renderPolygonMesh(it->second, polygonMeshShader);
+            if(it->second.show)
+            {
+                switch(Scene::polygonMeshType)
+                {
+                case LINE:
+                    polygonMeshTypeLineShader.use();
+                    polygonMeshTypeLineShader.setMat4("projection", projection);
+                    polygonMeshTypeLineShader.setMat4("view", view);
+                    polygonMeshTypeLineShader.setMat4("model" , it->second.model);
+                    polygonMeshTypeLineShader.setFloat("pointSize", it->second.pointSize);
+                    polygonMeshTypeLineShader.setVec4("polygonMeshColor", it->second.color);
+                    Render::renderPolygonMeshTypeLine(it->second);
+                    break;
+                case FILL:
+                    polygonMeshTypeLineShader.use();
+                    polygonMeshTypeLineShader.setMat4("projection", projection);
+                    polygonMeshTypeLineShader.setMat4("view", view);
+                    polygonMeshTypeLineShader.setMat4("model" , it->second.model);
+                    polygonMeshTypeLineShader.setFloat("pointSize", it->second.pointSize);
+                    polygonMeshTypeLineShader.setVec4("polygonMeshColor", it->second.color);
+                    Render::renderPolygonMeshTypeLine(it->second);
+                    break;
+                case LIGHT:
+                    polygonMeshTypeLineShader.use();
+                    polygonMeshTypeLineShader.setMat4("projection", projection);
+                    polygonMeshTypeLineShader.setMat4("view", view);
+                    polygonMeshTypeLineShader.setMat4("model" , it->second.model);
+                    polygonMeshTypeLineShader.setFloat("pointSize", it->second.pointSize);
+                    polygonMeshTypeLineShader.setVec4("polygonMeshColor", it->second.color);
+                    Render::renderPolygonMeshTypeLine(it->second);
+                    break;
+                case LINE_AND_FILL:
+                    polygonMeshTypeLineShader.use();
+                    polygonMeshTypeLineShader.setMat4("projection", projection);
+                    polygonMeshTypeLineShader.setMat4("view", view);
+                    polygonMeshTypeLineShader.setMat4("model" , it->second.model);
+                    polygonMeshTypeLineShader.setFloat("pointSize", it->second.pointSize);
+                    polygonMeshTypeLineShader.setVec4("polygonMeshColor", it->second.color);
+                    Render::renderPolygonMeshTypeLine(it->second);
+                    break;
+                default:
+                    cerr << "Wrong polygon mesh render type!" << endl;
+                    exit(0);
+                }   
+            }
         }
         
 

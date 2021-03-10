@@ -48,6 +48,7 @@ void ShadowMapping::init()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+//渲染整个场景的depth map
 void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
 {
     mat4 lightProjection, lightView;
@@ -68,18 +69,29 @@ void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
     renderFloorDepthMap(simpleDepthShader, lightSpaceMatrix);
     //渲染球状点云shadow mapping的depth map
     renderPointCloudTypeSphereDepthMap(simpleDepthShader, lightSpaceMatrix);
+    //渲染polygon mesh的depth map
+    //renderPolygonMeshDepthMap(simpleDepthShader, lightSpaceMatrix);
 
     // 解绑帧缓冲
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // reset viewport
-    int width = 0;
-    int height = 0;
+    int width, height;
     glfwGetFramebufferSize(Window::glfwWindow, &width, &height);
     glViewport(0, 0, width, height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+//渲染地板的depth map
+void ShadowMapping::renderFloorDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix)
+{
+    simpleDepthShader.use();
+    simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    simpleDepthShader.setMat4("model", mat4(1.0f));
+    glBindVertexArray(Scene::floor.VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+}
 
+//渲染点云的depth map
 void ShadowMapping::renderPointCloudTypeSphereDepthMap(Shader &simpleDepthShader, mat4& lightSpaceMatrix)
 {
     glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
@@ -108,12 +120,19 @@ void ShadowMapping::renderPointCloudTypeSphereDepthMap(Shader &simpleDepthShader
     glDisable(GL_CULL_FACE); //关闭面剔除
 }
 
-void ShadowMapping::renderFloorDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix)
+//渲染polygon mesh的depth map
+void ShadowMapping::renderPolygonMeshDepthMap(Shader &simpleDepthShader, mat4& lightSpaceMatrix)
 {
-    simpleDepthShader.use();
-    simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    simpleDepthShader.setMat4("model", mat4(1.0f));
-    glBindVertexArray(Scene::floor.VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    //渲染polygon mesh
+    for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+    {
+        if(it->second.show)
+        {
+            simpleDepthShader.use();
+            // vs uniform
+            simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+            simpleDepthShader.setMat4("model", it->second.model);
+            Render::renderPolygonMeshTypeLine(it->second);
+        }
+    }
 }
-

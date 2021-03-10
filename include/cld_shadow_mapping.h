@@ -34,6 +34,7 @@ namespace coolender
         //渲染球状点云的Depth map
         void renderPointCloudTypeSphereDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix);
         void renderFloorDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix);
+        void renderPolygonMeshDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix);
         
     };
 }

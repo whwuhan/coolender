@@ -465,6 +465,7 @@ void CoolenderUI::renderRightSideBar()
                 Scene::clearColor.z = clearColor[2];
                 Scene::clearColor.w = 1.0f;
                 ImGui::Separator();
+
                 //点云全局设置
                 ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
                 if (ImGui::TreeNode("Point cloud global settings"))
@@ -506,7 +507,7 @@ void CoolenderUI::renderRightSideBar()
                         it->second.changePointSize = false;
                     }
                     float pointCloudPointSize = Scene::pointCloudPointSize;
-                    ImGui::DragFloat("Global point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                    ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
                     ImGui::SameLine();
                     warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type, your PC will explode!!!");
                     if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)//如果改变的点云球面的大小
@@ -550,6 +551,94 @@ void CoolenderUI::renderRightSideBar()
                     }
                     ImGui::TreePop();
                 }
+
+                //Polygon mesh全局设置
+                ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+                if (ImGui::TreeNode("Polygon mesh global settings"))
+                {
+                    //所有点云显示设置
+                    bool flag = true;
+                    for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+                    {
+                        //如果有一个点云不显示，设置Scene::showAllPointCloud为false
+                        if(!it->second.show)
+                        {
+                            flag = false;
+                        }
+                    }
+                    Scene::showAllPolygonMesh = flag;
+                    //判断是否显示所有mesh
+                    bool showAllPolygonMesh = Scene::showAllPolygonMesh;
+                    ImGui::Checkbox("Show all the polygon mesh", &Scene::showAllPolygonMesh);
+                    if(showAllPolygonMesh != Scene::showAllPolygonMesh)
+                    {
+                        //如果改变了Scene::showAllPolygonMesh，将所有点云的show属性设置为Scene::showAllPolygonMesh
+                        for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+                        {
+                            it->second.show = Scene::showAllPolygonMesh;
+                        }
+                    }
+
+                    //设置mesh类型
+                    int polygonMeshType = Scene::polygonMeshType;//enum强制转换为int
+                    ImGui::Text("Polygon mesh type:");ImGui::SameLine();
+                    ImGui::RadioButton("Line", &polygonMeshType, 0); ImGui::SameLine();
+                    ImGui::RadioButton("Fill", &polygonMeshType, 1); ImGui::SameLine();
+                    ImGui::RadioButton("Line and fill", &polygonMeshType, 2); ImGui::SameLine();
+                    ImGui::RadioButton("Light", &polygonMeshType, 3);
+                    Scene::polygonMeshType = POLYGON_MESH_TYPE(polygonMeshType);//int强制转化为enum
+
+                    //设置所有点云的point size
+                    // for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                    // {
+                    //     // 将所有点云的changePointSize设置为false
+                    //     it->second.changePointSize = false;
+                    // }
+                    float polygonMeshPointSize = Scene::polygonMeshPointSize;
+                    ImGui::DragFloat("Global polygon mesh point size", &Scene::polygonMeshPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                    ImGui::SameLine();
+                    if(abs(Scene::polygonMeshPointSize - polygonMeshPointSize) > 0.001)//如果改变的点云球面的大小
+                    {
+                        for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+                        {
+                            it->second.pointSize = Scene::polygonMeshPointSize;
+                        }
+                    }
+
+                    //设置所有点云的颜色
+                    float pointCloudColorR = Scene::pointCloudPointColor.x;
+                    float pointCloudColorG = Scene::pointCloudPointColor.y;
+                    float pointCloudColorB = Scene::pointCloudPointColor.z;
+                    float pointCloudPointColor[3] = 
+                    {
+                        Scene::pointCloudPointColor.x,
+                        Scene::pointCloudPointColor.y,
+                        Scene::pointCloudPointColor.z
+                    };
+                    ImGui::ColorEdit3("Global point color", pointCloudPointColor);
+                    Scene::pointCloudPointColor.x = pointCloudPointColor[0];
+                    Scene::pointCloudPointColor.y = pointCloudPointColor[1];
+                    Scene::pointCloudPointColor.z = pointCloudPointColor[2];
+                    //判断是否更改了全局点云颜色
+                    if(
+                        abs(Scene::pointCloudPointColor.x - pointCloudColorR) >  0.001 ||
+                        abs(Scene::pointCloudPointColor.y - pointCloudColorG) >  0.001 ||
+                        abs(Scene::pointCloudPointColor.z - pointCloudColorB) >  0.001 
+                    )
+                    {
+                        for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                        {
+                            //color
+                            it->second.color.x = pointCloudPointColor[0];
+                            it->second.color.y = pointCloudPointColor[1];
+                            it->second.color.z = pointCloudPointColor[2];
+                            // it->second.color.w = 1.0;
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+
+
                 ImGui::TreePop();
             }
             ImGui::Separator();
@@ -580,7 +669,7 @@ void CoolenderUI::renderRightSideBar()
             ImGui::Separator();
 
 
-            //根据场景中数据渲染UI
+            //======================根据场景中数据渲染UI======================
             //点云数据
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
             if (ImGui::TreeNode("Point Cloud:"))
@@ -665,7 +754,6 @@ void CoolenderUI::renderRightSideBar()
                             //注意这里删除后要break否则会出现内存错误
                             //猜测是因为map删除元素后，迭代器失效！！！！
                             ImGui::TreePop();
-                            ImGui::Separator();
                             break;
                         }
                         ImGui::TreePop();
@@ -674,6 +762,97 @@ void CoolenderUI::renderRightSideBar()
                 ImGui::TreePop();
             }
             ImGui::Separator();
+
+            //polygon mesh的相关UI
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+            if (ImGui::TreeNode("Polygon Mesh:"))
+            {
+                //每一个polygon mesh的UI
+                for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+                {
+                    
+                    ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
+                    if (ImGui::TreeNode(it->first.c_str()))
+                    {   
+                        //checkbox
+                        ImGui::Checkbox("Show polygon mesh", &it->second.show);
+                        
+                        //设置pointSize
+                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
+                        
+                        //color
+                        float polygonMeshColor[3] = 
+                        {
+                            it->second.color.x,
+                            it->second.color.y,
+                            it->second.color.z,
+                        };
+                        ImGui::ColorEdit3("Point color", polygonMeshColor);
+                        it->second.color.x = polygonMeshColor[0];
+                        it->second.color.y = polygonMeshColor[1];
+                        it->second.color.z = polygonMeshColor[2];
+                        it->second.color.w = 1.0;
+                        
+                        //注意glm::mat4是按照列优选的顺序来的
+                        //缩放
+                        ImGui::SliderFloat("Scale", &it->second.scale, 0.0f, 10.0f, "Scale = %.3f");
+                        it->second.model =
+                            glm::scale(glm::mat4(1.0f), glm::vec3(it->second.scale));
+
+                        //平移 
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("transX", &it->second.transX, 0.01f);ImGui::SameLine();                        
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("transY", &it->second.transY, 0.01f);ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
+                        it->second.model =
+                            glm::translate(
+                                it->second.model,
+                                glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
+                        
+                        //旋转
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);ImGui::SameLine();
+                        ImGui::SetNextItemWidth(80);
+                        ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
+                        it->second.model =  
+                            glm::rotate(
+                                it->second.model,
+                                glm::radians(it->second.rotateX), 
+                                glm::vec3(1.0f, 0.0f, 0.0f));
+                        it->second.model= 
+                            glm::rotate(
+                                it->second.model,
+                                glm::radians(it->second.rotateY), 
+                                glm::vec3(0.0f, 1.0f, 0.0f));
+                        it->second.model= 
+                            glm::rotate(
+                                it->second.model,
+                                glm::radians(it->second.rotateZ), 
+                                glm::vec3(0.0f, 0.0f, 1.0f));
+
+                        //delete button 
+                        ImVec2 buttonSize(ImGui::GetFontSize() * 6.0f, 0.0f);
+                        if(ImGui::Button("Delete", buttonSize))
+                        {
+                            Scene::deletePolygonMesh(it->first);
+                            //注意这里删除后要break否则会出现内存错误
+                            //猜测是因为map删除元素后，迭代器失效！！！！
+                            ImGui::TreePop();
+                            break;
+                        }
+                        ImGui::TreePop();
+                    }
+                }
+                ImGui::TreePop();
+            }
+
+
+
+            //======================根据场景中数据渲染UI结束======================
         }
     }
     ImGui::End();

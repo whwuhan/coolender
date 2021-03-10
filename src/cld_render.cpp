@@ -141,17 +141,16 @@ void Render::renderPolygonMeshInit(PolygonMesh &mesh)
     glBindVertexArray(0);
 }
 
-//渲染mesh
-void Render::renderPolygonMesh(PolygonMesh &mesh, Shader& shader)
+//渲染线框模式的mesh
+void Render::renderPolygonMeshTypeLine(PolygonMesh &mesh)
 {
-    shader.use();
-    shader.setInt("polygonModel", 0);
     glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
-    shader.setInt("polygonModel", 1);
+    // glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    //绘制点
     glDrawElements(GL_POINTS, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置绘制成线框模式
     glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//设置成默认模式
     glBindVertexArray(0);
 }
+
