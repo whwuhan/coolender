@@ -96,6 +96,9 @@ void Window::initAndRun()
     Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
     //绘制球状点云
     Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");
+    //polygon mesh shader
+    Shader polygonMeshShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh.fs.glsl");
+
     //shadow mapping depth map shader
     Shader simpleDepthShader("shader/shadow_mapping_depth.vs.glsl", "shader/shadow_mapping_depth.fs.glsl");
 
@@ -171,7 +174,7 @@ void Window::initAndRun()
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
-        //场景渲染
+        //==========================场景渲染==========================
         //渲染点云
         glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
         //glCullFace(GL_FRONT);//设置剔除正面
@@ -237,6 +240,23 @@ void Window::initAndRun()
             exit(0);
         } 
         glDisable(GL_CULL_FACE); //关闭面剔除
+
+        //渲染polygon mesh
+        for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+        {
+            polygonMeshShader.use();
+            polygonMeshShader.setMat4("projection", projection);
+            polygonMeshShader.setMat4("view", view);
+            polygonMeshShader.setMat4("model" , it->second.model);
+            Render::renderPolygonMesh(it->second, polygonMeshShader);
+        }
+        
+
+
+
+
+
+        //==========================场景渲染结束==========================
 
         //场景截图
         if(Window::screenShot)

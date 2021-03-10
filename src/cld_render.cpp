@@ -20,9 +20,9 @@ void Render::renderPointCloudTypePointInit(PointCloud &pointCloud)
     glGenBuffers(1, &pointCloud.VBO);
     glBindBuffer(GL_ARRAY_BUFFER, pointCloud.VBO);
     //传递数据
-    glBufferData(GL_ARRAY_BUFFER, sizeof(pointCloudData), pointCloudData, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(pointCloudData), &pointCloudData[0], GL_STATIC_DRAW);
     //设置VAO
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glBindVertexArray(0);
 }
@@ -95,7 +95,7 @@ void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
     glBindVertexArray(0);
 }
 
-//渲染mesh准备
+//渲染polygon mesh准备
 void Render::renderPolygonMeshInit(PolygonMesh &mesh)
 {
     //获取C++原生数据
@@ -106,11 +106,12 @@ void Render::renderPolygonMeshInit(PolygonMesh &mesh)
         {
             if(j < 3)
             {
-                polygonMeshData[i * 6 + j] = mesh.vertices.row(i)[j];
+                polygonMeshData[i * 6 + j] = mesh.vertices(i, j);
             }
             else
             {
-                polygonMeshData[i * 6 + j] = mesh.normals.row(i)[j - 3];
+                polygonMeshData[i * 6 + j] = mesh.normals(i, j - 3);
+                // cout << mesh.normals.row(i)[j - 3] << endl;
             }
         }
     }
@@ -127,21 +128,30 @@ void Render::renderPolygonMeshInit(PolygonMesh &mesh)
     glBindVertexArray(mesh.VAO);
     glGenBuffers(1, &mesh.VBO);
     glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(polygonMeshData), polygonMeshData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(polygonMeshData), &polygonMeshData[0], GL_STATIC_DRAW);
     //EBO
     glGenBuffers(1, &mesh.EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(polygonMeshElement), &polygonMeshElement[0], GL_STATIC_DRAW);
     //设置VAO
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glBindVertexArray(0);
 }
 
 //渲染mesh
-void Render::renderPolygonMesh(PolygonMesh &mesh)
+void Render::renderPolygonMesh(PolygonMesh &mesh, Shader& shader)
 {
-    
+    shader.use();
+    shader.setInt("polygonModel", 0);
+    glBindVertexArray(mesh.VAO);
+    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    shader.setInt("polygonModel", 1);
+    glDrawElements(GL_POINTS, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置绘制成线框模式
+    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//设置成默认模式
+    glBindVertexArray(0);
 }

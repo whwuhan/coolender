@@ -809,7 +809,8 @@ void CoolenderUI::renderPolygonMeshObjFileChooseDialog()
     }        
 }
 
-void CoolenderUI::renderModelObjFileChooseDialog()//渲染model文件选择对话框
+//渲染model文件选择对话框
+void CoolenderUI::renderModelObjFileChooseDialog()
 {
     //设置大小和位置
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
@@ -884,8 +885,6 @@ void CoolenderUI::warningMarker(const char* desc)
         ImGui::EndTooltip();
     }
 }
-
-
 
 //cleanup
 void CoolenderUI::destroy()

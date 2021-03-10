@@ -5,13 +5,13 @@
  * 
 */
 #include <whlib.h>
-#include <cld_sphere.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <cld_sphere.h>
+#include <cld_shader.h>
 
 namespace coolender
 {
@@ -25,6 +25,6 @@ namespace coolender
         static void renderPointCloudTypeSphere(wh::basic::PointCloud &pointCloud, coolender::Sphere &sphere);//渲染球状点云
         //渲染mesh
         static void renderPolygonMeshInit(wh::basic::PolygonMesh &mesh);
-        static void renderPolygonMesh(wh::basic::PolygonMesh &mesh);
+        static void renderPolygonMesh(wh::basic::PolygonMesh &mesh, coolender::Shader& shader);
     };
 }
