@@ -24,7 +24,7 @@ namespace coolender
         static void renderPointCloudTypeSphereInit(wh::basic::PointCloud &pointCloud, coolender::Sphere &sphere);//准备渲染球状点云并返回对应球面
         static void renderPointCloudTypeSphere(wh::basic::PointCloud &pointCloud, coolender::Sphere &sphere);//渲染球状点云
         //渲染mesh
-        // static void renderPolygonMeshInit(wh::basic::PolygonMesh &mesh);
-        // static void renderPolygonMesh(wh::basic::PolygonMesh &mesh);
+        static void renderPolygonMeshInit(wh::basic::PolygonMesh &mesh);
+        static void renderPolygonMesh(wh::basic::PolygonMesh &mesh);
     };
 }

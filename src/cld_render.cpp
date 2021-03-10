@@ -16,11 +16,13 @@ void Render::renderPointCloudTypePointInit(PointCloud &pointCloud)
         }
     }
     glGenVertexArrays(1, &pointCloud.VAO);
-    glGenBuffers(1, &pointCloud.VBO);
     glBindVertexArray(pointCloud.VAO);
+    glGenBuffers(1, &pointCloud.VBO);
     glBindBuffer(GL_ARRAY_BUFFER, pointCloud.VBO);
+    //传递数据
     glBufferData(GL_ARRAY_BUFFER, sizeof(pointCloudData), pointCloudData, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
+    //设置VAO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glBindVertexArray(0);
 }
@@ -93,14 +95,53 @@ void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
     glBindVertexArray(0);
 }
 
-// //渲染mesh准备
-// void Render::renderPolygonMeshInit(PolygonMesh &mesh)
-// {
+//渲染mesh准备
+void Render::renderPolygonMeshInit(PolygonMesh &mesh)
+{
+    //获取C++原生数据
+    float polygonMeshData[mesh.vertices.rows() * 6];//分配空间 每个顶点和法线一一对应，pos:3 normals:3 不考虑UV坐标
+    for(int i = 0; i < mesh.vertices.rows(); i++)
+    {
+        for(int j = 0; j < 6; j++)
+        {
+            if(j < 3)
+            {
+                polygonMeshData[i * 6 + j] = mesh.vertices.row(i)[j];
+            }
+            else
+            {
+                polygonMeshData[i * 6 + j] = mesh.normals.row(i)[j - 3];
+            }
+        }
+    }
+    unsigned int polygonMeshElement[mesh.verticesIndices.rows() * 3];//EBO数据 一个面片要绘制3个点，所以要3个坐标的索引
+    for(int i = 0; i < mesh.verticesIndices.rows(); i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            polygonMeshElement[i * 3 + j] = mesh.verticesIndices(i,j) - 1;
+        }
+    }
+    //VAO VBO
+    glGenVertexArrays(1, &mesh.VAO);
+    glBindVertexArray(mesh.VAO);
+    glGenBuffers(1, &mesh.VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(polygonMeshData), polygonMeshData, GL_STATIC_DRAW);
+    //EBO
+    glGenBuffers(1, &mesh.EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(polygonMeshElement), &polygonMeshElement[0], GL_STATIC_DRAW);
+    //设置VAO
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindVertexArray(0);
+}
 
-// }
-
-// //渲染mesh
-// void Render::renderPolygonMesh(PolygonMesh &mesh)
-// {
-
-// }
+//渲染mesh
+void Render::renderPolygonMesh(PolygonMesh &mesh)
+{
+    
+}

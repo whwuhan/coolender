@@ -15,6 +15,8 @@ bool CoolenderUI::showRightSideBar = true;
 bool CoolenderUI::showUsage = true;
 bool CoolenderUI::showMessageBox = true;
 bool CoolenderUI::showPointCloudObjFileChooseDialog = false;
+bool CoolenderUI::showPolygonMeshObjFileChooseDialog = false;
+bool CoolenderUI::showModelObjFileChooseDialog = false;
 bool CoolenderUI::showScreenshotSaveDirChooseDialog = false;
 int CoolenderUI::style = 0;//UI风格
 
@@ -154,7 +156,17 @@ void CoolenderUI::render()
         {
             CoolenderUI::renderPointCloudObjFileChooseDialog();
         }
-
+        //obj polygon mesh
+        if(CoolenderUI::showPolygonMeshObjFileChooseDialog)
+        {
+            CoolenderUI::renderPolygonMeshObjFileChooseDialog();
+        }
+        //obj model
+        if(CoolenderUI::showModelObjFileChooseDialog)
+        {
+            CoolenderUI::renderModelObjFileChooseDialog();
+        }
+        //截图存放位置选择对话框
         if(CoolenderUI::showScreenshotSaveDirChooseDialog)
         {
             CoolenderUI::renderScreenshotSaveDirChooseDialog();
@@ -177,23 +189,31 @@ void CoolenderUI::renderMenu()
             {
                 CoolenderUI::showPointCloudObjFileChooseDialog = true;
             }
+            if (ImGui::MenuItem("Import polygom mesh .obj", ""))
+            {
+                CoolenderUI::showPolygonMeshObjFileChooseDialog = true;
+            }
+            if (ImGui::MenuItem("Import model .obj", ""))
+            {
+                CoolenderUI::showModelObjFileChooseDialog = true;
+            }
             ImGui::EndMenu();
         }
         
         //Edit
-        if (ImGui::BeginMenu("Edit"))
-        {
-            if (ImGui::MenuItem("Undo", "CTRL+Z"))
-            {
+        // if (ImGui::BeginMenu("Edit"))
+        // {
+        //     if (ImGui::MenuItem("Undo", "CTRL+Z"))
+        //     {
                 
-            }
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-            ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-            ImGui::EndMenu();
-        }
+        //     }
+        //     if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+        //     ImGui::Separator();
+        //     if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+        //     if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+        //     if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+        //     ImGui::EndMenu();
+        // }
 
         //Window 控制显示哪些窗口
         if (ImGui::BeginMenu("Window"))
@@ -704,17 +724,17 @@ void CoolenderUI::renderMessageBox()
     ImGui::End();
 }
 
-//渲染文件选择框
+//渲染点云文件选择框
 void CoolenderUI::renderPointCloudObjFileChooseDialog()
 {
     //设置大小和位置
     const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
-    ImGuiFileDialog::Instance()->OpenDialog("PointCloudObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
+    ImGuiFileDialog::Instance()->OpenDialog("PolygonMeshObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
     ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
     // display
-    if (ImGuiFileDialog::Instance()->Display("PointCloudObjFileChooseDialog")) 
+    if (ImGuiFileDialog::Instance()->Display("PolygonMeshObjFileChooseDialog")) 
     {
         // action if OK 点击OK
         if (ImGuiFileDialog::Instance()->IsOk())
@@ -724,7 +744,7 @@ void CoolenderUI::renderPointCloudObjFileChooseDialog()
             for(auto it = fileMap.begin(); it != fileMap.end(); it++)
             {
                 // action
-                cout << "You choose file:" << it->first << endl;
+                cout << "You choose point cloud file:" << it->first << endl;
                 cout << "Your choosed file’s path is " << it->second << endl;
                 //读取点云数据
                 PointCloud pointCloud;
@@ -747,6 +767,81 @@ void CoolenderUI::renderPointCloudObjFileChooseDialog()
         ImGuiFileDialog::Instance()->Close();
         CoolenderUI::showPointCloudObjFileChooseDialog = false;
     }        
+}
+
+//渲染mesh文件选择框
+void CoolenderUI::renderPolygonMeshObjFileChooseDialog()
+{
+    //设置大小和位置
+    const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
+    ImGuiFileDialog::Instance()->OpenDialog("PolygonMeshObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
+    ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
+    // display
+    if (ImGuiFileDialog::Instance()->Display("PolygonMeshObjFileChooseDialog")) 
+    {
+        // action if OK 点击OK
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+            //获取的路径和文件名称
+            auto fileMap = ImGuiFileDialog::Instance()->GetSelection();//返回一个map<string, string> key是文件名，value是路径
+            for(auto it = fileMap.begin(); it != fileMap.end(); it++)
+            {
+                // action
+                cout << "You choose polygon mesh file:" << it->first << endl;
+                cout << "Your choosed file’s path is " << it->second << endl;
+                //读取点云数据
+                PolygonMesh mesh;
+                loadPolygonMeshObj(it->second, &mesh);
+                //将点云添加到场景中
+                Scene::addPolygonMesh(it->second, mesh);
+                //传输数据给GPU
+                Render::renderPolygonMeshInit(Scene::polygonMeshCollection[it->second]);//点状点云
+            }
+            //关闭窗口
+            ImGuiFileDialog::Instance()->Close();
+            CoolenderUI::showPolygonMeshObjFileChooseDialog = false;
+        }
+        // close
+        ImGuiFileDialog::Instance()->Close();
+        CoolenderUI::showPolygonMeshObjFileChooseDialog = false;
+    }        
+}
+
+void CoolenderUI::renderModelObjFileChooseDialog()//渲染model文件选择对话框
+{
+    //设置大小和位置
+    const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x + 30, mainViewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
+    ImGuiFileDialog::Instance()->OpenDialog("ModelObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
+    ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
+    // display
+    if (ImGuiFileDialog::Instance()->Display("ModelObjFileChooseDialog")) 
+    {
+        // action if OK 点击OK
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+            //获取的路径和文件名称
+            auto fileMap = ImGuiFileDialog::Instance()->GetSelection();//返回一个map<string, string> key是文件名，value是路径
+            for(auto it = fileMap.begin(); it != fileMap.end(); it++)
+            {
+                // action
+                cout << "You choose model file:" << it->first << endl;
+                cout << "Your choosed file’s path is " << it->second << endl;
+                Model model(it->second);
+                //将model添加到场景中
+                Scene::addModel(it->second, model);
+            }
+            //关闭窗口
+            ImGuiFileDialog::Instance()->Close();
+            CoolenderUI::showModelObjFileChooseDialog = false;
+        }
+        // close
+        ImGuiFileDialog::Instance()->Close();
+        CoolenderUI::showModelObjFileChooseDialog = false;
+    }       
 }
 
 //截图保存路径选择对话框

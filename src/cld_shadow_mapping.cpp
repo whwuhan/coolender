@@ -72,7 +72,10 @@ void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
     // 解绑帧缓冲
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // reset viewport
-    glViewport(0, 0, Window::width, Window::height);
+    int width = 0;
+    int height = 0;
+    glfwGetFramebufferSize(Window::glfwWindow, &width, &height);
+    glViewport(0, 0, width, height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

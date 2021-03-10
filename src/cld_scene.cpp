@@ -19,8 +19,8 @@ bool Scene::showAllPointCloud = true;
 // map<string, Light> Scene::lightCollection;//光源
 map<string, PointCloud> Scene::pointCloudCollection;//点云
 map<string, Sphere> Scene::sphereCollection;//球状点云对应的球
+map<string, PolygonMesh> Scene::polygonMeshCollection;//mesh
 map<string, Model> Scene::modelCollection;//Mesh网格
-
 map<string, Light> Scene::pointLightCollection;//点光源
 
 Scene::Scene()
@@ -37,7 +37,7 @@ Scene::Scene()
 // }
 
 //增加点光源
-void Scene::addPointLight(std::string pointLightName, coolender::Light &pointLight)
+void Scene::addPointLight(string pointLightName, coolender::Light &pointLight)
 {
     pointLightCollection[pointLightName] = pointLight;
     cout << "Add point light successfully." << endl;
@@ -50,6 +50,20 @@ void Scene::addPointCloud(string pointCloudName, PointCloud &pointCloud)
     cout << "Add point cloud successfully." << endl;
 }
 
+//添加球面
+void Scene::addSphere(string sphereName, Sphere& sphere)
+{
+    sphereCollection[sphereName] = sphere;
+    cout << "Add sphere successfully." << endl;
+}
+
+//添加mesh
+void Scene::addPolygonMesh(string polygonMeshName, PolygonMesh& polygonMesh)
+{
+    polygonMeshCollection[polygonMeshName] = polygonMesh;
+    cout << "Add polygon mesh successfully." << endl;
+}
+
 //添加Model
 void Scene::addModel(string modelName, Model &model)
 {
@@ -57,12 +71,7 @@ void Scene::addModel(string modelName, Model &model)
     cout << "Add model successfully." << endl;
 }
 
-//添加球面
-void Scene::addSphere(string sphereName, Sphere& sphere)
-{
-    sphereCollection[sphereName] = sphere;
-    cout << "Add sphere successfully." << endl;
-}
+
 
 //删除光源
 // void Scene::deleteLight(string lightName)
@@ -72,7 +81,7 @@ void Scene::addSphere(string sphereName, Sphere& sphere)
 // }
 
 //删除点光源
-void Scene::deletePointLight(std::string pointLightName)
+void Scene::deletePointLight(string pointLightName)
 {
     pointLightCollection.erase(pointLightName);
     cout << "Delete point light successfully." << endl;
@@ -92,13 +101,6 @@ void Scene::deletePointCloud(string pointCloudName)
     cout << "Delete point cloud successfully." << endl;
 }
 
-//删除Mesh
-void Scene::deleteModel(string modelName)
-{
-    modelCollection.erase(modelName);
-    cout << "Delete model successfully." << endl;
-}
-
 //删除球面
 void Scene::deleteSphere(string sphereName)
 {
@@ -109,3 +111,23 @@ void Scene::deleteSphere(string sphereName)
     sphereCollection.erase(sphereName);
     cout << "Delete sphere successfully." << endl;
 }
+
+//删除mesh
+void Scene::deletePolygonMesh(string polygonMeshName)
+{
+    //先删VBO EBO VAO
+    glDeleteBuffers(1, &polygonMeshCollection[polygonMeshName].VBO);
+    glDeleteBuffers(1, &polygonMeshCollection[polygonMeshName].EBO);
+    glDeleteVertexArrays(1, &polygonMeshCollection[polygonMeshName].VAO);
+    polygonMeshCollection.erase(polygonMeshName);
+    cout << "Delete polygon mesh successfully." << endl;
+}
+
+//删除Model
+void Scene::deleteModel(string modelName)
+{
+    modelCollection.erase(modelName);
+    cout << "Delete model successfully." << endl;
+}
+
+

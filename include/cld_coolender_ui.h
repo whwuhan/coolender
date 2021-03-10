@@ -35,6 +35,8 @@ namespace coolender
         static float frameRounding;//内部图标的圆角
 
         static bool showPointCloudObjFileChooseDialog;//obj点云文件选择框
+        static bool showPolygonMeshObjFileChooseDialog;
+        static bool showModelObjFileChooseDialog;//obj model模型文件选择框
         static bool showScreenshotSaveDirChooseDialog;//截图保存路径选择选择框
         static bool showUsage;//显示操作手册
         static bool showRightSideBar;//显示右边Sidebar
@@ -62,6 +64,8 @@ namespace coolender
 
         //隐藏UI
         static void renderPointCloudObjFileChooseDialog();//渲染文件选择对话框
+        static void renderPolygonMeshObjFileChooseDialog();
+        static void renderModelObjFileChooseDialog();//渲染文件选择对话框
         static void renderScreenshotSaveDirChooseDialog();//选择渲染截图保存文件夹对话框
 
         //其他UI

@@ -26,6 +26,7 @@ namespace coolender
         std::string directory;                   //模型加载路径
         bool gammaCorrection;                    //
 
+        
         //构造函数加载模型
         Model();
         Model(std::string const &path, bool gamma = false);

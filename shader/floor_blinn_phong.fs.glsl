@@ -27,6 +27,7 @@ uniform float ambientIntensity;
 //地板信息
 uniform vec4 floorColor;//不使用纹理时的颜色信息
 uniform bool floorUseTex;//地板是否使用纹理
+uniform vec4 clearColor;
 
 // 计算是否在阴影中
 float ShadowCalculation(vec4 fragPosLightSpace){
@@ -111,12 +112,12 @@ void main()
     float disFragPosToCen = distance(fsIn.FragPos, vec3(0.0f, -1.0f, 0.0f));//FragPos到场景中心的距离
     if(disFragPosToCen > 10)//地面绘制成圆形
     {
-        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        FragColor = clearColor;
     }
-    else if(disFragPosToCen > 6.5)
-    {
-        blinPhong(1 + (5 / 3.5 * (disFragPosToCen - 6.5)));
-    }
+    // else if(disFragPosToCen > 6.5)
+    // {
+    //     blinPhong(1 + (5 / 3.5 * (disFragPosToCen - 6.5)));
+    // }
     else
     {
         blinPhong(1);

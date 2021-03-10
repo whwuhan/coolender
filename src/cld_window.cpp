@@ -161,6 +161,7 @@ void Window::initAndRun()
             
             floorShader.setBool("floorUseTex", Scene::floorUseTex);
             floorShader.setVec4("floorColor", Scene::floor.color);
+            floorShader.setVec4("clearColor", Scene::clearColor);
             // floor
             glBindVertexArray(floor.VAO);
             glActiveTexture(GL_TEXTURE0);
