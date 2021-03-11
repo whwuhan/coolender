@@ -18,32 +18,37 @@
 
 namespace coolender
 {
+    enum OPERATE_MODE {WOW, FPS};//两种操作模式FPS风格和WOW风格
     class Window
     {
     public :
         // Window();//默认构造函数
         static GLFWwindow *glfwWindow;//glfw window
-        static bool cursorDisable;//是否进入光标不可显示模式
-        static bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
-        static bool mouseButtonRightFirstRlease;//鼠标右键是否第一次松开
-        static bool mouseButtonRightFirstPressed;//鼠标右键是否第一次按下
-        static double cursorPosX;//鼠标位置X
-        static double cursorPosY;//鼠标位置Y
+        //窗口大小
         static unsigned int width;//window 宽
         static unsigned int height;//window 高
+        //相机相关
         static Camera camera;//相机
         static float cameraSpeedScale;//相机移速比例
+        //渲染相关
         static bool useMSAA;//是否使用MSAA抗锯齿
         static int MSAALevel;//抗锯齿级别
-        //功能
-        static bool screenShot;
+        //镜头操作模式
+        static OPERATE_MODE operateMode;
         //timing
         static float deltaTime;
         static float lastFrame;
-        //防止模式切换镜头闪烁
-        // static float lastX;
-        // static float lastY;
-        static bool firstMouse;//第一次聚焦于窗口
+
+        //防止镜头闪烁
+        static bool firstChangeToFPSMode;//第一次切换到FPS操作模式
+        static bool firstChangeToWOWMode;//第一次切换到WOW操作模式
+        static double cursorPosX;//鼠标位置X
+        static double cursorPosY;//鼠标位置Y
+        static bool changeOperateModeKeyPressed;//更换操作模式按键是否被按下
+        static bool mouseButtonRightFirstRlease;//鼠标右键是否第一次松开
+        static bool mouseButtonRightFirstPressed;//鼠标右键是否第一次按下
+        //功能
+        static bool screenShot;
 
         static void initAndRun();//初始化glfw glad并运行窗口(包含渲染循环)
     };
@@ -57,8 +62,8 @@ namespace coolender
     //鼠标点击回调函数
     void mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int action, int mods);
     //鼠标移动
-    void moveModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//移动模式下的鼠标移动回调函数 类似FPS游戏
-    void cursorModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//鼠标模式下的鼠标移动回调函数 类似WOW
+    void FPSModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//移动模式下的鼠标移动回调函数 类似FPS游戏
+    void WOWModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//鼠标模式下的鼠标移动回调函数 类似WOW
     //获取鼠标位置
     void getCursorPos(GLFWwindow* glfwWindow, double xpos, double ypos);
 }

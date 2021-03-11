@@ -4,33 +4,31 @@ using namespace coolender;
 using namespace glm;
 //static变量初始化
 GLFWwindow *Window::glfwWindow = nullptr;          //glfw window
-bool Window::cursorDisable = false;                //是否进入光标不可显示模式
-bool Window::changeOperateModeKeyPressed = false;  //更换操作模式按键是否被按下
-bool Window::mouseButtonRightFirstPressed = true;  //鼠标右键是否第一次被按下
-bool Window::mouseButtonRightFirstRlease = true;    //鼠标右键是否是第一次被松开
-double Window::cursorPosX = Window::width / 2.0f;  //鼠标位置X
-double Window::cursorPosY = Window::height / 2.0f; //鼠标位置Y
-Camera Window::camera;                             //相机
-float Window::cameraSpeedScale = 1.0f;             //相机移速比例
-bool Window::useMSAA = true;
-int Window::MSAALevel = 8;                          //MSAA采样数量
+//窗口大小
 unsigned int Window::width = 1600;
 unsigned int Window::height = 900;
-//功能
-bool Window::screenShot = false;
+//相机相关
+Camera Window::camera;                             //相机
+float Window::cameraSpeedScale = 1.0f;             //相机移速比例
+//渲染相关
+bool Window::useMSAA = true;
+int Window::MSAALevel = 8;                          //MSAA采样数量
+//镜头操作模式
+OPERATE_MODE Window::operateMode = WOW;
 //timing
 float Window::deltaTime = 0.0f;
 float Window::lastFrame = 0.0f;
 //防止模式切换镜头闪烁
-// float Window::lastX = Window::width / 2.0f;
-// float Window::lastY = Window::height / 2.0f;
-bool Window::firstMouse = true;
+bool Window::firstChangeToFPSMode = true;//第一次切换到FPS操作模式
+bool Window::firstChangeToWOWMode = true;//第一次切换到WOW操作模式
+bool Window::changeOperateModeKeyPressed = false;  //更换操作模式按键是否被按下
+bool Window::mouseButtonRightFirstPressed = true;  //鼠标右键是否第一次被按下
+bool Window::mouseButtonRightFirstRlease = true;   //鼠标右键是否是第一次被松开
+double Window::cursorPosX = Window::width / 2.0f;  //鼠标位置X
+double Window::cursorPosY = Window::height / 2.0f; //鼠标位置Y
+//功能
+bool Window::screenShot = false;
 
-//其他static变量初始化
-
-//默认构造函数
-// Window::Window()
-// {}
 void Window::initAndRun()
 {
     //======================glfw glad opengl 初始化======================
@@ -65,7 +63,7 @@ void Window::initAndRun()
     //鼠标点击回调函数
     glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallBack);
     //鼠标移动回调函数 默认模式是WOW风格
-    glfwSetCursorPosCallback(glfwWindow, cursorModeMouseCallback);
+    glfwSetCursorPosCallback(glfwWindow, nullptr);
     //告诉GLFW选中窗口不显示鼠标
     //glfwSetInputMode(Window::glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -90,25 +88,26 @@ void Window::initAndRun()
 
     //shader
     //地板
-    Shader floorShader("shader/floor.vs.glsl", "shader/floor_blinn_phong.fs.glsl");
+    Shader floorShader("shader/floor.vs.glsl", "shader/floor.fs.glsl");
     Plane floor;
     floor.init();
     floorShader.use();
     floorShader.setInt("floorTexture", 0);
     floorShader.setInt("shadowMap", 1);
     Scene::floor = floor;
-    //点状点云shader
-    Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");
-    //绘制球状点云
-    Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");
+    
+    //point cloud shader
+    Shader pointCloudTypePointShader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");//点状点云shader
+    Shader pointCloudTypeShpereShader("shader/point_cloud_type_sphere.vs.glsl", "shader/point_cloud_type_sphere.fs.glsl");//绘制球状点云
     
     //polygon mesh shader
     Shader polygonMeshTypeLineShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_line.fs.glsl");
     Shader polygonMeshTypeFillShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_fill.fs.glsl");
+    Shader polygonMeshTypeLineAndFillShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_line_and_fill.fs.glsl");
+    Shader polygonMeshTypeLightShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_light.fs.glsl");
+    
     //shadow mapping depth map shader
     Shader simpleDepthShader("shader/shadow_mapping_depth.vs.glsl", "shader/shadow_mapping_depth.fs.glsl");
-
-    //ShadowMapping
     ShadowMapping shadowMapping;
     shadowMapping.init();
 
@@ -393,22 +392,29 @@ void coolender::processInput(GLFWwindow *glfwWindow)
 //修改操作模式
 void coolender::changeOperateMode(GLFWwindow *glfwWindow)
 {
-    Window::cursorDisable = !Window::cursorDisable;
-    if (Window::cursorDisable)
-    {
-        //FPS风格
-        Window::firstMouse = true;
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
-        glfwSetCursorPosCallback(glfwWindow, moveModeMouseCallback);   //设置鼠标的移动模式为move model
+    // Window::cursorDisable = !Window::cursorDisable;
+    switch(Window::operateMode)
+    {//注意设置的顺序
+    case WOW:
+        //切换为FPS风格
+        Window::firstChangeToFPSMode = true;
+        Window::operateMode = FPS;
         glfwSetMouseButtonCallback(glfwWindow, nullptr);                //禁用鼠标按键监听
-    }
-    else
-    {   
-        //wow风格
-        Window::mouseButtonRightFirstPressed = true;
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  //显示鼠标
-        glfwSetCursorPosCallback(glfwWindow, cursorModeMouseCallback); //设置鼠标的移动模式为cursor model
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
+        glfwSetCursorPosCallback(glfwWindow, FPSModeMouseCallback);     //设置鼠标的移动模式为FPS mode
+        
+        break;
+    case FPS:
+        //切换为WOW风格
+        Window::firstChangeToWOWMode = true;
+        Window::operateMode = WOW;
         glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallBack);    //启动鼠标按键监听
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  //显示鼠标
+        glfwSetCursorPosCallback(glfwWindow, WOWModeMouseCallback);     //设置鼠标的移动模式为WOW mode
+        break;
+    default:
+        cerr << "Wrong operate mode!" << endl;
+        exit(0);
     }
 }
 
@@ -422,14 +428,14 @@ void coolender::scrollCallback(GLFWwindow *winglfwWindowdow, double xoffset, dou
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
 //移动模式下的鼠标移动回调函数 类似FPS游戏
-void coolender::moveModeMouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
+void coolender::FPSModeMouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
 {   
     //防止镜头抖动
-    if (Window::firstMouse)
+    if (Window::firstChangeToFPSMode)
     {
         Window::cursorPosX = xpos;
         Window::cursorPosY = ypos;
-        Window::firstMouse = false;
+        Window::firstChangeToFPSMode = false;
     }
 
     float xoffset = xpos - Window::cursorPosX;
@@ -444,46 +450,57 @@ void coolender::moveModeMouseCallback(GLFWwindow *glfwWindow, double xpos, doubl
 //鼠标点击回调函数
 void coolender::mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int action, int mods)
 {
-    if (action == GLFW_PRESS)
+    //===============WOW操作风格下的鼠标按键监听===============
+    //监听鼠标右键按下
+    if (action == GLFW_PRESS && Window::operateMode == WOW)
     {
         switch(button)
         {
         case GLFW_MOUSE_BUTTON_RIGHT:
-            glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
-            Window::mouseButtonRightFirstPressed = true;
-            // Window::mouseButtonRightFirstRlease = false;
+            if(Window::mouseButtonRightFirstPressed)
+            {
+                glfwSetCursorPosCallback(glfwWindow, nullptr);                  //先禁用鼠标移动监听
+                Window::mouseButtonRightFirstPressed = false;
+                Window::mouseButtonRightFirstRlease = true;
+                Window::firstChangeToWOWMode = true;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
+                glfwSetCursorPosCallback(glfwWindow, WOWModeMouseCallback);     //设置为WOW操作模式
+            }
             break;
         }
     }
-
-    if(action == GLFW_RELEASE)
+    //监听鼠标右键释放
+    if(action == GLFW_RELEASE && Window::operateMode == WOW)
     {
         switch(button)
         {
         case GLFW_MOUSE_BUTTON_RIGHT:
-            glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);//显示鼠标
-            Window::mouseButtonRightFirstPressed = false;
+            if(Window::mouseButtonRightFirstRlease)
+            {
+                glfwSetCursorPosCallback(glfwWindow, nullptr);                  //先禁用鼠标移动监听
+                Window::mouseButtonRightFirstPressed = true;
+                Window::mouseButtonRightFirstRlease = false;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);//显示鼠标
+                // Window::firstChangeToWOWMode = true;
+            }
             // Window::mouseButtonRightFirstRlease = true;
             break;
         }
-    }
+    }//WOW操作模式下的鼠标监听结束
 }
 
 //鼠标模式下的鼠标移动回调函数 类似WOW
-void coolender::cursorModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
+void coolender::WOWModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
 {
     if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     { 
         //防止镜头抖动
-        if (Window::mouseButtonRightFirstPressed)
+        if (Window::firstChangeToWOWMode)
         {
             Window::cursorPosX = xpos;
             Window::cursorPosY = ypos;
-            Window::mouseButtonRightFirstPressed = false;
-            //Window::mouseButtonRightFirstRlease = true;
+            Window::firstChangeToWOWMode = false;
         }
-        // cout << "mouseButtonRightFirstPressed: " <<Window::mouseButtonRightFirstPressed << endl;
-        // cout << "mouseButtonRightFirstRlease: " <<Window::mouseButtonRightFirstRlease << endl;
         float xoffset = xpos - Window::cursorPosX;
         float yoffset = Window::cursorPosY - ypos; // reversed since y-coordinates go from bottom to top
 

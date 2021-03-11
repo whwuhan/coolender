@@ -243,13 +243,14 @@ void CoolenderUI::renderUsage()
         ImGui::Text("How to switch mode:");
         ImGui::BulletText("Please press Q to switch operate mode!");
         ImGui::Separator();
-        ImGui::Text("In cursor operate mode(default operate mode):");
+        ImGui::Text("In WOW operate mode(default operate mode):");
         ImGui::BulletText("Like World of Warcraft's operate mode.");
         ImGui::BulletText("You can use cursor to select what you want.");
         ImGui::BulletText("Press WASD and SPACE key to move your view position.");
         ImGui::BulletText("Move your mouse with mouse right button pressed to change view angle.");
+        ImGui::BulletText("Scroll the mouse wheel to change the field of view.");
         ImGui::Separator();
-        ImGui::Text("In movement operate mode:");
+        ImGui::Text("In FPS operate mode:");
         ImGui::BulletText("Like FPS game's operate mode.");
         ImGui::BulletText("Press WASD and SPACE key to move your view position.");
         ImGui::BulletText("Move your mouse to change view angle.");
@@ -469,16 +470,19 @@ void CoolenderUI::renderRightSideBar()
                 if (ImGui::TreeNode("Point cloud global settings"))
                 {
                     //所有点云显示设置
-                    bool flag = true;
                     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                     {
                         //如果有一个点云不显示，设置Scene::showAllPointCloud为false
                         if(!it->second.show)
                         {
-                            flag = false;
+                            Scene::showAllPointCloud = false;
+                            break;
+                        }
+                        else
+                        {
+                            Scene::showAllPointCloud = true;
                         }
                     }
-                    Scene::showAllPointCloud = flag;
                     //判断是否显示所有点云
                     bool showAllPointCloud = Scene::showAllPointCloud;
                     ImGui::Checkbox("Show all the point clouds", &Scene::showAllPointCloud);
@@ -556,16 +560,19 @@ void CoolenderUI::renderRightSideBar()
                 if (ImGui::TreeNode("Polygon mesh global settings"))
                 {
                     //所有polygon mesh显示设置
-                    bool flag = true;
                     for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                     {
                         //如果有一个polygon mesh不显示，设置Scene::showAllPolygonMesh为false
                         if(!it->second.show)
                         {
-                            flag = false;
+                            Scene::showAllPolygonMesh = false;
+                            break;
+                        }
+                        else
+                        {
+                             Scene::showAllPolygonMesh = true;
                         }
                     }
-                    Scene::showAllPolygonMesh = flag;
                     //判断是否显示所有mesh
                     bool showAllPolygonMesh = Scene::showAllPolygonMesh;
                     ImGui::Checkbox("Show all the polygon mesh", &Scene::showAllPolygonMesh);
@@ -589,7 +596,6 @@ void CoolenderUI::renderRightSideBar()
 
                     float polygonMeshPointSize = Scene::polygonMeshPointSize;
                     ImGui::DragFloat("Global polygon mesh point size", &Scene::polygonMeshPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
-                    ImGui::SameLine();
                     if(abs(Scene::polygonMeshPointSize - polygonMeshPointSize) > 0.001)//如果改变了polygon mesh顶点的大小
                     {
                         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
