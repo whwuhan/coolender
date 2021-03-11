@@ -70,7 +70,7 @@ void ShadowMapping::renderDepthMap(Shader &depthMapShader)
     glFrontFace(GL_CW); //设置顺时针的面为正面
     glCullFace(GL_FRONT);//剔除前面的面
     //开始渲染
-    renderFloorDepthMap(depthMapShader, lightSpaceMatrix);//渲染地板depth map
+    //renderFloorDepthMap(depthMapShader, lightSpaceMatrix);//渲染地板depth map 做了面剔除后不会再渲染地板了
     renderPointCloudTypeSphereDepthMap(depthMapShader, lightSpaceMatrix);//渲染球状点云shadow mapping的depth map
     renderPolygonMeshDepthMap(depthMapShader, lightSpaceMatrix);//渲染polygon mesh的depth map
     glCullFace(GL_BACK); // 不要忘记设回原先的culling face
