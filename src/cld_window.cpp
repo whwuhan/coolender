@@ -27,7 +27,7 @@ bool Window::mouseButtonRightFirstRlease = true;   //鼠标右键是否是第一
 double Window::cursorPosX = Window::width / 2.0f;  //鼠标位置X
 double Window::cursorPosY = Window::height / 2.0f; //鼠标位置Y
 //功能
-bool Window::screenShot = false;
+bool Window::screenshot = false;
 
 void Window::initAndRun()
 {
@@ -107,7 +107,7 @@ void Window::initAndRun()
     Shader polygonMeshTypeLightShader("shader/polygon_mesh.vs.glsl", "shader/polygon_mesh_type_light.fs.glsl");
     
     //shadow mapping depth map shader
-    Shader simpleDepthShader("shader/shadow_mapping_point_cloud_depth.vs.glsl", "shader/shadow_mapping_depth.fs.glsl");
+    Shader depthMapShader("shader/shadow_mapping_depth.vs.glsl", "shader/shadow_mapping_depth.fs.glsl");
     ShadowMapping shadowMapping;
     shadowMapping.init();
 
@@ -136,10 +136,10 @@ void Window::initAndRun()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //渲染shawdow mapping depth map
-        shadowMapping.renderDepthMap(simpleDepthShader);
+        shadowMapping.renderDepthMap(depthMapShader);
         
         //获取投影矩阵和相机矩阵
-        mat4 projection = perspective(radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
+        mat4 projection = perspective(radians(camera.Zoom), (float)Window::width / (float)Window::height, 0.1f, 100.0f);
         mat4 view = camera.GetViewMatrix();
 
         //渲染地板
@@ -269,7 +269,7 @@ void Window::initAndRun()
                     polygonMeshTypeFillShader.setMat4("model" , it->second.model);
                     polygonMeshTypeFillShader.setFloat("pointSize", it->second.pointSize);
                     polygonMeshTypeFillShader.setVec4("faceColor", it->second.faceColor);
-                    Render::renderPolygonMeshTypeFILL(it->second);
+                    Render::renderPolygonMeshTypeFill(it->second);
                     break;
                 case LINE_AND_FILL:
                     polygonMeshTypeLineAndFillShader.use();
@@ -310,10 +310,10 @@ void Window::initAndRun()
         //==========================场景渲染结束==========================
 
         //场景截图
-        if(Window::screenShot)
+        if(Window::screenshot)
         {
             string curTime = Function::getCurTime();
-            Function::screenShot("cld_screenshot_" + curTime + "_" + to_string(glfwGetTime()) +".png");
+            Function::screenshot("cld_screenshot_" + curTime + "_" + to_string(glfwGetTime()) +".png");
         }
         
         //根据场景渲染UI
@@ -339,6 +339,8 @@ void Window::initAndRun()
 //回调函数声明，更改窗口大小的时候，更改视口大小
 void coolender::framebufferSizeCallback(GLFWwindow *glfwWindow, int width, int height)
 {
+    Window::width = width;
+    Window::height = height;
     glViewport(0, 0, width, height);
 }
 
@@ -365,11 +367,11 @@ void coolender::processInput(GLFWwindow *glfwWindow)
     {
         Window::changeOperateModeKeyPressed = false;
     }
-    
+
     //截图快捷键
     if (glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && glfwGetKey(glfwWindow, GLFW_KEY_P) == GLFW_PRESS)
     {
-        Window::screenShot = true;
+        Window::screenshot = true;
     }
 
     //键盘监听

@@ -19,8 +19,8 @@ uniform mat4 model;//点云的model矩阵
 
 void main()
 {
-    vsOut.FragPos = aPos;
+    vsOut.FragPos = vec3(model * vec4(aPos, 1.0));
     vsOut.TexCoords = aTexCoords;
-    vsOut.Normal = aNormal;
+    vsOut.Normal = vec3(model * vec4(aNormal, 1.0));
     gl_Position = projection * view * model * ainstanceMatrix * vec4(aPos, 1.0f); 
 }

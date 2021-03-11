@@ -49,7 +49,7 @@ void ShadowMapping::init()
 }
 
 //渲染整个场景的depth map
-void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
+void ShadowMapping::renderDepthMap(Shader &depthMapShader)
 {
     mat4 lightProjection, lightView;
     mat4 lightSpaceMatrix;
@@ -61,16 +61,20 @@ void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
 
     // 开始渲染从光照位置的depth map
     // 设置视口参数 参数 x y 宽 高
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, ShadowMapping::width, ShadowMapping::height);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
-
-    //渲染地板depth map
-    renderFloorDepthMap(simpleDepthShader, lightSpaceMatrix);
-    //渲染球状点云shadow mapping的depth map
-    renderPointCloudTypeSphereDepthMap(simpleDepthShader, lightSpaceMatrix);
-    //渲染polygon mesh的depth map
-    //renderPolygonMeshDepthMap(simpleDepthShader, lightSpaceMatrix);
+    
+    //剔除正面防止peter panning
+    glEnable(GL_CULL_FACE); //开启面剔除
+    glFrontFace(GL_CW); //设置顺时针的面为正面
+    glCullFace(GL_FRONT);//剔除前面的面
+    //开始渲染
+    renderFloorDepthMap(depthMapShader, lightSpaceMatrix);//渲染地板depth map
+    renderPointCloudTypeSphereDepthMap(depthMapShader, lightSpaceMatrix);//渲染球状点云shadow mapping的depth map
+    renderPolygonMeshDepthMap(depthMapShader, lightSpaceMatrix);//渲染polygon mesh的depth map
+    glCullFace(GL_BACK); // 不要忘记设回原先的culling face
+    glDisable(GL_CULL_FACE); //关闭面剔除
 
     // 解绑帧缓冲
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -82,31 +86,29 @@ void ShadowMapping::renderDepthMap(Shader &simpleDepthShader)
 }
 
 //渲染地板的depth map
-void ShadowMapping::renderFloorDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix)
+void ShadowMapping::renderFloorDepthMap(coolender::Shader &depthMapShader, glm::mat4& lightSpaceMatrix)
 {
-    simpleDepthShader.use();
-    simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    simpleDepthShader.setMat4("model", mat4(1.0f));
+    depthMapShader.use();
+    depthMapShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    depthMapShader.setMat4("model", mat4(1.0f));
+    depthMapShader.setBool("renderPointCloud", false);
     glBindVertexArray(Scene::floor.VAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 //渲染点云的depth map
-void ShadowMapping::renderPointCloudTypeSphereDepthMap(Shader &simpleDepthShader, mat4& lightSpaceMatrix)
+void ShadowMapping::renderPointCloudTypeSphereDepthMap(Shader &depthMapShader, mat4& lightSpaceMatrix)
 {
-    glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
-    //glCullFace(GL_FRONT);//设置剔除正面
-    glFrontFace(GL_CW); //设置顺时针的面为正面
     for (auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
     {
         //判断是否显示球状点云
         if (it->second.show)
         {
-            simpleDepthShader.use();
+            depthMapShader.use();
             // vs uniform
-            simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-            simpleDepthShader.setMat4("model", it->second.model);
-
+            depthMapShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+            depthMapShader.setMat4("model", it->second.model);
+            depthMapShader.setBool("renderPointCloud", true);
             //判断是否改变了球状点云的半径
             if (it->second.changePointSize)
             {
@@ -117,22 +119,22 @@ void ShadowMapping::renderPointCloudTypeSphereDepthMap(Shader &simpleDepthShader
             Render::renderPointCloudTypeSphere(it->second, Scene::sphereCollection[it->first]);
         }
     }
-    glDisable(GL_CULL_FACE); //关闭面剔除
 }
 
 //渲染polygon mesh的depth map
-void ShadowMapping::renderPolygonMeshDepthMap(Shader &simpleDepthShader, mat4& lightSpaceMatrix)
+void ShadowMapping::renderPolygonMeshDepthMap(Shader &depthMapShader, mat4& lightSpaceMatrix)
 {
     //渲染polygon mesh
     for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
     {
         if(it->second.show)
         {
-            simpleDepthShader.use();
+            depthMapShader.use();
             // vs uniform
-            simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-            simpleDepthShader.setMat4("model", it->second.model);
-            Render::renderPolygonMeshTypeLine(it->second);
+            depthMapShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+            depthMapShader.setMat4("model", it->second.model);
+            depthMapShader.setBool("renderPointCloud", false);
+            Render::renderPolygonMeshTypeFill(it->second);
         }
     }
 }

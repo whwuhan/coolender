@@ -423,26 +423,26 @@ void CoolenderUI::renderRightSideBar()
         if(ImGui::CollapsingHeader("Function"))
         {
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if(ImGui::TreeNode("Screen shot"))
+            if(ImGui::TreeNode("Screenshot"))
             {
                 
-                ImGui::Text("Screen shot save path:");ImGui::SameLine();
+                ImGui::Text("Screenshot save path:");ImGui::SameLine();
                 //注意ImGui使用的format string 最好这样写，否则会出现warning
-                ImGui::Text("%s", (Function::screenShotOutPath).c_str());ImGui::SameLine();
+                ImGui::Text("%s", (Function::screenshotOutPath).c_str());ImGui::SameLine();
                 if(ImGui::Button("Change path"))
                 {
                     CoolenderUI::showScreenshotSaveDirChooseDialog = true;
                 }
-                if(ImGui::Button("Screen shot"))
+                if(ImGui::Button("Screenshot"))
                 {
-                    Window::screenShot = true;
+                    Window::screenshot = true;
                 }
                 //判断前一个组件是否Hovered
                 if (ImGui::IsItemHovered())
                 {
                     ImGui::BeginTooltip();
                     ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                    ImGui::TextUnformatted("Shorcut left CTRL + P");
+                    ImGui::TextUnformatted("Shorcut: LEFT CTRL + P");
                     ImGui::PopTextWrapPos();
                     ImGui::EndTooltip();
                 }
@@ -1027,7 +1027,7 @@ void CoolenderUI::renderPolygonMeshObjFileChooseDialog()
                 //将点云添加到场景中
                 Scene::addPolygonMesh(it->second, mesh);
                 //传输数据给GPU
-                Render::renderPolygonMeshInit(Scene::polygonMeshCollection[it->second]);//点状点云
+                Render::renderPolygonMeshInit(Scene::polygonMeshCollection[it->second]);//polygon mesh准备
             }
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
@@ -1091,7 +1091,7 @@ void CoolenderUI::renderScreenshotSaveDirChooseDialog()
         if (ImGuiFileDialog::Instance()->IsOk())
         {
             
-            Function::screenShotOutPath = ImGuiFileDialog::Instance()->GetCurrentPath();
+            Function::screenshotOutPath = ImGuiFileDialog::Instance()->GetCurrentPath();
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
             CoolenderUI::showScreenshotSaveDirChooseDialog = false;

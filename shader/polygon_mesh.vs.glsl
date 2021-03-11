@@ -20,7 +20,7 @@ uniform float pointSize;//mesh点的大小
 void main()
 {
     vsOut.FragPos = aPos;
-    vsOut.Normal = aNormal;
+    vsOut.Normal = vec3(model * vec4(aNormal, 1.0f));
     gl_Position = projection * view *  model * vec4(aPos, 1.0);
     gl_PointSize = pointSize;
 }

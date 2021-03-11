@@ -14,7 +14,7 @@ namespace coolender
     class Function
     {
     public:
-        static std::string screenShotOutPath;//截图保存文件夹位置
+        static std::string screenshotOutPath;//截图保存文件夹位置
 
 
 
@@ -28,7 +28,7 @@ namespace coolender
          * width：图像宽度
          * height：图像高度
         */
-        static void screenShot(std::string fileName);
+        static void screenshot(std::string fileName);
 
         //获取当前时间
         static std::string getCurTime();

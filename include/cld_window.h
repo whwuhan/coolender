@@ -48,7 +48,7 @@ namespace coolender
         static bool mouseButtonRightFirstRlease;//鼠标右键是否第一次松开
         static bool mouseButtonRightFirstPressed;//鼠标右键是否第一次按下
         //功能
-        static bool screenShot;
+        static bool screenshot;
 
         static void initAndRun();//初始化glfw glad并运行窗口(包含渲染循环)
     };

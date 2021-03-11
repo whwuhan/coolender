@@ -41,7 +41,7 @@ float ShadowCalculation(vec4 fragPosLightSpace){
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    float bias = 0.005; // 加一个bias防止摩尔纹
+    float bias = 0.0; // 加一个bias防止摩尔纹
 
     // 或者通过视角与fragment的法线计算bias
     // vec3 lightDir = normalize(lightPos - fsIn.FragPos);
@@ -81,7 +81,6 @@ void blinPhong(float intensity)
         color = vec3(floorColor);
     }
     
-
     // ambient 环境光
     vec3 ambient = ambientIntensity * color * lightColor;
 

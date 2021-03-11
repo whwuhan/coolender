@@ -30,11 +30,11 @@ namespace coolender
         float farPlane;//远平面
 
         void init();//初始化
-        void renderDepthMap(coolender::Shader &simpleDepthShader);//渲染在光源位置的深度图到对应的纹理中
+        void renderDepthMap(coolender::Shader &depthMapShader);//渲染在光源位置的深度图到对应的纹理中
         //渲染球状点云的Depth map
-        void renderPointCloudTypeSphereDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix);
-        void renderFloorDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix);
-        void renderPolygonMeshDepthMap(coolender::Shader &simpleDepthShader, glm::mat4& lightSpaceMatrix);
+        void renderPointCloudTypeSphereDepthMap(coolender::Shader &depthMapShader, glm::mat4& lightSpaceMatrix);
+        void renderFloorDepthMap(coolender::Shader &depthMapShader, glm::mat4& lightSpaceMatrix);
+        void renderPolygonMeshDepthMap(coolender::Shader &depthMapShader, glm::mat4& lightSpaceMatrix);
         
     };
 }
