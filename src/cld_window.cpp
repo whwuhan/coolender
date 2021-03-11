@@ -349,7 +349,7 @@ void coolender::processInput(GLFWwindow *glfwWindow)
         glfwSetWindowShouldClose(glfwWindow, true);
     }
 
-    //按左边ctrl切换操作模式
+    //按Q切换操作模式
     if (glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_PRESS && !Window::changeOperateModeKeyPressed)
     {
         Window::changeOperateModeKeyPressed = true;
@@ -396,17 +396,16 @@ void coolender::changeOperateMode(GLFWwindow *glfwWindow)
     if (Window::cursorDisable)
     {
         //FPS风格
-        //新增监听鼠标和鼠标滚轮事件
         Window::firstMouse = true;
-        glfwSetCursorPosCallback(glfwWindow, moveModelMouseCallback);//移动模式
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
+        glfwSetCursorPosCallback(glfwWindow, moveModelMouseCallback);
     }
     else
     {   
         //wow风格
         Window::mouseButtonRightFirstPressed = true;
-        glfwSetCursorPosCallback(glfwWindow, cursorModelMouseCallback);
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetCursorPosCallback(glfwWindow, cursorModelMouseCallback);
     }
 }
 
@@ -448,6 +447,20 @@ void coolender::mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int acti
         {
         case GLFW_MOUSE_BUTTON_RIGHT:
             glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
+            Window::mouseButtonRightFirstPressed = true;
+            Window::mouseButtonRightFirstRlease = false;
+            break;
+        }
+    }
+
+    if(action == GLFW_RELEASE)
+    {
+        switch(button)
+        {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);//显示鼠标
+            Window::mouseButtonRightFirstPressed = false;
+            Window::mouseButtonRightFirstRlease = true;
             break;
         }
     }
@@ -475,14 +488,6 @@ void coolender::cursorModelMouseCallback(GLFWwindow* glfwWindow, double xpos, do
 
         Window::camera.ProcessMouseMovement(xoffset, yoffset); 
     }
-    if(glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
-    {
-        Window::mouseButtonRightFirstPressed = true;
-        Window::mouseButtonRightFirstRlease = false;
-        //松开右键，显示指针
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-    
 }
 
 //获取当前指针的位置

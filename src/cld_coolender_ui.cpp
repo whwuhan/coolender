@@ -6,7 +6,7 @@ using namespace wh::utils::io;
 //static 变量初始化
 GLFWwindow* CoolenderUI::glfwWindow = nullptr;
 //整体设置
-float CoolenderUI::fontSize = 15.0;//字体大小
+float CoolenderUI::fontSize = 14.0;//字体大小
 float CoolenderUI::globalScale = 1.0;//整体的字体缩放
 float CoolenderUI::windowRounding = 6.0;//窗口的圆角
 float CoolenderUI::frameRounding = 3.0;//内部图标的圆角
@@ -28,28 +28,6 @@ float CoolenderUI::rightSidebarWidth = 500;//右侧边栏宽
 float CoolenderUI::rightSidebarHeight = 650;//右侧边栏高
 float CoolenderUI::messageBoxPosX = 3;//message box距离左边距离
 float CoolenderUI::messageBoxPosY = 300;//message box距离usage的纵向距离
-// float CoolenderUI::messageBoxWidth = 200;//宽
-// float CoolenderUI::messageBoxHeight = 200;//高
-
-// int CoolenderUI::globalSettingOpenAction = 1;//初始是否打开global setting界面
-// int CoolenderUI::sceneSettingOpenAction = 1;//初始是否打开scene setting界面
-
-// CoolenderUI::CoolenderUI():
-// window(nullptr),
-// globalScale(1.0),
-// fontSize(15.0),
-// windowRounding(6.0),
-// frameRounding(3.0)
-// {}
-
-// CoolenderUI::CoolenderUI(GLFWwindow* window):
-// window(window),
-// globalScale(1.0),
-// fontSize(15.0),
-// windowRounding(6.0),
-// frameRounding(3.0)
-// {}
-
 
 //初始化UI
 void CoolenderUI::init(GLFWwindow* glfwWindow)
@@ -61,7 +39,12 @@ void CoolenderUI::init(GLFWwindow* glfwWindow)
     ImGuiIO& io = ImGui::GetIO(); 
     (void)io;
     io.FontGlobalScale = globalScale;//设置字体的缩放大小
-    io.Fonts->AddFontFromFileTTF("fonts/DroidSans.ttf", fontSize);//设置字体
+    // io.Fonts->AddFontFromFileTTF("fonts/Cousine-Regular.ttf", fontSize);//设置字体
+    // io.Fonts->AddFontFromFileTTF("fonts/DroidSans.ttf", fontSize);//设置字体
+    // io.Fonts->AddFontFromFileTTF("fonts/Karla-Regular.ttf", fontSize);//设置字体
+    // io.Fonts->AddFontFromFileTTF("fonts/ProggyClean.ttf", fontSize);//设置字体
+    //io.Fonts->AddFontFromFileTTF("fonts/ProggyTiny.ttf", fontSize);//设置字体
+    io.Fonts->AddFontFromFileTTF("fonts/Roboto-Medium.ttf", fontSize);//设置字体
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -896,7 +879,7 @@ void CoolenderUI::renderMessageBox()
     {   
         //简介
         ImGui::Text("Brief Introduction:");
-        ImGui::BulletText("This is a simple scene renderer for \npoint cloud, polygonmesh and model.");
+        ImGui::BulletText("This is a simple scene renderer for \npoint cloud, polygon mesh without any \npbr texture and model with pbr textures.");
         ImGui::Separator();
         //显示帧数
         ImGui::Text
