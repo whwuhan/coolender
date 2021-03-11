@@ -154,3 +154,32 @@ void Render::renderPolygonMeshTypeLine(PolygonMesh &mesh)
     glBindVertexArray(0);
 }
 
+//填充模式
+void Render::renderPolygonMeshTypeFILL(PolygonMesh &mesh)
+{
+    glBindVertexArray(mesh.VAO);
+    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+//线框加填充模式
+void Render::renderPolygonMeshTypeLineAndFill(PolygonMesh &mesh, Shader &shader)
+{
+    glBindVertexArray(mesh.VAO);
+    shader.setBool("renderLineAndPoint", true);
+    glDrawElements(GL_POINTS, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置绘制成线框模式
+    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    shader.setBool("renderLineAndPoint", false);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//设置成默认模式
+    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+//光照模式
+void Render::renderPolygonMeshTypeLight(wh::basic::PolygonMesh &mesh)
+{
+    glBindVertexArray(mesh.VAO);
+    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

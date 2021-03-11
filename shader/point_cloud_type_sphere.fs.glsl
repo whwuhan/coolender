@@ -21,6 +21,7 @@ uniform vec3 lightColor;
 uniform vec3 lightPos;//光源位置
 uniform vec3 lightLookAt;//光源聚焦位置
 
+//环境光强度
 uniform float ambientIntensity;
 void main()
 {
@@ -39,7 +40,7 @@ void main()
     vec3 viewDir = normalize(viewPos - fsIn.FragPos);    
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec3 specular = lightColor * spec;
+    vec3 specular = spec * lightColor;
     
     color = ambient + diffuse + specular;
 

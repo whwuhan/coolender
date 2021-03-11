@@ -1,12 +1,12 @@
 #version 330 core
 /**
-mesh的点
+ polygon mesh 线框类型
 */
 out vec4 FragColor;
 
-uniform vec4 polygonMeshColor;
+uniform vec4 pointAndLineColor;
 void main()
 {
     // FragColor = polygonMeshColor;
-    FragColor = vec4(0.0, 0.0, 0.0, 1.0f);
+    FragColor = pointAndLineColor;
 }

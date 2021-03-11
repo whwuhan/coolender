@@ -39,8 +39,8 @@ namespace coolender
         static bool showAllPolygonMesh;//显示所有mesh
         static POLYGON_MESH_TYPE polygonMeshType;
         static float polygonMeshPointSize;//场景所有mesh点的大小
-        static glm::vec4 polygonMeshColor;//场景所有点云的颜色
-
+        static glm::vec4 polygonMeshPointAndLineColor;//场景所有polygon mesh PointAndLine的颜色
+        static glm::vec4 polygonMeshFaceColor;//场景所有polygon mesh Face的颜色
 
         //场景中的物体
         // static std::map<std::string, coolender::Light> lightCollection;//光源

@@ -4,9 +4,18 @@ mesh的点
 */
 out vec4 FragColor;
 
-uniform vec4 polygonMeshColor;
+uniform vec4 pointAndLineColor;
+uniform vec4 faceColor;
+uniform bool renderLineAndPoint;
 void main()
 {
     // FragColor = polygonMeshColor;
-    FragColor = vec4(0.0, 0.0, 0.0, 1.0f);
+    if(renderLineAndPoint)
+    {
+        FragColor = pointAndLineColor;
+    }
+    else
+    {
+        FragColor = faceColor;
+    }
 }

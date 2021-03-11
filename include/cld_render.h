@@ -27,5 +27,7 @@ namespace coolender
         static void renderPolygonMeshInit(wh::basic::PolygonMesh &mesh);
         static void renderPolygonMeshTypeLine(wh::basic::PolygonMesh &mesh);//线框模式
         static void renderPolygonMeshTypeFILL(wh::basic::PolygonMesh &mesh);//填充模式
+        static void renderPolygonMeshTypeLineAndFill(wh::basic::PolygonMesh &mesh, coolender::Shader &shader);//线框加填充模式
+        static void renderPolygonMeshTypeLight(wh::basic::PolygonMesh &mesh);//光照模式
     };
 }

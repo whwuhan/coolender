@@ -25,7 +25,8 @@ vec4 Scene::pointCloudPointColor(0.06f, 0.729f, 0.941f, 1.0f);
 bool Scene::showAllPolygonMesh = true;
 POLYGON_MESH_TYPE Scene::polygonMeshType = LINE_AND_FILL;//polygon mesh的类型
 float Scene::polygonMeshPointSize = 5.0f;
-vec4 Scene::polygonMeshColor = vec4(0.6, 0.6, 0.6, 1.0f);//场景所有mesh的颜色
+vec4 Scene::polygonMeshPointAndLineColor = vec4(0.0, 0.0, 0.0, 1.0f);//场景所有mesh 点和线的颜色
+vec4 Scene::polygonMeshFaceColor = vec4(0.6, 0.6, 0.6, 1.0f);//场景所有mesh的颜色
 
 //注意static变量要先初始化 否则链接失败
 // map<string, Light> Scene::lightCollection;//光源

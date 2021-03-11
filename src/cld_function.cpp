@@ -8,12 +8,14 @@ void Function::screenShot(string fileName)
 {
     //y轴翻转
     stbi_flip_vertically_on_write(true);
+    int width, height;
+    glfwGetFramebufferSize(Window::glfwWindow, &width, &height);
     //分配截图数据空间
-    GLchar data[Window::width * Window::height * 3];
+    GLchar data[width * height * 3];
     //获取当前帧的数据
-    glReadPixels(0, 0, Window::width, Window::height, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
     string finalPath = Function::screenShotOutPath + "/" + fileName;
-    stbi_write_png(finalPath.c_str(), Window::width, Window::height, 3, data, 0);
+    stbi_write_png(finalPath.c_str(), width, height, 3, data, 0);
     //stbi_image_free(data);//释放资源
     cout << "Screenshot successfully! Save path:"<< finalPath << endl;
     Window::screenShot = false;//设置当前帧不再截图

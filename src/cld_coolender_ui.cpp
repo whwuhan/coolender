@@ -177,7 +177,7 @@ void CoolenderUI::renderMenu()
             {
                 CoolenderUI::showPolygonMeshObjFileChooseDialog = true;
             }
-            if (ImGui::MenuItem("Import model .obj", ""))
+            if (ImGui::MenuItem("Import model .obj", NULL, false, false))
             {
                 CoolenderUI::showModelObjFileChooseDialog = true;
             }
@@ -425,6 +425,7 @@ void CoolenderUI::renderRightSideBar()
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
             if(ImGui::TreeNode("Screen shot"))
             {
+                
                 ImGui::Text("Screen shot save path:");ImGui::SameLine();
                 //注意ImGui使用的format string 最好这样写，否则会出现warning
                 ImGui::Text("%s", (Function::screenShotOutPath).c_str());ImGui::SameLine();
@@ -435,6 +436,15 @@ void CoolenderUI::renderRightSideBar()
                 if(ImGui::Button("Screen shot"))
                 {
                     Window::screenShot = true;
+                }
+                //判断前一个组件是否Hovered
+                if (ImGui::IsItemHovered())
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                    ImGui::TextUnformatted("Shorcut left CTRL + P");
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
                 }
                 ImGui::TreePop();
             }
@@ -531,7 +541,7 @@ void CoolenderUI::renderRightSideBar()
                         Scene::pointCloudPointColor.y,
                         Scene::pointCloudPointColor.z
                     };
-                    ImGui::ColorEdit3("Global point color", pointCloudPointColor);
+                    ImGui::ColorEdit3("Global point cloud point color", pointCloudPointColor);
                     Scene::pointCloudPointColor.x = pointCloudPointColor[0];
                     Scene::pointCloudPointColor.y = pointCloudPointColor[1];
                     Scene::pointCloudPointColor.z = pointCloudPointColor[2];
@@ -604,33 +614,63 @@ void CoolenderUI::renderRightSideBar()
                         }
                     }
 
-                    //设置所有点云的颜色
-                    float polygonMeshColorR = Scene::polygonMeshColor.x;
-                    float polygonMeshColorG = Scene::polygonMeshColor.y;
-                    float polygonMeshColorB = Scene::polygonMeshColor.z;
-                    float polygonMeshColor[3] = 
+                    //设置所有polygon mesh的颜色
+                    //点和线的颜色
+                    float polygonMeshPointAndLineColorR = Scene::polygonMeshPointAndLineColor.x;
+                    float polygonMeshPointAndLineColorG = Scene::polygonMeshPointAndLineColor.y;
+                    float polygonMeshPointAndLineColorB = Scene::polygonMeshPointAndLineColor.z;
+                    float polygonMeshPointAndLineColor[3] = 
                     {
-                        Scene::polygonMeshColor.x,
-                        Scene::polygonMeshColor.y,
-                        Scene::polygonMeshColor.z
+                        Scene::polygonMeshPointAndLineColor.x,
+                        Scene::polygonMeshPointAndLineColor.y,
+                        Scene::polygonMeshPointAndLineColor.z
                     };
-                    ImGui::ColorEdit3("Global point color", polygonMeshColor);
-                    Scene::polygonMeshColor.x = polygonMeshColor[0];
-                    Scene::polygonMeshColor.y = polygonMeshColor[1];
-                    Scene::polygonMeshColor.z = polygonMeshColor[2];
+                    ImGui::ColorEdit3("Global polygon mesh point and line color", polygonMeshPointAndLineColor);
+                    Scene::polygonMeshPointAndLineColor.x = polygonMeshPointAndLineColor[0];
+                    Scene::polygonMeshPointAndLineColor.y = polygonMeshPointAndLineColor[1];
+                    Scene::polygonMeshPointAndLineColor.z = polygonMeshPointAndLineColor[2];
                     //判断是否更改了全局点云颜色
                     if(
-                        abs(Scene::polygonMeshColor.x - polygonMeshColorR) >  0.001 ||
-                        abs(Scene::polygonMeshColor.y - polygonMeshColorG) >  0.001 ||
-                        abs(Scene::polygonMeshColor.z - polygonMeshColorB) >  0.001 
+                        abs(Scene::polygonMeshPointAndLineColor.x - polygonMeshPointAndLineColorR) >  0.001 ||
+                        abs(Scene::polygonMeshPointAndLineColor.y - polygonMeshPointAndLineColorG) >  0.001 ||
+                        abs(Scene::polygonMeshPointAndLineColor.z - polygonMeshPointAndLineColorB) >  0.001 
                     )
                     {
-                        for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
+                        for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                         {
                             //color
-                            it->second.color.x = polygonMeshColor[0];
-                            it->second.color.y = polygonMeshColor[1];
-                            it->second.color.z = polygonMeshColor[2];
+                            it->second.pointAndLineColor.x = polygonMeshPointAndLineColor[0];
+                            it->second.pointAndLineColor.y = polygonMeshPointAndLineColor[1];
+                            it->second.pointAndLineColor.z = polygonMeshPointAndLineColor[2];
+                        }
+                    }
+                    //面的颜色
+                    float polygonMeshFaceColorR = Scene::polygonMeshFaceColor.x;
+                    float polygonMeshFaceColorG = Scene::polygonMeshFaceColor.y;
+                    float polygonMeshFaceColorB = Scene::polygonMeshFaceColor.z;
+                    float polygonMeshFaceColor[3] = 
+                    {
+                        Scene::polygonMeshFaceColor.x,
+                        Scene::polygonMeshFaceColor.y,
+                        Scene::polygonMeshFaceColor.z
+                    };
+                    ImGui::ColorEdit3("Global polygon mesh face color", polygonMeshFaceColor);
+                    Scene::polygonMeshFaceColor.x = polygonMeshFaceColor[0];
+                    Scene::polygonMeshFaceColor.y = polygonMeshFaceColor[1];
+                    Scene::polygonMeshFaceColor.z = polygonMeshFaceColor[2];
+                    //判断是否更改了全局点云颜色
+                    if(
+                        abs(Scene::polygonMeshFaceColor.x - polygonMeshFaceColorR) >  0.001 ||
+                        abs(Scene::polygonMeshFaceColor.y - polygonMeshFaceColorG) >  0.001 ||
+                        abs(Scene::polygonMeshFaceColor.z - polygonMeshFaceColorB) >  0.001 
+                    )
+                    {
+                        for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
+                        {
+                            //color
+                            it->second.faceColor.x = polygonMeshFaceColor[0];
+                            it->second.faceColor.y = polygonMeshFaceColor[1];
+                            it->second.faceColor.z = polygonMeshFaceColor[2];
                             // it->second.color.w = 1.0;
                         }
                     }
@@ -782,17 +822,28 @@ void CoolenderUI::renderRightSideBar()
                         ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
                         
                         //color
-                        float polygonMeshColor[3] = 
+                        float pointAndLineColor[3] = 
                         {
-                            it->second.color.x,
-                            it->second.color.y,
-                            it->second.color.z,
+                            it->second.pointAndLineColor.x,
+                            it->second.pointAndLineColor.y,
+                            it->second.pointAndLineColor.z,
                         };
-                        ImGui::ColorEdit3("Point color", polygonMeshColor);
-                        it->second.color.x = polygonMeshColor[0];
-                        it->second.color.y = polygonMeshColor[1];
-                        it->second.color.z = polygonMeshColor[2];
-                        it->second.color.w = 1.0;
+                        ImGui::ColorEdit3("Point and line color", pointAndLineColor);
+                        it->second.pointAndLineColor.x = pointAndLineColor[0];
+                        it->second.pointAndLineColor.y = pointAndLineColor[1];
+                        it->second.pointAndLineColor.z = pointAndLineColor[2];
+                        it->second.pointAndLineColor.w = 1.0;
+
+                        float faceColor[3] = 
+                        {
+                            it->second.faceColor.x,
+                            it->second.faceColor.y,
+                            it->second.faceColor.z,
+                        };
+                        ImGui::ColorEdit3("Face color", faceColor);
+                        it->second.faceColor.x = faceColor[0];
+                        it->second.faceColor.y = faceColor[1];
+                        it->second.faceColor.z = faceColor[2];
                         
                         //注意glm::mat4是按照列优选的顺序来的
                         //缩放
