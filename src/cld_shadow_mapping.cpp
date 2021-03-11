@@ -3,34 +3,51 @@ using namespace std;
 using namespace coolender;
 using namespace glm;
 
-ShadowMapping::ShadowMapping():
-shadowMappingScale(1),
-width(Window::width * shadowMappingScale),
-height(Window::height * shadowMappingScale),
-nearPlane(0.1f),
-farPlane(100.0f),
-depthMapFBO(0),
-depthMap(0)
-{}
+// ShadowMapping::ShadowMapping():
+// shadowMappingScale(3),
+// width(Window::width * shadowMappingScale),
+// height(Window::height * shadowMappingScale),
+// nearPlane(0.1f),
+// farPlane(100.0f),
+// depthMapFBO(0),
+// depthMap(0)
+// {}
 
-ShadowMapping::ShadowMapping(unsigned int width, unsigned int height, float nearPlane, float farPlane):
-width(width),
-height(height),
-nearPlane(nearPlane),
-farPlane(farPlane),
-depthMapFBO(0),
-depthMap(0)
-{}
+// ShadowMapping::ShadowMapping(unsigned int width, unsigned int height, float nearPlane, float farPlane):
+// width(width),
+// height(height),
+// nearPlane(nearPlane),
+// farPlane(farPlane),
+// depthMapFBO(0),
+// depthMap(0)
+// {}
+
+//FrameBuffer Object的分辨率
+float ShadowMapping::shadowMappingScale = 1.0;//shadow mapping分辨率缩放
+unsigned int ShadowMapping::width = Window::width;
+unsigned int ShadowMapping::height = Window::height;
+
+
+unsigned int ShadowMapping::depthMapFBO = 0;// 创建 depth map framebuffer object
+unsigned int ShadowMapping::depthMap = 0;// create depth texture 将深度信息放在纹理上
+float ShadowMapping::nearPlane = 0.1f;//在光源位置渲染时，投影矩阵近平面
+float ShadowMapping::farPlane = 100.0f;//远平面
 
 void ShadowMapping::init()
 {
     // 创建 depth map framebuffer object
-    glGenFramebuffers(1, &depthMapFBO);
+    glGenFramebuffers(1, &ShadowMapping::depthMapFBO);
     // create depth texture 将深度信息放在纹理上
-    glGenTextures(1, &depthMap);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glGenTextures(1, &ShadowMapping::depthMap);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapping::depthMap);
     //设置当前绑定纹理的信息 注意纹理的类型，参数 纹理的类型， level, 纹理内部存储数据的格式， 宽，高 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(
+        GL_TEXTURE_2D, 
+        0, GL_DEPTH_COMPONENT, 
+        ShadowMapping::width * ShadowMapping::shadowMappingScale, 
+        ShadowMapping::height * ShadowMapping::shadowMappingScale, 
+        0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL
+        );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -41,8 +58,8 @@ void ShadowMapping::init()
     float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     // attach depth texture as FBO's depth buffer 将纹理绑定在帧缓冲上
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapping::depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapping::depthMap, 0);
     glDrawBuffer(GL_NONE);//表示只需要深度信息
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -61,8 +78,8 @@ void ShadowMapping::renderDepthMap(Shader &depthMapShader)
 
     // 开始渲染从光照位置的depth map
     // 设置视口参数 参数 x y 宽 高
-    glViewport(0, 0, ShadowMapping::width, ShadowMapping::height);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glViewport(0, 0, ShadowMapping::width * ShadowMapping::shadowMappingScale, ShadowMapping::height * ShadowMapping::shadowMappingScale);
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapping::depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
     
     //剔除正面防止peter panning

@@ -44,7 +44,7 @@ void CoolenderUI::init(GLFWwindow* glfwWindow)
     // io.Fonts->AddFontFromFileTTF("fonts/Karla-Regular.ttf", fontSize);//设置字体
     // io.Fonts->AddFontFromFileTTF("fonts/ProggyClean.ttf", fontSize);//设置字体
     //io.Fonts->AddFontFromFileTTF("fonts/ProggyTiny.ttf", fontSize);//设置字体
-    io.Fonts->AddFontFromFileTTF("fonts/Roboto-Medium.ttf", fontSize);//设置字体
+    io.Fonts->AddFontFromFileTTF("fonts/Roboto-Medium.ttf", CoolenderUI::fontSize);//设置字体
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -177,7 +177,7 @@ void CoolenderUI::renderMenu()
             {
                 CoolenderUI::showPolygonMeshObjFileChooseDialog = true;
             }
-            if (ImGui::MenuItem("Import model .obj", NULL, false, false))
+            if (ImGui::MenuItem("Import model .obj (TODO)", NULL, false, false))
             {
                 CoolenderUI::showModelObjFileChooseDialog = true;
             }
@@ -448,7 +448,7 @@ void CoolenderUI::renderRightSideBar()
                 }
                 ImGui::TreePop();
             }
-        }
+        }ImGui::Separator();//功能相关UI结束
 
 
         //========================================================================================================
@@ -473,6 +473,11 @@ void CoolenderUI::renderRightSideBar()
                 Scene::clearColor.y = clearColor[1];
                 Scene::clearColor.z = clearColor[2];
                 Scene::clearColor.w = 1.0f;
+                
+                //shadow mapping 分辨率缩放设置
+                float shadowMappingScale = ShadowMapping::shadowMappingScale;
+                ImGui::DragFloat("Shadow mapping resolution scale", &ShadowMapping::shadowMappingScale, 0.05f, 1.0f, 10.0f, "Shadow mapping resolution scale: %.3f");
+                if(abs(ShadowMapping::shadowMappingScale - shadowMappingScale) > 0.01) ShadowMapping::init();//如果改变了shadow mapping的缩放大小重新初始化
                 ImGui::Separator();
 
                 //点云全局设置
@@ -519,7 +524,7 @@ void CoolenderUI::renderRightSideBar()
                         it->second.changePointSize = false;
                     }
                     float pointCloudPointSize = Scene::pointCloudPointSize;
-                    ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                    ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point cloud point size: %.3f");
                     ImGui::SameLine();
                     warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type with too many point cloud models, \nyour PC will explode!!!");
                     if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)//如果改变的点云球面的大小
@@ -605,7 +610,7 @@ void CoolenderUI::renderRightSideBar()
                     Scene::polygonMeshType = POLYGON_MESH_TYPE(polygonMeshType);//int强制转化为enum
 
                     float polygonMeshPointSize = Scene::polygonMeshPointSize;
-                    ImGui::DragFloat("Global polygon mesh point size", &Scene::polygonMeshPointSize, 0.005f, 0.0f, 50.0f, "Global point size: %.3f");
+                    ImGui::DragFloat("Global polygon mesh point size", &Scene::polygonMeshPointSize, 0.005f, 0.0f, 50.0f, "Global polygon mesh point size: %.3f");
                     if(abs(Scene::polygonMeshPointSize - polygonMeshPointSize) > 0.001)//如果改变了polygon mesh顶点的大小
                     {
                         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
