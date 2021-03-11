@@ -60,15 +60,12 @@ void Window::initAndRun()
     glfwSwapInterval(1); // Enable vsync 每帧的交换间隔，防止屏幕撕裂
     //注册回调函数，告诉GLFW窗口大小调整时，调用这个回调函数
     glfwSetFramebufferSizeCallback(Window::glfwWindow, framebufferSizeCallback);
-    //新增监听鼠标和鼠标滚轮事件
+    //鼠标滚轮监听
     glfwSetScrollCallback(Window::glfwWindow, scrollCallback);
     //鼠标点击回调函数
     glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallBack);
-    //鼠标移动回调函数 模式是WOW风格
-    glfwSetCursorPosCallback(glfwWindow, cursorModelMouseCallback);
-
-    // glfwSetCursorPosCallback(Window::glfwWindow,mouseCallback);
-    // glfwSetScrollCallback(Window::glfwWindow,scrollCallback);
+    //鼠标移动回调函数 默认模式是WOW风格
+    glfwSetCursorPosCallback(glfwWindow, cursorModeMouseCallback);
     //告诉GLFW选中窗口不显示鼠标
     //glfwSetInputMode(Window::glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -350,7 +347,11 @@ void coolender::processInput(GLFWwindow *glfwWindow)
     }
 
     //按Q切换操作模式
-    if (glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_PRESS && !Window::changeOperateModeKeyPressed)
+    if (
+        glfwGetKey(glfwWindow, GLFW_KEY_Q) == GLFW_PRESS && 
+        !Window::changeOperateModeKeyPressed && 
+        glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE
+    )
     {
         Window::changeOperateModeKeyPressed = true;
         changeOperateMode(Window::glfwWindow);
@@ -398,14 +399,16 @@ void coolender::changeOperateMode(GLFWwindow *glfwWindow)
         //FPS风格
         Window::firstMouse = true;
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
-        glfwSetCursorPosCallback(glfwWindow, moveModelMouseCallback);
+        glfwSetCursorPosCallback(glfwWindow, moveModeMouseCallback);   //设置鼠标的移动模式为move model
+        glfwSetMouseButtonCallback(glfwWindow, nullptr);                //禁用鼠标按键监听
     }
     else
     {   
         //wow风格
         Window::mouseButtonRightFirstPressed = true;
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        glfwSetCursorPosCallback(glfwWindow, cursorModelMouseCallback);
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  //显示鼠标
+        glfwSetCursorPosCallback(glfwWindow, cursorModeMouseCallback); //设置鼠标的移动模式为cursor model
+        glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallBack);    //启动鼠标按键监听
     }
 }
 
@@ -419,7 +422,7 @@ void coolender::scrollCallback(GLFWwindow *winglfwWindowdow, double xoffset, dou
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
 //移动模式下的鼠标移动回调函数 类似FPS游戏
-void coolender::moveModelMouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
+void coolender::moveModeMouseCallback(GLFWwindow *glfwWindow, double xpos, double ypos)
 {   
     //防止镜头抖动
     if (Window::firstMouse)
@@ -448,7 +451,7 @@ void coolender::mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int acti
         case GLFW_MOUSE_BUTTON_RIGHT:
             glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//隐藏鼠标
             Window::mouseButtonRightFirstPressed = true;
-            Window::mouseButtonRightFirstRlease = false;
+            // Window::mouseButtonRightFirstRlease = false;
             break;
         }
     }
@@ -460,14 +463,14 @@ void coolender::mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int acti
         case GLFW_MOUSE_BUTTON_RIGHT:
             glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);//显示鼠标
             Window::mouseButtonRightFirstPressed = false;
-            Window::mouseButtonRightFirstRlease = true;
+            // Window::mouseButtonRightFirstRlease = true;
             break;
         }
     }
 }
 
 //鼠标模式下的鼠标移动回调函数 类似WOW
-void coolender::cursorModelMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
+void coolender::cursorModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos)
 {
     if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     { 
@@ -477,9 +480,10 @@ void coolender::cursorModelMouseCallback(GLFWwindow* glfwWindow, double xpos, do
             Window::cursorPosX = xpos;
             Window::cursorPosY = ypos;
             Window::mouseButtonRightFirstPressed = false;
-            Window::mouseButtonRightFirstRlease = true;
+            //Window::mouseButtonRightFirstRlease = true;
         }
-        
+        // cout << "mouseButtonRightFirstPressed: " <<Window::mouseButtonRightFirstPressed << endl;
+        // cout << "mouseButtonRightFirstRlease: " <<Window::mouseButtonRightFirstRlease << endl;
         float xoffset = xpos - Window::cursorPosX;
         float yoffset = Window::cursorPosY - ypos; // reversed since y-coordinates go from bottom to top
 

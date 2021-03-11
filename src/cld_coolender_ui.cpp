@@ -241,12 +241,16 @@ void CoolenderUI::renderUsage()
     ImGui::Begin("Usage", &CoolenderUI::showUsage, ImGuiWindowFlags_AlwaysAutoResize);
     {
         ImGui::Text("How to switch mode:");
-        ImGui::BulletText("Please press Q to change operate mode!");
+        ImGui::BulletText("Please press Q to switch operate mode!");
         ImGui::Separator();
-        ImGui::Text("In cursor operate mode:");
+        ImGui::Text("In cursor operate mode(default operate mode):");
+        ImGui::BulletText("Like World of Warcraft's operate mode.");
         ImGui::BulletText("You can use cursor to select what you want.");
+        ImGui::BulletText("Press WASD and SPACE key to move your view position.");
+        ImGui::BulletText("Move your mouse with mouse right button pressed to change view angle.");
         ImGui::Separator();
         ImGui::Text("In movement operate mode:");
+        ImGui::BulletText("Like FPS game's operate mode.");
         ImGui::BulletText("Press WASD and SPACE key to move your view position.");
         ImGui::BulletText("Move your mouse to change view angle.");
         ImGui::BulletText("Scroll the mouse wheel to change the field of view.");

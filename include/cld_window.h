@@ -57,8 +57,8 @@ namespace coolender
     //鼠标点击回调函数
     void mouseButtonCallBack(GLFWwindow* glfwWindow, int button, int action, int mods);
     //鼠标移动
-    void moveModelMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//移动模式下的鼠标移动回调函数 类似FPS游戏
-    void cursorModelMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//鼠标模式下的鼠标移动回调函数 类似WOW
+    void moveModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//移动模式下的鼠标移动回调函数 类似FPS游戏
+    void cursorModeMouseCallback(GLFWwindow* glfwWindow, double xpos, double ypos);//鼠标模式下的鼠标移动回调函数 类似WOW
     //获取鼠标位置
     void getCursorPos(GLFWwindow* glfwWindow, double xpos, double ypos);
 }
