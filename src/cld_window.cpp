@@ -12,7 +12,7 @@ Camera Window::camera;                             //相机
 float Window::cameraSpeedScale = 1.0f;             //相机移速比例
 //渲染相关
 bool Window::useMSAA = true;
-int Window::MSAALevel = 8;                          //MSAA采样数量
+int Window::MSAALevel = 2;                          //MSAA采样数量
 //镜头操作模式
 OPERATE_MODE Window::operateMode = WOW;
 //timing
@@ -227,8 +227,6 @@ void Window::initAndRun()
                     pointCloudTypeShpereShader.setFloat("ambientIntensity", Scene::ambientIntensity);//平行光环境光强度
                     pointCloudTypeShpereShader.setVec3("lightPos", Scene::parallelLight.position);//光源位置
                     pointCloudTypeShpereShader.setVec3("lightLookAt", Scene::parallelLight.lookAt);//光源位置
-
-                    // cout << glGetUniformLocation(pointCloudTypeShpereShader.ID, "parallelLightDir2") << endl;
                     //判断是否改变了球状点云的半径
                     if (it->second.changePointSize)
                     {

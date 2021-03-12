@@ -50,7 +50,7 @@ void Render:: renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sph
             pointModel, 
             vec3(pointCloud.points.row(i)[0], pointCloud.points.row(i)[1], pointCloud.points.row(i)[2])
         );//平移
-        pointModel = scale(pointModel, vec3(pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05));//QIU D缩放
+        pointModel = scale(pointModel, vec3(pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05));//缩放
         //不需要旋转
         pointModelMatrices[i] = pointModel;
     } 
@@ -91,7 +91,9 @@ void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
 {   
     glBindVertexArray(sphere.VAO);
     //注意绘制类型是GL_TRIANGLE_STRIP 不是GL_TRIANGLES
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置绘制成线框模式
     glDrawElementsInstanced(GL_TRIANGLE_STRIP, sphere.indexCount, GL_UNSIGNED_INT, 0, pointCloud.size);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//设置成默认模式
     glBindVertexArray(0);
 }
 

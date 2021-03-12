@@ -29,12 +29,15 @@ void main()
 
     // ambient 环境光
     vec3 ambient = ambientIntensity * color * lightColor;
+    // vec3 ambient = ambientIntensity * color;   
 
     // diffuse 漫反射
     vec3 lightDir = normalize(lightPos - lightLookAt);
+    // vec3 lightDir = normalize(lightPos);
     vec3 normal = normalize(fsIn.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color * lightColor;
+    // vec3 diffuse = diff * color;
 
     // specular 镜面光
     vec3 viewDir = normalize(viewPos - fsIn.FragPos);    

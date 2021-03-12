@@ -15,10 +15,10 @@ Sphere::Sphere():
 VAO(0),
 VBO(0),
 EBO(0),
-radius(0.01),
+radius(0.05),
 indexCount(0),
-xSegments(4),
-ySegments(4)
+xSegments(10),
+ySegments(10)
 {}
 
 //产生球的mesh,返回VAO
@@ -132,14 +132,11 @@ void Sphere::setRadiusAndSegmentsByPointSize(float pointSize)
     EBO = 0;
     VAO = 0;
     //设置球的参数
-    radius = pointSize * 0.01;
-    xSegments = pointSize * 4;
-    ySegments = pointSize * 4;
+    radius = pointSize * 0.05;
+    xSegments = 10+ pointSize;
+    ySegments = 10 + pointSize;
     //打印球的细分程度
-    cout << "xSegments : " << xSegments << endl;
-    cout << "ySegments : " << ySegments << endl;
+    // cout << "xSegments : " << xSegments << endl;
+    // cout << "ySegments : " << ySegments << endl;
     createSphere();
-    // cout << "VBO : " << VBO << endl;
-    // cout << "EBO : " << EBO << endl;
-    // cout << "VAO : " << VAO << endl;
 }

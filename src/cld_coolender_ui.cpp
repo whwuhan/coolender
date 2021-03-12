@@ -524,7 +524,7 @@ void CoolenderUI::renderRightSideBar()
                         it->second.changePointSize = false;
                     }
                     float pointCloudPointSize = Scene::pointCloudPointSize;
-                    ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 50.0f, "Global point cloud point size: %.3f");
+                    ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 2.0f, "Global point cloud point size: %.3f");
                     ImGui::SameLine();
                     warningMarker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type with too many point cloud models, \nyour PC will explode!!!");
                     if(abs(Scene::pointCloudPointSize - pointCloudPointSize) > 0.001)//如果改变的点云球面的大小
@@ -729,7 +729,7 @@ void CoolenderUI::renderRightSideBar()
                         
                         //设置pointSize
                         float pointSize = it->second.pointSize;//用于判断是否改变了point size
-                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
+                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 2.0f, "Point size: %.3f");
                         //ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 10.f, "Point size = %.3f");
                         //判断是否改变了球面的半径
                         if(abs(it->second.pointSize - pointSize) > 0.001)
