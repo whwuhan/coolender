@@ -12,7 +12,7 @@ Camera Window::camera;                             //相机
 float Window::cameraSpeedScale = 1.0f;             //相机移速比例
 //渲染相关
 bool Window::useMSAA = true;
-int Window::MSAALevel = 2;                          //MSAA采样数量
+int Window::MSAALevel = 8;                          //MSAA采样数量
 //镜头操作模式
 OPERATE_MODE Window::operateMode = WOW;
 //timing

@@ -476,7 +476,7 @@ void CoolenderUI::renderRightSideBar()
                 
                 //shadow mapping 分辨率缩放设置
                 float shadowMappingScale = ShadowMapping::shadowMappingScale;
-                ImGui::DragFloat("Shadow mapping resolution scale", &ShadowMapping::shadowMappingScale, 0.05f, 1.0f, 10.0f, "Shadow mapping resolution scale: %.3f");
+                ImGui::DragFloat("Shadow mapping resolution scale", &ShadowMapping::shadowMappingScale, 0.05f, 1.0f, 5.0f, "Shadow mapping resolution scale: %.3f");
                 if(abs(ShadowMapping::shadowMappingScale - shadowMappingScale) > 0.01) ShadowMapping::init();//如果改变了shadow mapping的缩放大小重新初始化
                 ImGui::Separator();
 
@@ -512,7 +512,7 @@ void CoolenderUI::renderRightSideBar()
 
                     //设置点云类型
                     int pointType = Scene::pointType;//enum强制转换为int
-                    ImGui::Text("Point cloud point type:");ImGui::SameLine();
+                    ImGui::Text("Point cloud render type:");ImGui::SameLine();
                     ImGui::RadioButton("Point", &pointType, 0); ImGui::SameLine();
                     ImGui::RadioButton("Sphere", &pointType, 1);
                     Scene::pointType = POINT_TYPE(pointType);//int强制转化为enum
@@ -602,7 +602,7 @@ void CoolenderUI::renderRightSideBar()
 
                     //设置mesh类型
                     int polygonMeshType = Scene::polygonMeshType;//enum强制转换为int
-                    ImGui::Text("Polygon mesh type:");ImGui::SameLine();
+                    ImGui::Text("Polygon mesh render type:");ImGui::SameLine();
                     ImGui::RadioButton("Line", &polygonMeshType, 0); ImGui::SameLine();
                     ImGui::RadioButton("Fill", &polygonMeshType, 1); ImGui::SameLine();
                     ImGui::RadioButton("Line and fill", &polygonMeshType, 2); ImGui::SameLine();
@@ -945,7 +945,7 @@ void CoolenderUI::renderMessageBox()
     {   
         //简介
         ImGui::Text("Brief Introduction:");
-        ImGui::BulletText("This is a simple scene renderer for \npoint cloud, polygon mesh without any \npbr texture and model with pbr textures.");
+        ImGui::BulletText("This is a simple scene renderer for \npoint clouds, polygon meshes without any \nPBR texture and models with PBR textures(TODO).");
         ImGui::Separator();
         //显示帧数
         ImGui::Text

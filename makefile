@@ -1,4 +1,7 @@
 include makefile_conf.mk
+#是否生成压缩文件
+COMPRESS := FLASE
+
 #所有.o文件
 OBJS := \
 objs/cld_main.o \
@@ -20,7 +23,15 @@ objs/cld_window.o \
 objs/stb_image_write.o \
 objs/stb_image.o 
 
-
+#压缩文件
+ifeq ($(COMPRESS), TRUE)
+Coolender.zip : Coolender
+	@echo "Compressing file..."
+	zip -r $@ Coolender README.md starter.command shader \
+	screenshot models icon img icon fonts
+	@echo "Compress file successfully." 
+else
+#编译源码
 Coolender : $(OBJS)
 	$(CC) $(FLAGS) \
 	-I$(INCLUDE_DIR) \
@@ -86,8 +97,8 @@ objs/stb_image_write.o : src/stb_image_write.cpp
 
 objs/stb_image.o : src/stb_image.cpp
 	$(CC) $(FLAGS) -I$(INCLUDE_DIR) $(3RD_SRC_INCLUDE) -c $(SRC_DIR)/stb_image.cpp -o $@
-
+endif
 
 .PHONY : clean
 clean : 
-	-rm -rf Coolender $(OBJS)
+	-rm -rf Coolender $(OBJS) Coolender.zip
