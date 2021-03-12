@@ -1,6 +1,6 @@
 # Coolender
 
-![alt Coolender](/Users/wuhan/wuhan/CodingSpace/Coolender/img_temp/QQ20210312-174959.png)
+![alt Coolender](img_temp/QQ20210312-174959.png)
 
 ## 1.Introduction
 
