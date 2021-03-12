@@ -1,6 +1,6 @@
 # Coolender
 
-![alt Coolender](img_temp/QQ20210312-174959.png)
+![Coolender](img_temp/QQ20210312-174959.png)
 
 ## 1.Introduction
 
@@ -17,13 +17,13 @@ cd path_to_Coolender_directory
 
 PS: Maybe there's a warning "It's from an unidentified developer "on macOS, the solution is:https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac.
 
-If Coolender run successfully, you will see the following GUI:
+If Coolender runs successfully, you will see the following GUI:
 
-![alt Coolender GUI](img_temp/QQ20210312-170006.png)
+![Coolender](img_temp/QQ20210312-170006.png)
 
 At first, there is nothing in the scene, so it's blank on the screen, but you can turn on the display floor switch with texture as follow. There is a floor in the scene.
 
-![alt Coolender GUI](img_temp/QQ20210312-170113.png)
+![Coolender](img_temp/QQ20210312-170113.png)
 
 ## 3.Operate mode
 
@@ -46,7 +46,7 @@ In FPS games style operate mode, press <kbd>W</kbd><kbd>S</kbd><kbd>D</kbd> and 
 
 ## 4.Import model
 
-Coolender divide the displayable models into 3 categories such as point cloud only has vertex information, polygon mesh has vertex , normals and faces information, model not only has has vertex , normals and faces information but also with PBR textures(TODO).
+Coolender divide the displayable models into 3 categories such as point cloud only has vertex information, polygon mesh has vertex , normals and faces information, model not only has vertex , normals and faces information but also with PBR textures(TODO).
 
 PS:  Now Coolender can only import `.obj` format models, if you want use another format like `.ply`, `.fbx`, et al. it's better to convert  to `.obj` format. We list some ways to convert to `.obj` format.
 
@@ -57,13 +57,13 @@ PS:  Now Coolender can only import `.obj` format models, if you want use another
 
 You can import point cloud models from the top menu as follow.
 
-![alt Coolender](img_temp/QQ20210312-172103.png)
+![Coolender](img_temp/QQ20210312-172103.png)
 
 There's some point cloud models in `models/pointcloud` directory.
 
 We import the `models/pointcloud/BirdM2.obj` as an example. After import a point cloud, you can see the information from the side bar. You can set some attributes like point size, color et al. of the point cloud in the side bar or delete point cloud from the scene.
 
-![alt Coolender](img_temp/QQ20210312-172738.png)
+![Coolender](img_temp/QQ20210312-172738.png)
 
 ### 4.2 Import polygon mesh
 
@@ -71,7 +71,7 @@ It's quite similar to import polygon mesh compere to importing point cloud from 
 
 We import the `models/pointcloud/diablo3_pose.obj` as an example. And it's also the same to set some attributes like point cloud.
 
-![alt Coolender](img_temp/QQ20210312-180103.png)
+![Coolender](img_temp/QQ20210312-180103.png)
 
 ### 4.3 Import model with PBR textures
 
@@ -85,7 +85,7 @@ Besides the attribute settings of a single model, Coolender can set some differe
 
 For example, choose sphere render type for point cloud.
 
-![alt Coolender](img_temp/QQ20210312-204234.png)
+![Coolender](img_temp/QQ20210312-204234.png)
 
 **PS: Although, we use instancing to render point cloud in sphere type, but it's still performance-consuming, if it's a large point cloud with too many points.**
 
@@ -93,7 +93,7 @@ For example, choose sphere render type for point cloud.
 
 Choose a lighting mode to render the polygon mesh.
 
-![alt Coolender](img_temp/QQ20210312-182249.png)
+![Coolender](img_temp/QQ20210312-182249.png)
 
 ## 6. Shadow settings
 
@@ -103,17 +103,17 @@ If you want a good shadow rendering, you can adjust the shadow mapping resolutio
 
 Eg. Low shadow mapping resolution scale
 
-![alt Coolender](img_temp/QQ20210312-212418.png)
+![Coolender](img_temp/QQ20210312-212418.png)
 
 Eg. Heigh shadow mapping resolution scale
 
-![alt Coolender](img_temp/QQ20210312-212452.png)
+![Coolender](img_temp/QQ20210312-212452.png)
 
 ## 7.Function
 
 ### 7.1 Screenshot
 
-You can take a screenshot of the scene by click the `Screenshot` button in the side bar or use shortcut `LEFT CTRL`  + `P`. The screenshot will be stored in the screenshot directory under the root directory and will be named automatically. You can change the screenshot store directory as you like by clicking `Change path` in the side bar.
+You can take a screenshot of the scene by click the `Screenshot` button in the side bar or use shortcut `LEFT CTRL`  + `P`. The screenshot will be stored in the **screenshot** directory under the root directory and will be named automatically. You can change the screenshot store directory as you like by clicking `Change path` in the side bar.
 
 ## 8.TODO
 
