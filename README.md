@@ -87,7 +87,7 @@ For example, choose sphere render type for point cloud.
 
 ![Coolender](img_temp/QQ20210312-204234.png)
 
-**PS: Although, we use instancing to render point cloud in sphere type, but it's still performance-consuming, if it's a large point cloud with too many points.**
+**PS: Although, we use instancing with face culling to render point cloud in sphere type, but it's still performance-consuming, if it's a large point cloud with too many points.**
 
 ### 5.2  Different render type for polygon mesh
 
