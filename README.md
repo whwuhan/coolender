@@ -121,6 +121,7 @@ You can take a screenshot of the scene by click the `Screenshot` button in the s
 * Windows version.
 * Skybox.
 * Normals rendering.
+* Multiple lights
 * Defferred shading.
 * SSAO
 
