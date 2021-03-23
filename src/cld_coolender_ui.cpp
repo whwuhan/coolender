@@ -6,7 +6,7 @@ using namespace wh::utils::io;
 //static 变量初始化
 GLFWwindow* CoolenderUI::glfwWindow = nullptr;
 //整体设置
-float CoolenderUI::fontSize = 19.0;//字体大小
+float CoolenderUI::fontSize = 15.0;//字体大小
 float CoolenderUI::globalScale = 1.0;//整体的字体缩放
 float CoolenderUI::windowRounding = 6.0;//窗口的圆角
 float CoolenderUI::frameRounding = 3.0;//内部图标的圆角
