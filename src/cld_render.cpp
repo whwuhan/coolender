@@ -98,34 +98,25 @@ void Render::renderPointCloudTypeSphere(PointCloud &pointCloud, Sphere &sphere)
 }
 
 //渲染polygon mesh准备
-void Render::renderPolygonMeshInit(PolygonMesh &mesh)
-{
+void Render::renderPolygonMeshInit(PolygonMesh &mesh){
     //获取C++原生数据
     float polygonMeshData[mesh.vertices.rows() * 6];//分配空间 每个顶点和法线一一对应，pos:3 normals:3 不考虑UV坐标
     //判断是不是正确的polygon mesh
-    if(mesh.normals.rows() == 0)//没有法线
-    {
+    if(mesh.normals.rows() == 0){
+        //没有法线
         cerr << "Warning! There are no normals!" << endl;
-        for(int i = 0; i < mesh.vertices.rows(); i++)
-        {
-            for(int j = 0; j < 3; j++)
-            {
+        for(int i = 0; i < mesh.vertices.rows(); i++){
+            for(int j = 0; j < 3; j++){
                 polygonMeshData[i * 3 + j] = mesh.vertices(i, j);
             }
         }
-    }
-    else//有法线
-    {
-        for(int i = 0; i < mesh.vertices.rows(); i++)
-        {
-            for(int j = 0; j < 6; j++)
-            {
-                if(j < 3)
-                {
+    }else{
+        //有法线
+        for(int i = 0; i < mesh.vertices.rows(); i++){
+            for(int j = 0; j < 6; j++){
+                if(j < 3){
                     polygonMeshData[i * 6 + j] = mesh.vertices(i, j);
-                }
-                else
-                {
+                }else{
                     polygonMeshData[i * 6 + j] = mesh.normals(i, j - 3);
                     // cout << mesh.normals.row(i)[j - 3] << endl;
                 }
@@ -135,17 +126,13 @@ void Render::renderPolygonMeshInit(PolygonMesh &mesh)
     
     //面片索引
     unsigned int polygonMeshElement[mesh.verticesIndices.rows() * 3];//EBO数据 一个面片要绘制3个点，所以要3个坐标的索引
-    if(mesh.verticesIndices.rows() == 0)//没有面片索引
-    {
+    if(mesh.verticesIndices.rows() == 0){
+        //没有面片索引
         cerr << "Warning! It's not a polygon mesh model!" << endl;
         return;
-    }
-    else
-    {
-        for(int i = 0; i < mesh.verticesIndices.rows(); i++)
-        {
-            for(int j = 0; j < 3; j++)
-            {
+    }else{
+        for(int i = 0; i < mesh.verticesIndices.rows(); i++){
+            for(int j = 0; j < 3; j++){
                 polygonMeshElement[i * 3 + j] = mesh.verticesIndices(i,j) - 1;
             }
         }
