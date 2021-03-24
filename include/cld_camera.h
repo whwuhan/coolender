@@ -70,7 +70,7 @@ namespace coolender
         //响应鼠标滚轮
         void ProcessMouseScroll(float yoffset);
         //显示Camera信息
-        void showInf();
+        void show_inf();
     private:
         //计算前向向量
         void updateCameraVectors();

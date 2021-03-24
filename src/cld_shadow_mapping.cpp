@@ -127,9 +127,9 @@ void ShadowMapping::renderPointCloudTypeSphereDepthMap(Shader &depthMapShader, m
             depthMapShader.setMat4("model", it->second.model);
             depthMapShader.setBool("renderPointCloud", true);
             //判断是否改变了球状点云的半径
-            if (it->second.changePointSize)
+            if (it->second.change_point_size)
             {
-                Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
+                Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.point_size);
                 Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化（因为球的大小变了，要更新VAO）
             }
             //渲染球状点云

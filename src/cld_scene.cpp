@@ -106,7 +106,7 @@ void Scene::deletePointCloud(string pointCloudName)
 {   
     //先删VBO VAO
     glDeleteBuffers(1, &pointCloudCollection[pointCloudName].VBO);
-    glDeleteBuffers(1, &pointCloudCollection[pointCloudName].pointModelMatricesBuffer);
+    glDeleteBuffers(1, &pointCloudCollection[pointCloudName].point_model_matrices_buffer);
     glDeleteVertexArrays(1, &pointCloudCollection[pointCloudName].VAO);
     //删除对应的球面
     deleteSphere(pointCloudName);

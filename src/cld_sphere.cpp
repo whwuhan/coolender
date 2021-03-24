@@ -120,8 +120,8 @@ void Sphere::createSphere()
     return ;
 }
 
-//根据pointSize设置球的半径和分割数量
-void Sphere::setRadiusAndSegmentsByPointSize(float pointSize)
+//根据point_size设置球的半径和分割数量
+void Sphere::setRadiusAndSegmentsByPointSize(float point_size)
 {
     //先删VBO EBO VAO
     glDeleteBuffers(1, &VBO);
@@ -132,9 +132,9 @@ void Sphere::setRadiusAndSegmentsByPointSize(float pointSize)
     EBO = 0;
     VAO = 0;
     //设置球的参数
-    radius = pointSize * 0.05;
-    xSegments = 10+ pointSize;
-    ySegments = 10 + pointSize;
+    radius = point_size * 0.05;
+    xSegments = 10+ point_size;
+    ySegments = 10 + point_size;
     //打印球的细分程度
     // cout << "xSegments : " << xSegments << endl;
     // cout << "ySegments : " << ySegments << endl;

@@ -520,8 +520,8 @@ void CoolenderUI::renderRightSideBar()
                     //设置所有点云的point size
                     for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                     {
-                        // 将所有点云的changePointSize设置为false
-                        it->second.changePointSize = false;
+                        // 将所有点云的change_point_size设置为false
+                        it->second.change_point_size = false;
                     }
                     float pointCloudPointSize = Scene::pointCloudPointSize;
                     ImGui::DragFloat("Global point cloud point size", &Scene::pointCloudPointSize, 0.005f, 0.0f, 2.0f, "Global point cloud point size: %.3f");
@@ -531,8 +531,8 @@ void CoolenderUI::renderRightSideBar()
                     {
                         for(auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                         {
-                            it->second.pointSize = Scene::pointCloudPointSize;
-                            it->second.changePointSize = true;
+                            it->second.point_size = Scene::pointCloudPointSize;
+                            it->second.change_point_size = true;
                         }
                     }
 
@@ -615,7 +615,7 @@ void CoolenderUI::renderRightSideBar()
                     {
                         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                         {
-                            it->second.pointSize = Scene::polygonMeshPointSize;
+                            it->second.point_size = Scene::polygonMeshPointSize;
                         }
                     }
 
@@ -644,9 +644,9 @@ void CoolenderUI::renderRightSideBar()
                         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                         {
                             //color
-                            it->second.pointAndLineColor.x = polygonMeshPointAndLineColor[0];
-                            it->second.pointAndLineColor.y = polygonMeshPointAndLineColor[1];
-                            it->second.pointAndLineColor.z = polygonMeshPointAndLineColor[2];
+                            it->second.point_and_line_color.x = polygonMeshPointAndLineColor[0];
+                            it->second.point_and_line_color.y = polygonMeshPointAndLineColor[1];
+                            it->second.point_and_line_color.z = polygonMeshPointAndLineColor[2];
                         }
                     }
                     //面的颜色
@@ -673,9 +673,9 @@ void CoolenderUI::renderRightSideBar()
                         for(auto it = Scene::polygonMeshCollection.begin(); it != Scene::polygonMeshCollection.end(); it++)
                         {
                             //color
-                            it->second.faceColor.x = polygonMeshFaceColor[0];
-                            it->second.faceColor.y = polygonMeshFaceColor[1];
-                            it->second.faceColor.z = polygonMeshFaceColor[2];
+                            it->second.face_color.x = polygonMeshFaceColor[0];
+                            it->second.face_color.y = polygonMeshFaceColor[1];
+                            it->second.face_color.z = polygonMeshFaceColor[2];
                             // it->second.color.w = 1.0;
                         }
                     }
@@ -727,14 +727,14 @@ void CoolenderUI::renderRightSideBar()
                         //checkbox
                         ImGui::Checkbox("Show point cloud", &it->second.show);
                         
-                        //设置pointSize
-                        float pointSize = it->second.pointSize;//用于判断是否改变了point size
-                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 2.0f, "Point size: %.3f");
-                        //ImGui::SliderFloat("Point size", &it->second.pointSize, 0.0f, 10.f, "Point size = %.3f");
+                        //设置point_size
+                        float point_size = it->second.point_size;//用于判断是否改变了point size
+                        ImGui::DragFloat("Point size", &it->second.point_size, 0.005f, 0.0f, 2.0f, "Point size: %.3f");
+                        //ImGui::SliderFloat("Point size", &it->second.point_size, 0.0f, 10.f, "Point size = %.3f");
                         //判断是否改变了球面的半径
-                        if(abs(it->second.pointSize - pointSize) > 0.001)
+                        if(abs(it->second.point_size - point_size) > 0.001)
                         {
-                            it->second.changePointSize = true;
+                            it->second.change_point_size = true;
                         }
                         //color
                         float pointColor[3] = 
@@ -757,37 +757,37 @@ void CoolenderUI::renderRightSideBar()
 
                         //平移 
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transX", &it->second.transX, 0.01f);ImGui::SameLine();                        
+                        ImGui::DragFloat("trans_x", &it->second.trans_x, 0.01f);ImGui::SameLine();                        
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transY", &it->second.transY, 0.01f);ImGui::SameLine();
+                        ImGui::DragFloat("trans_y", &it->second.trans_y, 0.01f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
+                        ImGui::DragFloat("trans_z", &it->second.trans_z, 0.01f);
                         it->second.model =
                             glm::translate(
                                 it->second.model,
-                                glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
+                                glm::vec3(it->second.trans_x, it->second.trans_y, it->second.trans_z));
                         
                         //旋转
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);ImGui::SameLine();
+                        ImGui::DragFloat("rotate_x", &it->second.rotate_x, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);ImGui::SameLine();
+                        ImGui::DragFloat("rotate_y", &it->second.rotate_y, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
+                        ImGui::DragFloat("rotate_z", &it->second.rotate_z, 0.1f);
                         it->second.model =  
                             glm::rotate(
                                 it->second.model,
-                                glm::radians(it->second.rotateX), 
+                                glm::radians(it->second.rotate_x), 
                                 glm::vec3(1.0f, 0.0f, 0.0f));
                         it->second.model= 
                             glm::rotate(
                                 it->second.model,
-                                glm::radians(it->second.rotateY), 
+                                glm::radians(it->second.rotate_y), 
                                 glm::vec3(0.0f, 1.0f, 0.0f));
                         it->second.model= 
                             glm::rotate(
                                 it->second.model,
-                                glm::radians(it->second.rotateZ), 
+                                glm::radians(it->second.rotate_z), 
                                 glm::vec3(0.0f, 0.0f, 1.0f));
 
                         //delete button 
@@ -823,32 +823,32 @@ void CoolenderUI::renderRightSideBar()
                         //checkbox
                         ImGui::Checkbox("Show polygon mesh", &it->second.show);
                         
-                        //设置pointSize
-                        ImGui::DragFloat("Point size", &it->second.pointSize, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
+                        //设置point_size
+                        ImGui::DragFloat("Point size", &it->second.point_size, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
                         
                         //color
-                        float pointAndLineColor[3] = 
+                        float point_and_line_color[3] = 
                         {
-                            it->second.pointAndLineColor.x,
-                            it->second.pointAndLineColor.y,
-                            it->second.pointAndLineColor.z,
+                            it->second.point_and_line_color.x,
+                            it->second.point_and_line_color.y,
+                            it->second.point_and_line_color.z,
                         };
-                        ImGui::ColorEdit3("Point and line color", pointAndLineColor);
-                        it->second.pointAndLineColor.x = pointAndLineColor[0];
-                        it->second.pointAndLineColor.y = pointAndLineColor[1];
-                        it->second.pointAndLineColor.z = pointAndLineColor[2];
-                        it->second.pointAndLineColor.w = 1.0;
+                        ImGui::ColorEdit3("Point and line color", point_and_line_color);
+                        it->second.point_and_line_color.x = point_and_line_color[0];
+                        it->second.point_and_line_color.y = point_and_line_color[1];
+                        it->second.point_and_line_color.z = point_and_line_color[2];
+                        it->second.point_and_line_color.w = 1.0;
 
-                        float faceColor[3] = 
+                        float face_color[3] = 
                         {
-                            it->second.faceColor.x,
-                            it->second.faceColor.y,
-                            it->second.faceColor.z,
+                            it->second.face_color.x,
+                            it->second.face_color.y,
+                            it->second.face_color.z,
                         };
-                        ImGui::ColorEdit3("Face color", faceColor);
-                        it->second.faceColor.x = faceColor[0];
-                        it->second.faceColor.y = faceColor[1];
-                        it->second.faceColor.z = faceColor[2];
+                        ImGui::ColorEdit3("Face color", face_color);
+                        it->second.face_color.x = face_color[0];
+                        it->second.face_color.y = face_color[1];
+                        it->second.face_color.z = face_color[2];
                         
                         //注意glm::mat4是按照列优选的顺序来的
                         //缩放
@@ -858,37 +858,37 @@ void CoolenderUI::renderRightSideBar()
 
                         //平移 
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transX", &it->second.transX, 0.01f);ImGui::SameLine();                        
+                        ImGui::DragFloat("trans_x", &it->second.trans_x, 0.01f);ImGui::SameLine();                        
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transY", &it->second.transY, 0.01f);ImGui::SameLine();
+                        ImGui::DragFloat("trans_y", &it->second.trans_y, 0.01f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("transZ", &it->second.transZ, 0.01f);
+                        ImGui::DragFloat("trans_z", &it->second.trans_z, 0.01f);
                         it->second.model =
                             glm::translate(
                                 it->second.model,
-                                glm::vec3(it->second.transX, it->second.transY, it->second.transZ));
+                                glm::vec3(it->second.trans_x, it->second.trans_y, it->second.trans_z));
                         
                         //旋转
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateX", &it->second.rotateX, 0.1f);ImGui::SameLine();
+                        ImGui::DragFloat("rotate_x", &it->second.rotate_x, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateY", &it->second.rotateY, 0.1f);ImGui::SameLine();
+                        ImGui::DragFloat("rotate_y", &it->second.rotate_y, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
-                        ImGui::DragFloat("rotateZ", &it->second.rotateZ, 0.1f);
+                        ImGui::DragFloat("rotate_z", &it->second.rotate_z, 0.1f);
                         it->second.model =  
                             glm::rotate(
                                 it->second.model,
-                                glm::radians(it->second.rotateX), 
+                                glm::radians(it->second.rotate_x), 
                                 glm::vec3(1.0f, 0.0f, 0.0f));
                         it->second.model= 
                             glm::rotate(
                                 it->second.model,
-                                glm::radians(it->second.rotateY), 
+                                glm::radians(it->second.rotate_y), 
                                 glm::vec3(0.0f, 1.0f, 0.0f));
                         it->second.model= 
                             glm::rotate(
                                 it->second.model,
-                                glm::radians(it->second.rotateZ), 
+                                glm::radians(it->second.rotate_z), 
                                 glm::vec3(0.0f, 0.0f, 1.0f));
 
                         //delete button 
@@ -983,7 +983,7 @@ void CoolenderUI::renderPointCloudObjFileChooseDialog()
                 cout << "Your choosed file’s path is " << it->second << endl;
                 //读取点云数据
                 PointCloud pointCloud;
-                loadPointCloudObj(it->second, &pointCloud);
+                load_point_cloud_obj(it->second, &pointCloud);
                 //将点云添加到场景中
                 Scene::addPointCloud(it->second, pointCloud);
                 //传输数据给GPU
@@ -1028,7 +1028,7 @@ void CoolenderUI::renderPolygonMeshObjFileChooseDialog()
                 cout << "Your choosed file’s path is " << it->second << endl;
                 //读取点云数据
                 PolygonMesh mesh;
-                loadPolygonMeshObj(it->second, &mesh);
+                load_polygon_mesh_obj(it->second, &mesh);
                 //将点云添加到场景中
                 Scene::addPolygonMesh(it->second, mesh);
                 //传输数据给GPU

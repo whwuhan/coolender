@@ -23,6 +23,6 @@ namespace coolender
 
         Sphere();
         void createSphere();//生成一个球
-        void setRadiusAndSegmentsByPointSize(float pointSize);//根据point size设置球的半径和分割数量
+        void setRadiusAndSegmentsByPointSize(float point_size);//根据point size设置球的半径和分割数量
     };
 }

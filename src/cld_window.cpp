@@ -185,28 +185,27 @@ void Window::initAndRun()
         glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
         //glCullFace(GL_FRONT);//设置剔除正面
         glFrontFace(GL_CW); //设置顺时针的面为正面
-        switch (Scene::pointType)
-        {
-        //绘制成点
-        case POINT:
-            for (auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
-            {
-                //判断是否显示点云模型
-                if (it->second.show)
+        switch (Scene::pointType){
+            //绘制成点
+            case POINT:
+                for (auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
                 {
-                    pointCloudTypePointShader.use();
-                    //vs uniform                   
-                    pointCloudTypePointShader.setMat4("projection", projection);
-                    pointCloudTypePointShader.setMat4("view", view);
-                    pointCloudTypePointShader.setMat4("model", it->second.model);
-                    //fs uniform
-                    pointCloudTypePointShader.setFloat("pointSize", it->second.pointSize);
-                    pointCloudTypePointShader.setVec4("pointCloudColor", it->second.color);
-                    //渲染点云
-                    Render::renderPointCloudTypePoint(it->second);
+                    //判断是否显示点云模型
+                    if (it->second.show)
+                    {
+                        pointCloudTypePointShader.use();
+                        //vs uniform                   
+                        pointCloudTypePointShader.setMat4("projection", projection);
+                        pointCloudTypePointShader.setMat4("view", view);
+                        pointCloudTypePointShader.setMat4("model", it->second.model);
+                        //fs uniform
+                        pointCloudTypePointShader.setFloat("pointSize", it->second.point_size);
+                        pointCloudTypePointShader.setVec4("pointCloudColor", it->second.color);
+                        //渲染点云
+                        Render::renderPointCloudTypePoint(it->second);
+                    }
                 }
-            }
-            break;
+                break;
         //将点绘制成球
         case SPHERE:
             for (auto it = Scene::pointCloudCollection.begin(); it != Scene::pointCloudCollection.end(); it++)
@@ -228,9 +227,9 @@ void Window::initAndRun()
                     pointCloudTypeShpereShader.setVec3("lightPos", Scene::parallelLight.position);//光源位置
                     pointCloudTypeShpereShader.setVec3("lightLookAt", Scene::parallelLight.lookAt);//光源位置
                     //判断是否改变了球状点云的半径
-                    if (it->second.changePointSize)
+                    if (it->second.change_point_size)
                     {
-                        Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.pointSize);
+                        Scene::sphereCollection[it->first].setRadiusAndSegmentsByPointSize(it->second.point_size);
                         Render::renderPointCloudTypeSphereInit(it->second, Scene::sphereCollection[it->first]); //重新初始化（因为球的大小变了，要更新VAO）
                     }
                     //渲染球状点云
@@ -257,8 +256,8 @@ void Window::initAndRun()
                     polygonMeshTypeLineShader.setMat4("projection", projection);
                     polygonMeshTypeLineShader.setMat4("view", view);
                     polygonMeshTypeLineShader.setMat4("model" , it->second.model);
-                    polygonMeshTypeLineShader.setFloat("pointSize", it->second.pointSize);
-                    polygonMeshTypeLineShader.setVec4("pointAndLineColor", it->second.pointAndLineColor);
+                    polygonMeshTypeLineShader.setFloat("pointSize", it->second.point_size);
+                    polygonMeshTypeLineShader.setVec4("pointAndLineColor", it->second.point_and_line_color);
                     Render::renderPolygonMeshTypeLine(it->second);
                     break;
                 case FILL:
@@ -266,8 +265,8 @@ void Window::initAndRun()
                     polygonMeshTypeFillShader.setMat4("projection", projection);
                     polygonMeshTypeFillShader.setMat4("view", view);
                     polygonMeshTypeFillShader.setMat4("model" , it->second.model);
-                    polygonMeshTypeFillShader.setFloat("pointSize", it->second.pointSize);
-                    polygonMeshTypeFillShader.setVec4("faceColor", it->second.faceColor);
+                    polygonMeshTypeFillShader.setFloat("pointSize", it->second.point_size);
+                    polygonMeshTypeFillShader.setVec4("faceColor", it->second.face_color);
                     Render::renderPolygonMeshTypeFill(it->second);
                     break;
                 case LINE_AND_FILL:
@@ -275,9 +274,9 @@ void Window::initAndRun()
                     polygonMeshTypeLineAndFillShader.setMat4("projection", projection);
                     polygonMeshTypeLineAndFillShader.setMat4("view", view);
                     polygonMeshTypeLineAndFillShader.setMat4("model" , it->second.model);
-                    polygonMeshTypeLineAndFillShader.setFloat("pointSize", it->second.pointSize);
-                    polygonMeshTypeLineAndFillShader.setVec4("pointAndLineColor", it->second.pointAndLineColor);
-                    polygonMeshTypeLineAndFillShader.setVec4("faceColor", it->second.faceColor);
+                    polygonMeshTypeLineAndFillShader.setFloat("pointSize", it->second.point_size);
+                    polygonMeshTypeLineAndFillShader.setVec4("pointAndLineColor", it->second.point_and_line_color);
+                    polygonMeshTypeLineAndFillShader.setVec4("faceColor", it->second.face_color);
                     Render::renderPolygonMeshTypeLineAndFill(it->second, polygonMeshTypeLineAndFillShader);
                     break;
                 case LIGHT:
@@ -285,8 +284,8 @@ void Window::initAndRun()
                     polygonMeshTypeLightShader.setMat4("projection", projection);
                     polygonMeshTypeLightShader.setMat4("view", view);
                     polygonMeshTypeLightShader.setMat4("model" , it->second.model);
-                    polygonMeshTypeLightShader.setVec3("pointSize", vec3(it->second.pointSize));
-                    polygonMeshTypeLightShader.setVec3("faceColor", vec3(it->second.faceColor));
+                    polygonMeshTypeLightShader.setVec3("pointSize", vec3(it->second.point_size));
+                    polygonMeshTypeLightShader.setVec3("faceColor", vec3(it->second.face_color));
                     polygonMeshTypeLightShader.setVec3("viewPos", camera.Position);
                     polygonMeshTypeLightShader.setVec3("lightColor", vec3(Scene::parallelLight.color));//平行光颜色
                     polygonMeshTypeLightShader.setVec3("lightPos", Scene::parallelLight.position);//光源位置

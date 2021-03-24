@@ -50,18 +50,18 @@ void Render:: renderPointCloudTypeSphereInit(PointCloud &pointCloud, Sphere &sph
             pointModel, 
             vec3(pointCloud.points.row(i)[0], pointCloud.points.row(i)[1], pointCloud.points.row(i)[2])
         );//平移
-        pointModel = scale(pointModel, vec3(pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05, pointCloud.pointSize * 0.05));//缩放
+        pointModel = scale(pointModel, vec3(pointCloud.point_size * 0.05, pointCloud.point_size * 0.05, pointCloud.point_size * 0.05));//缩放
         //不需要旋转
         pointModelMatrices[i] = pointModel;
     } 
 
     // configure instanced array 注意开始配置instanced array(实际就是把这些model矩阵先放到缓存里面)
-    if(0 == pointCloud.pointModelMatricesBuffer)
+    if(0 == pointCloud.point_model_matrices_buffer)
     {
-        glGenBuffers(1,&pointCloud.pointModelMatricesBuffer);
+        glGenBuffers(1,&pointCloud.point_model_matrices_buffer);
     }
-    // cout << pointCloud.pointModelMatricesBuffer << endl;
-    glBindBuffer(GL_ARRAY_BUFFER, pointCloud.pointModelMatricesBuffer);
+    // cout << pointCloud.point_model_matrices_buffer << endl;
+    glBindBuffer(GL_ARRAY_BUFFER, pointCloud.point_model_matrices_buffer);
     glBufferData(GL_ARRAY_BUFFER, pointAmount * sizeof(mat4), &pointModelMatrices[0], GL_STATIC_DRAW);
     
 
@@ -125,15 +125,15 @@ void Render::renderPolygonMeshInit(PolygonMesh &mesh){
     }
     
     //面片索引
-    unsigned int polygonMeshElement[mesh.verticesIndices.rows() * 3];//EBO数据 一个面片要绘制3个点，所以要3个坐标的索引
-    if(mesh.verticesIndices.rows() == 0){
+    unsigned int polygonMeshElement[mesh.vertices_indices.rows() * 3];//EBO数据 一个面片要绘制3个点，所以要3个坐标的索引
+    if(mesh.vertices_indices.rows() == 0){
         //没有面片索引
         cerr << "Warning! It's not a polygon mesh model!" << endl;
         return;
     }else{
-        for(int i = 0; i < mesh.verticesIndices.rows(); i++){
+        for(int i = 0; i < mesh.vertices_indices.rows(); i++){
             for(int j = 0; j < 3; j++){
-                polygonMeshElement[i * 3 + j] = mesh.verticesIndices(i,j) - 1;
+                polygonMeshElement[i * 3 + j] = mesh.vertices_indices(i,j) - 1;
             }
         }
     }
@@ -159,11 +159,11 @@ void Render::renderPolygonMeshInit(PolygonMesh &mesh){
 void Render::renderPolygonMeshTypeLine(PolygonMesh &mesh)
 {
     glBindVertexArray(mesh.VAO);
-    // glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    // glDrawElements(GL_TRIANGLES, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     //绘制点
-    glDrawElements(GL_POINTS, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_POINTS, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置绘制成线框模式
-    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//设置成默认模式
     glBindVertexArray(0);
 }
@@ -172,7 +172,7 @@ void Render::renderPolygonMeshTypeLine(PolygonMesh &mesh)
 void Render::renderPolygonMeshTypeFill(PolygonMesh &mesh)
 {
     glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -181,12 +181,12 @@ void Render::renderPolygonMeshTypeLineAndFill(PolygonMesh &mesh, Shader &shader)
 {
     glBindVertexArray(mesh.VAO);
     shader.setBool("renderLineAndPoint", true);
-    glDrawElements(GL_POINTS, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_POINTS, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置绘制成线框模式
-    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     shader.setBool("renderLineAndPoint", false);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//设置成默认模式
-    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -194,6 +194,6 @@ void Render::renderPolygonMeshTypeLineAndFill(PolygonMesh &mesh, Shader &shader)
 void Render::renderPolygonMeshTypeLight(wh::basic::PolygonMesh &mesh)
 {
     glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, mesh.verticesIndices.rows() * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.vertices_indices.rows() * 3, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

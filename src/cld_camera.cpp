@@ -130,7 +130,7 @@ void Camera::updateCameraVectors()
 }
 
 //显示相机信息
-void Camera::showInf()
+void Camera::show_inf()
 {
     cout<<"-----------------------------------------"<<endl;
     cout<<"Camera information:"<<endl;
