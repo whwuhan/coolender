@@ -7,15 +7,11 @@ out vec4 FragColor;
 uniform vec4 pointAndLineColor;
 uniform vec4 faceColor;
 uniform bool renderLineAndPoint;
-void main()
-{
+void main(){
     // FragColor = polygonMeshColor;
-    if(renderLineAndPoint)
-    {
+    if(renderLineAndPoint){
         FragColor = pointAndLineColor;
-    }
-    else
-    {
+    }else{
         FragColor = faceColor;
     }
 }
