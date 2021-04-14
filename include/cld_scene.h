@@ -8,69 +8,67 @@
 #include <cld_light.h>
 #include <cld_plane.h>
 #include <cld_model.h>
-namespace coolender
-{
+namespace coolender{
     enum POINT_TYPE{POINT, SPHERE};//点的绘制类型
     enum LIGHT_MODEL{PHONG, BLINN_PHONG, PBR};//场景使用的光照模型
     enum POLYGON_MESH_TYPE{LINE, FILL, LINE_AND_FILL, LIGHT};//mesh的渲染模式
-    class Scene
-    {
+    class Scene{
     public:
         Scene();
         //场景的属性
-        static Light  parallelLight;//场景平行光
-        static float ambientIntensity;//场景的环境光强度
-        static glm::vec4 clearColor;//背景颜色
-        static LIGHT_MODEL lightModel;//光照模型
+        static Light  parallel_light;//场景平行光
+        static float ambient_intensity;//场景的环境光强度
+        static glm::vec4 clear_color;//背景颜色
+        static LIGHT_MODEL light_model;//光照模型
 
         static coolender::Plane floor;//地板
-        static bool showFloor;//显示地板
-        static bool floorUseTex;//地板是否使用纹理
-        static bool phongLightingModel;//Phong光照模型
+        static bool show_floor;//显示地板
+        static bool floor_use_tex;//地板是否使用纹理
+        static bool phong_lighting_model;//Phong光照模型
         
 
         //点云
-        static bool showAllPointCloud;//显示所有点云
-        static POINT_TYPE pointType;//点云点的绘制类型
-        static float pointCloudPointSize;//场景所有点云的大小
-        static glm::vec4 pointCloudPointColor;//场景所有点云的颜色
+        static bool show_all_point_cloud;//显示所有点云
+        static POINT_TYPE point_type;//点云点的绘制类型
+        static float point_cloud_point_size;//场景所有点云的大小
+        static glm::vec4 point_cloud_point_color;//场景所有点云的颜色
         
         //mesh
-        static bool showAllPolygonMesh;//显示所有mesh
-        static POLYGON_MESH_TYPE polygonMeshType;
-        static float polygonMeshPointSize;//场景所有mesh点的大小
-        static glm::vec4 polygonMeshPointAndLineColor;//场景所有polygon mesh PointAndLine的颜色
-        static glm::vec4 polygonMeshFaceColor;//场景所有polygon mesh Face的颜色
+        static bool show_all_polygon_mesh;//显示所有mesh
+        static POLYGON_MESH_TYPE polygon_mesh_type;
+        static float polygon_mesh_point_size;//场景所有mesh点的大小
+        static glm::vec4 polygon_mesh_point_line_color;//场景所有polygon mesh PointAndLine的颜色
+        static glm::vec4 polygon_mesh_face_color;//场景所有polygon mesh Face的颜色
 
         //场景中的物体
-        // static std::map<std::string, coolender::Light> lightCollection;//光源
-        static std::map<std::string, coolender::Light> pointLightCollection;//点光源
-        static std::map<std::string, wh::basic::PointCloud> pointCloudCollection;//点云
-        static std::map<std::string, coolender::Sphere> sphereCollection;//球状点云对应的球
-        static std::map<std::string, wh::basic::PolygonMesh> polygonMeshCollection;
-        static std::map<std::string, coolender::Model> modelCollection;//模型
+        // static std::map<std::string, coolender::Light> light_map;//光源
+        static std::map<std::string, coolender::Light> point_light_map;//点光源
+        static std::map<std::string, wh::basic::PointCloud> point_cloud_map;//点云
+        static std::map<std::string, coolender::Sphere> sphere_map;//球状点云对应的球
+        static std::map<std::string, wh::basic::PolygonMesh> polygon_mesh_map;
+        static std::map<std::string, coolender::Model> model_map;//模型
         
 
         //给场景中添加物体
-        // static void addLight(std::string lightName, coolender::Light &light);
-        static void addPointLight(std::string pointLightName, coolender::Light &pointLight);
-        static void addPointCloud(std::string pointCloudName, wh::basic::PointCloud &pointCloud);
-        static void addSphere(std::string sphereName, coolender::Sphere &sphere);
-        static void addPolygonMesh(std::string meshName, wh::basic::PolygonMesh &mesh);
-        static void addModel(std::string modelName, coolender::Model &model);
+        // static void add_light(std::string light_name, coolender::Light &light);
+        static void add_point_light(std::string point_light_name, coolender::Light &point_light);
+        static void add_point_cloud(std::string point_cloud_name, wh::basic::PointCloud &point_cloud);
+        static void add_sphere(std::string sphere_name, coolender::Sphere &sphere);
+        static void add_polygon_mesh(std::string polygon_mesh_name, wh::basic::PolygonMesh &mesh);
+        static void add_model(std::string model_name, coolender::Model &model);
         
 
 
         //删除场景中的物体
-        // static void deleteLight(std::string lightName);
-        static void deletePointLight(std::string pointLightName);
-        static void deletePointCloud(std::string pointCloudName);
-        static void deleteSphere(std::string sphereName);
-        static void deletePolygonMesh(std::string polygonMeshName);
-        static void deleteModel(std::string modelName);
+        // static void delete_light(std::string light_name);
+        static void delete_point_light(std::string point_light_name);
+        static void delete_point_cloud(std::string point_cloud_name);
+        static void delete_sphere(std::string sphere_name);
+        static void delete_polygon_mesh(std::string polygon_mesh_name);
+        static void delete_model(std::string model_name);
         
 
         //渲染场景
-        static void renderScene();
+        static void render_scene();
     };
 }

@@ -4,15 +4,13 @@ using namespace coolender;
 
 // utility function for loading a 2D texture from file
 // ---------------------------------------------------
-unsigned int TextureLoader::loadTexture2D(char const *path)
-{
+unsigned int TextureLoader::loadTexture2D(char const *path){
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
     unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-    if (data)
-    {
+    if (data){
         GLenum format;
         if (nrComponents == 1)
             format = GL_RED;
@@ -31,9 +29,7 @@ unsigned int TextureLoader::loadTexture2D(char const *path)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
-    }
-    else
-    {
+    }else{
         cout << "Texture failed to load at path: " << path << endl;
         stbi_image_free(data);
     }

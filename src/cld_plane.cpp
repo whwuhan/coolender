@@ -3,17 +3,15 @@
 using namespace std;
 using namespace coolender;
 using namespace glm;
-Plane::Plane():color(1.0f, 1.0f, 1.0f, 1.0f), texturePath("img/concrete_seamless.jpg")
+Plane::Plane():color(1.0f, 1.0f, 1.0f, 1.0f), texture_path("img/concrete_seamless.jpg")
 {}
 
-Plane::Plane(vec4 color, string texturePath):color(color), texturePath(texturePath)
+Plane::Plane(vec4 color, string texture_path):color(color), texture_path(texture_path)
 {}
 
-void Plane::init()
-{
+void Plane::init(){
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    float planeVertices[] = 
-    {
+    float planeVertices[] = {
         // positions            // normals         // texcoords
          10.0f, -1.0f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
         -10.0f, -1.0f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
@@ -36,6 +34,6 @@ void Plane::init()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
-    texture = TextureLoader::loadTexture2D(texturePath.c_str());
+    texture = TextureLoader::loadTexture2D(texture_path.c_str());
     return ;
 }

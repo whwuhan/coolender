@@ -3,7 +3,7 @@ using namespace coolender;
 using namespace std;
 string Coolender::version = "alpha 1.0";
 
-void Coolender::initAndRun()
+void Coolender::init_and_run()
 {
-    Window::initAndRun();
+    Window::init_and_run();
 }

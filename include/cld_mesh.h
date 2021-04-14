@@ -8,8 +8,7 @@
 #include <cld_shader.h>
 #include <string>
 #include <vector>
-namespace coolender
-{
+namespace coolender{
     //点结构体
     struct Vertex{
         glm::vec3 Position;     //点的位置

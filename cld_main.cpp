@@ -5,6 +5,6 @@
 
 int main()
 {
-    coolender::Coolender::initAndRun();
+    coolender::Coolender::init_and_run();
     return 0;
 }

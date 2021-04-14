@@ -6,11 +6,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-namespace coolender
-{
+namespace coolender{
         //照相机移动方向枚举
-    enum Camera_Movement
-    {
+    enum Camera_Movement{
         FORWARD,
         BACKWARD,
         LEFT,
@@ -26,8 +24,7 @@ namespace coolender
     const float ZOOM        = 45.0f;    //fov视角
 
     //相机抽象类
-    class Camera
-    {
+    class Camera{
     public:
         //相机属性
         glm::vec3 Position;
@@ -43,25 +40,18 @@ namespace coolender
         float MouseSensitivity;
         float Zoom;
         //构造方法
-        Camera
-        (
+        Camera(
             glm::vec3 position = glm::vec3(0.0f,0.0f,5.0f),//相机位置
             glm::vec3 up = glm::vec3(0.0f,1.0f,0.0f),
             float yaw = YAW,
-            float pitch = PITCH
-        );
-        Camera
-        (
-            float posX,
-            float posY,
-            float posZ,
-            float upX,
-            float upY,
-            float upZ,
-            float yaw,
-            float pitch
-        );
+            float pitch = PITCH);
+            
+        Camera(
+            float posX, float posY,float posZ,
+            float upX, float upY, float upZ, 
+            float yaw,float pitch);
         //获取观察矩阵，也就是loocAt矩阵
+
         glm::mat4 GetViewMatrix();
         //响应键盘
         void ProcessKeyboard(Camera_Movement direction,float deltaTime);
