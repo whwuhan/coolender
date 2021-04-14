@@ -7,19 +7,17 @@
 #include <stb_image.h>
 #include <string>
 #include <cld_texture_loader.h>
-namespace coolender
-{
-    class Plane
-    {
+namespace coolender{
+    class Plane {
     public:
         Plane();
-        Plane(glm::vec4 color, std::string texturePath);
+        Plane(glm::vec4 color, std::string texture_path);
         void init();
         unsigned int VAO;
         unsigned int VBO;
         unsigned int texture;
         glm::vec4 color;//颜色
     private:
-        std::string texturePath;//纹理路径
+        std::string texture_path;//纹理路径
     };
 }

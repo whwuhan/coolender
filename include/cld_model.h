@@ -15,10 +15,8 @@
 #include <map>
 #include <vector>
 
-namespace coolender
-{
-    class Model 
-    {
+namespace coolender{
+    class Model {
     public:
         //模型数据
         std::vector<coolender::Texture> textures_loaded;    //保存当前加载的纹理，保证纹理不需要重复加载
