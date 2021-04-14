@@ -73,7 +73,7 @@ void blinn_phong(float intensity){
     if(floor_use_tex){
         color = texture(floor_texture, fs_in.tex_coords).rgb;
     }else{
-        color = vec3(clear_color);
+        color = vec3(floor_color);
     }
     
     // ambient 环境光

@@ -34,18 +34,18 @@ void Render::render_point_cloud_type_point(PointCloud &point_cloud){
 //准备渲染球状点云
 void Render:: render_point_cloud_type_sphere_init(PointCloud &point_cloud, Sphere &sphere){
     glBindVertexArray(sphere.VAO);
-    unsigned int pointAmount = point_cloud.size;//点云点的数量
-    mat4 pointModelMatrices[pointAmount];//每个球状点云的model矩阵
-    for(int i = 0; i < pointAmount; i++){
-        mat4 pointModel(1.0f);
+    unsigned int point_amount = point_cloud.size;//点云点的数量
+    mat4 point_model_matrices[point_amount];//每个球状点云的model矩阵
+    for(int i = 0; i < point_amount; i++){
+        mat4 point_model(1.0f);
        
-        pointModel = translate(
-            pointModel, 
+        point_model = translate(
+            point_model, 
             vec3(point_cloud.points.row(i)[0], point_cloud.points.row(i)[1], point_cloud.points.row(i)[2])
         );//平移
-        pointModel = scale(pointModel, vec3(point_cloud.point_size * 0.05, point_cloud.point_size * 0.05, point_cloud.point_size * 0.05));//缩放
+        point_model = scale(point_model, vec3(point_cloud.point_size * 0.05, point_cloud.point_size * 0.05, point_cloud.point_size * 0.05));//缩放
         //不需要旋转
-        pointModelMatrices[i] = pointModel;
+        point_model_matrices[i] = point_model;
     } 
 
     // configure instanced array 注意开始配置instanced array(实际就是把这些model矩阵先放到缓存里面)
@@ -54,7 +54,7 @@ void Render:: render_point_cloud_type_sphere_init(PointCloud &point_cloud, Spher
 
     // cout << point_cloud.point_model_matrices_buffer << endl;
     glBindBuffer(GL_ARRAY_BUFFER, point_cloud.point_model_matrices_buffer);
-    glBufferData(GL_ARRAY_BUFFER, pointAmount * sizeof(mat4), &pointModelMatrices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, point_amount * sizeof(mat4), &point_model_matrices[0], GL_STATIC_DRAW);
     
 
     // set transformation matrices as an instance vertex attribute (with divisor 1)

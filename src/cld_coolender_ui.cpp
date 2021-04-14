@@ -593,15 +593,15 @@ void CoolenderUI::render_right_sidebar(){
                 ImGui::Checkbox("Use texture", &Scene::floor_use_tex);
                 if(!Scene::show_floor) Scene::floor_use_tex = false;
                 if(Scene::show_floor && !Scene::floor_use_tex){//地板不使用纹理，使用纯色
-                    float floorColor[] = {
+                    float floor_color[] = {
                         Scene::floor.color.x,
                         Scene::floor.color.y,
                         Scene::floor.color.z
                     };
-                    ImGui::ColorEdit3("Floor color", floorColor);
-                    Scene::floor.color.x = floorColor[0];
-                    Scene::floor.color.y = floorColor[1];
-                    Scene::floor.color.z = floorColor[2];
+                    ImGui::ColorEdit3("Floor color", floor_color);
+                    Scene::floor.color.x = floor_color[0];
+                    Scene::floor.color.y = floor_color[1];
+                    Scene::floor.color.z = floor_color[2];
                 }
                 ImGui::TreePop();
             }
