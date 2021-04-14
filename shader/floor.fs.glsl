@@ -3,9 +3,9 @@ out vec4 frag_color;
 
 // 注意这里要重新声明一次VsOut
 in VsOut{
-    vec3 frag_pos;
-    vec3 normal;
-    vec2 tex_coords;
+    vec3 frag_pos;// 将顶点在世界坐标系中的位置传递给片段着色器
+    vec3 normal;// 顶点的法线（注意是经过model矩阵移动过后的顶点法线）
+    vec2 tex_coords;// 顶点的纹理坐标
     vec4 frag_pos_light_space;// 顶点在光源空间中的坐标位置（类比相机坐标系，只是视角是从光源看出来）
 } fs_in;
 
@@ -41,7 +41,7 @@ float shadow_calculation(vec4 frag_pos_light_space){
     // get depth of current fragment from light's perspective
     float current_depth = proj_coords.z;
     // check whether current frag pos is in shadow
-    float bias = 0.001; // 加一个bias防止摩尔纹
+    float bias = 0.0; // 加一个bias防止摩尔纹
 
     // 或者通过视角与fragment的法线计算bias
     // vec3 light_dir = normalize(light_pos - fs_in.frag_pos);

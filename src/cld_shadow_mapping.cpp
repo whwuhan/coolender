@@ -66,7 +66,8 @@ void ShadowMapping::init(){
 
 //渲染整个场景的depth map
 void ShadowMapping::render_depth_map(Shader &depth_map_shader){
-    mat4 light_projection, light_view;
+    mat4 light_projection;      //投影矩阵
+    mat4 light_view;            //view矩阵
     mat4 light_space_matrix;
     // 正交投影矩阵  参数 左 右 下 上 远 近平面
     light_projection = ortho(-5.0f, 5.0f, -5.0f, 5.0f, near_plane, far_plane);
@@ -101,7 +102,7 @@ void ShadowMapping::render_depth_map(Shader &depth_map_shader){
 }
 
 //渲染地板的depth map
-void ShadowMapping::render_floor_depth_map(coolender::Shader &depth_map_shader, glm::mat4& light_space_matrix){
+void ShadowMapping::render_floor_depth_map(Shader &depth_map_shader, mat4& light_space_matrix){
     depth_map_shader.use();
     depth_map_shader.setMat4("light_space_matrix", light_space_matrix);
     depth_map_shader.setMat4("model", mat4(1.0f));

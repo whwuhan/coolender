@@ -85,13 +85,14 @@ void Window::init_and_run(){
 
     //shader
     //地板
-    Shader floor_shader("shader/floor.vs.glsl", "shader/floor.fs.glsl");
     Plane floor;
     floor.init();
-    floor_shader.use();
-    floor_shader.setInt("floorTexture", 0);
-    floor_shader.setInt("shadowMap", 1);
     Scene::floor = floor;
+    Shader floor_shader("shader/floor.vs.glsl", "shader/floor.fs.glsl");
+    floor_shader.use();
+    floor_shader.setInt("floor_texture", 0);
+    floor_shader.setInt("shadow_map", 1);
+    
     
     //point cloud shader
     Shader point_cloud_type_point_shader("shader/point_cloud_type_point.vs.glsl", "shader/point_cloud_type_point.fs.glsl");//点状点云shader
@@ -144,7 +145,8 @@ void Window::init_and_run(){
             //暂时不需要model矩阵
             floor_shader.setMat4("projection", projection);
             floor_shader.setMat4("view", view);
-            mat4 light_projection, light_view;
+            mat4 light_projection;
+            mat4 light_view;
             mat4 light_space_matrix;
             // 正交投影矩阵  参数 左 右 下 上 远 近平面
             light_projection = ortho(-5.0f, 5.0f, -5.0f, 5.0f, ShadowMapping::near_plane, ShadowMapping::far_plane);
@@ -158,9 +160,7 @@ void Window::init_and_run(){
             floor_shader.setVec3("light_color", vec3(Scene::parallel_light.color));
             floor_shader.setVec3("light_pos", Scene::parallel_light.position);//光源位置
             floor_shader.setVec3("light_look_at", Scene::parallel_light.look_at);
-
             floor_shader.setFloat("ambient_intensity", Scene::ambient_intensity); //环境光强度
-            
             floor_shader.setBool("floor_use_tex", Scene::floor_use_tex);
             floor_shader.setVec4("floor_color", Scene::floor.color);
             floor_shader.setVec4("clear_color", Scene::clear_color);
