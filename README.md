@@ -69,7 +69,7 @@ We import the `models/point_cloud/bird_m2.obj` as an example. After import a poi
 
 It's quite similar to import polygon mesh compere to importing point cloud from the top menu.
 
-We import the `models/pointcloud/diablo3_pose.obj` as an example. And it's also the same to set some attributes like point cloud.
+We import the `models/point_cloud/diablo3_pose.obj` as an example. And it's also the same to set some attributes like point cloud.
 
 ![Coolender](img_temp/QQ20210312-180103.png)
 
