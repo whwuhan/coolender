@@ -48,7 +48,7 @@ In FPS games style operate mode, press <kbd>W</kbd><kbd>S</kbd><kbd>D</kbd> and 
 
 Coolender divide the displayable models into 3 categories such as point cloud only has vertex information, polygon mesh has vertex , normals and faces information, model not only has vertex , normals and faces information but also with PBR textures(TODO).
 
-PS:  Now Coolender can only import `.obj` format models, if you want use another format like `.ply`, `.fbx`, et al. it's better to convert  to `.obj` format. We list some ways to convert to `.obj` format.
+PS:  Now Coolender can only import `.obj` format models, if you want use another format like `.ply`, `.fbx`, etc. it's better to convert  to `.obj` format. We list some ways to convert to `.obj` format.
 
 * Use [Blender](https://www.blender.org/download/).
 * Use [PCL](https://github.com/PointCloudLibrary/pcl).
