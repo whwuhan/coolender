@@ -61,7 +61,7 @@ You can import point cloud models from the top menu as follow.
 
 There's some point cloud models in `models/pointcloud` directory.
 
-We import the `models/pointcloud/BirdM2.obj` as an example. After import a point cloud, you can see the information from the side bar. You can set some attributes like point size, color et al. of the point cloud in the side bar or delete point cloud from the scene.
+We import the `models/point_cloud/bird_m2.obj` as an example. After import a point cloud, you can see the information from the side bar. You can set some attributes like point size, color et al. of the point cloud in the side bar or delete point cloud from the scene.
 
 ![Coolender](img_temp/QQ20210312-172738.png)
 
