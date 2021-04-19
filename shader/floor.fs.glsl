@@ -50,15 +50,17 @@ float shadow_calculation(vec4 frag_pos_light_space){
     // float shadow = current_depth - bias > closest_depth  ? 1.0 : 0.0;
 
     // PCF
-    float shadow = 0.0;
+    int filter_size = 3;            // 滤波核的大小
+    int range = filter_size / 2;    // 根据滤波核的大小算采样范围
+    float shadow = 0.0;             // fragment在阴影中的程度，范围[0,1]
     vec2 texel_size = 1.0 / textureSize(shadow_map, 0); //textureSize()返回shadow map第0级的分辨率 之所以除1，是因为下面的projCoords.xy已经是标准坐标了
-    for(int x = -1; x <= 1; ++x){// x = -1,0,1
-        for(int y = -1; y <= 1; ++y){// y = -1,0,1 一共采样9次
+    for(int x = -range; x <= range; ++x){// x = -1,0,1
+        for(int y = -range; y <= range; ++y){// y = -1,0,1 
             float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y) * texel_size).r; 
             shadow += current_depth - bias > pcf_depth  ? 1.0 : 0.0;        
         }    
     }
-    shadow /= 9.0; //一共采样9次，所以除以9
+    shadow /= float(filter_size * filter_size); //一共采样9次，所以除以9
 
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
     // 视锥外的物体，都视作不在阴影中
@@ -67,14 +69,17 @@ float shadow_calculation(vec4 frag_pos_light_space){
     return shadow;
 }
 
-void blinn_phong(float intensity){
+vec4 blinn_phong(float intensity){
     //地板颜色
     vec3 color;
-    if(floor_use_tex){
-        color = texture(floor_texture, fs_in.tex_coords).rgb;
-    }else{
-        color = vec3(floor_color);
-    }
+    // if(floor_use_tex){
+    //     color = texture(floor_texture, fs_in.tex_coords).rgb;
+    // }else{
+    //     color = vec3(floor_color);
+    // }
+
+    // if...else...改写成加权形式
+    color = int(floor_use_tex) * texture(floor_texture, fs_in.tex_coords).rgb + (1 - int(floor_use_tex)) * vec3(floor_color);
     
     // ambient 环境光
     vec3 ambient = ambient_intensity * color * light_color;
@@ -99,14 +104,18 @@ void blinn_phong(float intensity){
     //HDR
     // color = color / (vec3(1.0f) + color);
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));
-    frag_color = vec4(lighting, 1.0) * intensity;
+    return vec4(lighting, 1.0) * intensity;
 }
 
 void main(){
     float dis_frag_pos_to_cen = distance(fs_in.frag_pos, vec3(0.0f, -1.0f, 0.0f));//场景中心的距离
-    if(dis_frag_pos_to_cen > 10){//地面绘制成圆形
-        frag_color = clear_color;
-    }else{
-        blinn_phong(1);
-    }
+    // if(dis_frag_pos_to_cen > 10){//地面绘制成圆形
+    //     frag_color = clear_color;
+    // }else{
+    //     blinn_phong(1);
+    // }
+
+    // if...else...改写成加权形式
+    vec4 weight = step(vec4(10), vec4(dis_frag_pos_to_cen));
+    frag_color = weight.r * clear_color + (1 - weight.r) * blinn_phong(1);
 }
