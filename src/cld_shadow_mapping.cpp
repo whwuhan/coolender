@@ -33,14 +33,16 @@ unsigned int ShadowMapping::depth_map = 0;// create depth texture 将深度信�
 float ShadowMapping::near_plane = 0.1f;//在光源位置渲染时，投影矩阵近平面
 float ShadowMapping::far_plane = 100.0f;//远平面
 
-void ShadowMapping::init(){
+void ShadowMapping::init()
+{
     // 创建 depth map framebuffer object
     glGenFramebuffers(1, &ShadowMapping::depth_map_FBO);
     // create depth texture 将深度信息放在纹理上
     glGenTextures(1, &ShadowMapping::depth_map);
     glBindTexture(GL_TEXTURE_2D, ShadowMapping::depth_map);
     //设置当前绑定纹理的信息 注意纹理的类型，参数 纹理的类型， level, 纹理内部存储数据的格式， 宽，高 
-    glTexImage2D(
+    glTexImage2D
+    (
         GL_TEXTURE_2D, 
         0, GL_DEPTH_COMPONENT, 
         ShadowMapping::width * ShadowMapping::shadow_mapping_scale, 
@@ -58,6 +60,7 @@ void ShadowMapping::init(){
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
     // attach depth texture as FBO's depth buffer 将纹理绑定在帧缓冲上
     glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapping::depth_map_FBO);
+    // 将texture和framebuffer的深度缓冲绑定到一起
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapping::depth_map, 0);
     glDrawBuffer(GL_NONE);//表示只需要深度信息
     glReadBuffer(GL_NONE);
@@ -65,7 +68,8 @@ void ShadowMapping::init(){
 }
 
 //渲染整个场景的depth map
-void ShadowMapping::render_depth_map(Shader &depth_map_shader){
+void ShadowMapping::render_depth_map(Shader &depth_map_shader)
+{
     mat4 light_projection;      //投影矩阵
     mat4 light_view;            //view矩阵
     mat4 light_space_matrix;
@@ -102,7 +106,8 @@ void ShadowMapping::render_depth_map(Shader &depth_map_shader){
 }
 
 //渲染地板的depth map
-void ShadowMapping::render_floor_depth_map(Shader &depth_map_shader, mat4& light_space_matrix){
+void ShadowMapping::render_floor_depth_map(Shader &depth_map_shader, mat4& light_space_matrix)
+{
     depth_map_shader.use();
     depth_map_shader.setMat4("light_space_matrix", light_space_matrix);
     depth_map_shader.setMat4("model", mat4(1.0f));
@@ -112,10 +117,13 @@ void ShadowMapping::render_floor_depth_map(Shader &depth_map_shader, mat4& light
 }
 
 //渲染点云的depth map
-void ShadowMapping::render_point_cloud_type_sphere_depth_map(Shader &depth_map_shader, mat4& light_space_matrix){
-    for (auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+void ShadowMapping::render_point_cloud_type_sphere_depth_map(Shader &depth_map_shader, mat4& light_space_matrix)
+{
+    for (auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+    {
         //判断是否显示球状点云
-        if (it->second.show){
+        if (it->second.show)
+        {
             depth_map_shader.use();
             // vs uniform
             depth_map_shader.setMat4("light_space_matrix", light_space_matrix);
@@ -133,10 +141,13 @@ void ShadowMapping::render_point_cloud_type_sphere_depth_map(Shader &depth_map_s
 }
 
 //渲染polygon mesh的depth map
-void ShadowMapping::render_polygon_mesh_depth_map(Shader &depth_map_shader, mat4& light_space_matrix){
+void ShadowMapping::render_polygon_mesh_depth_map(Shader &depth_map_shader, mat4& light_space_matrix)
+{
     //渲染polygon mesh
-    for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
-        if(it->second.show){
+    for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+    {
+        if(it->second.show)
+        {
             depth_map_shader.use();
             // vs uniform
             depth_map_shader.setMat4("light_space_matrix", light_space_matrix);
