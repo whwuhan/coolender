@@ -30,7 +30,8 @@ float CoolenderUI::message_box_pos_x = 3;//message box距离左边距离
 float CoolenderUI::message_box_pos_y = 300;//message box距离usage的纵向距离
 
 //初始化UI
-void CoolenderUI::init(GLFWwindow* glfw_window){
+void CoolenderUI::init(GLFWwindow* glfw_window)
+{
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -62,7 +63,8 @@ void CoolenderUI::init(GLFWwindow* glfw_window){
 }
 
 //渲染DemoUI
-void CoolenderUI::render_demo_ui(){
+void CoolenderUI::render_demo_ui()
+{
     bool show = true;
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -75,7 +77,8 @@ void CoolenderUI::render_demo_ui(){
 }
 
 //渲染所有UI
-void CoolenderUI::render(){
+void CoolenderUI::render()
+{
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -135,15 +138,23 @@ void CoolenderUI::render(){
 //渲染顶部菜单栏
 void CoolenderUI::render_menu(){
     //顶部菜单栏
-    if (ImGui::BeginMainMenuBar()){   
+    if (ImGui::BeginMainMenuBar())
+    {   
         //File
-        if (ImGui::BeginMenu("File")){
+        if (ImGui::BeginMenu("File"))
+        {
             if (ImGui::MenuItem("Import point clouds .obj", ""))
+            {
                 CoolenderUI::show_point_cloud_obj_file_choose_dialog = true;
+            }
             if (ImGui::MenuItem("Import polygom mesh .obj", ""))
+            {
                 CoolenderUI::show_polygon_mesh_obj_file_choose_dialog = true;
+            }
             if (ImGui::MenuItem("Import model .obj (TODO)", NULL, false, false))
+            {
                 CoolenderUI::show_model_obj_file_choose_dialog = true;
+            }
             ImGui::EndMenu();
         }
         
@@ -163,18 +174,23 @@ void CoolenderUI::render_menu(){
         // }
 
         //Window 控制显示哪些窗口
-        if (ImGui::BeginMenu("Window")){
+        if (ImGui::BeginMenu("Window"))
+        {
             //使用手册
             if (ImGui::MenuItem("Show Usage", NULL, CoolenderUI::show_usage))
+            {
                 CoolenderUI::show_usage = !CoolenderUI::show_usage;
-
+            }
             //message box
             if (ImGui::MenuItem("Show Message Box", NULL, CoolenderUI::show_message_box))
+            {
                 CoolenderUI::show_message_box = !CoolenderUI::show_message_box;
-
+            }
             //右侧Sidebar
             if (ImGui::MenuItem("Show Right Sidebar", NULL, CoolenderUI::show_right_sidebar))
+            {
                 CoolenderUI::show_right_sidebar = !CoolenderUI::show_right_sidebar;
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -182,16 +198,24 @@ void CoolenderUI::render_menu(){
 }
 
 //渲染使用手册窗口
-void CoolenderUI::render_usage(){   
+void CoolenderUI::render_usage()
+{   
     //设置大小和位置
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(
-        ImVec2(main_viewport->WorkPos.x + CoolenderUI::usage_pos_x, main_viewport->WorkPos.y + CoolenderUI::usage_pos_y), 
-        ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos
+    (
+        ImVec2
+        (
+            main_viewport->WorkPos.x + CoolenderUI::usage_pos_x, 
+            main_viewport->WorkPos.y + CoolenderUI::usage_pos_y
+        ), 
+        ImGuiCond_FirstUseEver
+    );
     //ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_FirstUseEver);
     
     //窗口内容
-    ImGui::Begin("Usage", &CoolenderUI::show_usage, ImGuiWindowFlags_AlwaysAutoResize);{
+    ImGui::Begin("Usage", &CoolenderUI::show_usage, ImGuiWindowFlags_AlwaysAutoResize);
+    {
         ImGui::Text("How to switch mode:");
         ImGui::BulletText("Please press Q to switch operate mode!");
         ImGui::Separator();
@@ -212,40 +236,53 @@ void CoolenderUI::render_usage(){
 }
 
 //渲染右侧Sidebar
-void CoolenderUI::render_right_sidebar(){
+void CoolenderUI::render_right_sidebar()
+{
     //获取glfw window宽高
     int win_width, win_height;
     glfwGetFramebufferSize(Window::glfw_window, &win_width, &win_height);
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     //设置位置
-    ImGui::SetNextWindowPos(
-        ImVec2(
+    ImGui::SetNextWindowPos
+    (
+        ImVec2
+        (
             main_viewport->WorkPos.x + win_width - CoolenderUI::right_sidebar_width - CoolenderUI::right_sidebar_pos_x, 
-            main_viewport->WorkPos.y + CoolenderUI::right_sidebar_pos_y), 
+            main_viewport->WorkPos.y + CoolenderUI::right_sidebar_pos_y
+        ), 
             ImGuiCond_FirstUseEver
-        );
+    );
     //设置Sidebar大小
-    ImGui::SetNextWindowSize(
+    ImGui::SetNextWindowSize
+    (
         ImVec2(CoolenderUI::right_sidebar_width, CoolenderUI::right_sidebar_height), 
         ImGuiCond_FirstUseEver
     );
     //右侧Sidebar开始
-    ImGui::Begin("Coolender", &CoolenderUI::show_right_sidebar, ImGuiWindowFlags_None);{
+    ImGui::Begin("Coolender", &CoolenderUI::show_right_sidebar, ImGuiWindowFlags_None);
+    {
         //被选中时禁用滚轮调整视角
-        if(ImGui::IsWindowFocused()){
+        if(ImGui::IsWindowFocused())
+        {
             glfwSetScrollCallback(Window::glfw_window, nullptr);
-        }else{
+        }
+        else
+        {
             glfwSetScrollCallback(Window::glfw_window, scroll_callback);
         }
 
         //整体全局设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-        if(ImGui::CollapsingHeader("Global Settings")){   
+        if(ImGui::CollapsingHeader("Global Settings"))
+        {
             //UI风格设置
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("UI theme settings")){
-                if (ImGui::Combo("Theme", &CoolenderUI::style, "Dark\0Light\0Classic")){
-                    switch (CoolenderUI::style){
+            if (ImGui::TreeNode("UI theme settings"))
+            {
+                if (ImGui::Combo("Theme", &CoolenderUI::style, "Dark\0Light\0Classic"))
+                {
+                    switch (CoolenderUI::style)
+                    {
                         case 0: 
                             ImGui::StyleColorsDark(); 
                             break;
@@ -263,7 +300,8 @@ void CoolenderUI::render_right_sidebar(){
             
             //相机设置
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Camera settings and information")){
+            if (ImGui::TreeNode("Camera settings and information"))
+            {
                 //相机位置
                 ImGui::Text("Camera information:");
                 ImGui::SetNextItemWidth(80);
@@ -287,7 +325,8 @@ void CoolenderUI::render_right_sidebar(){
 
             //全局光照信息
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Global illumination settings")){
+            if (ImGui::TreeNode("Global illumination settings"))
+            {
                 //平行光环境光强度
                 ImGui::SliderFloat("Ambient light intensity", &Scene::ambient_intensity, 0.0f, 1.0f, "Ambient intensity = %.3f");
                 
@@ -310,7 +349,8 @@ void CoolenderUI::render_right_sidebar(){
                 
 
                 //光线颜色
-                float parallelLightColor[4] = {
+                float parallelLightColor[4] = 
+                {
                     Scene::parallel_light.color.x,
                     Scene::parallel_light.color.y,
                     Scene::parallel_light.color.z,
@@ -324,8 +364,6 @@ void CoolenderUI::render_right_sidebar(){
                 ImGui::TreePop();
             }
             ImGui::Separator();
-
-            
             
             //MSAA 暂时无法动态变更
             // ImGui::Checkbox("MSAA", &Window::use_MSAA);
@@ -356,19 +394,25 @@ void CoolenderUI::render_right_sidebar(){
         //========================================================================================================
         //功能相关UI
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-        if(ImGui::CollapsingHeader("Function")){
+        if(ImGui::CollapsingHeader("Function"))
+        {
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if(ImGui::TreeNode("Screenshot")){
-                
+            if(ImGui::TreeNode("Screenshot"))
+            {
                 ImGui::Text("Screenshot save path:");ImGui::SameLine();
                 //注意ImGui使用的format string 最好这样写，否则会出现warning
                 ImGui::Text("%s", (Function::screenshot_out_path).c_str());ImGui::SameLine();
                 if(ImGui::Button("Change path"))
+                {
                     CoolenderUI::show_screenshot_save_dir_choose_dialog = true;
+                }
                 if(ImGui::Button("Screenshot"))
+                {
                     Window::screenshot = true;
+                }
                 //判断前一个组件是否Hovered
-                if (ImGui::IsItemHovered()){
+                if (ImGui::IsItemHovered())
+                {
                     ImGui::BeginTooltip();
                     ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
                     ImGui::TextUnformatted("Shorcut: LEFT CTRL + P");
@@ -383,12 +427,15 @@ void CoolenderUI::render_right_sidebar(){
         //========================================================================================================
         //场景设置
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-        if(ImGui::CollapsingHeader("Scene Settings")){   
+        if(ImGui::CollapsingHeader("Scene Settings"))
+        {
             //全局场景设置
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if(ImGui::TreeNode("Global scene settings")){   
+            if(ImGui::TreeNode("Global scene settings"))
+            {   
                 //背景颜色调整框
-                float clear_color[4] = {
+                float clear_color[4] = 
+                {
                     Scene::clear_color.x,
                     Scene::clear_color.y,
                     Scene::clear_color.z,
@@ -403,28 +450,38 @@ void CoolenderUI::render_right_sidebar(){
                 //shadow mapping 分辨率缩放设置
                 float shadow_mapping_scale = ShadowMapping::shadow_mapping_scale;
                 ImGui::DragFloat("Shadow mapping resolution scale", &ShadowMapping::shadow_mapping_scale, 0.05f, 1.0f, 5.0f, "Shadow mapping resolution scale: %.3f");
-                if(abs(ShadowMapping::shadow_mapping_scale - shadow_mapping_scale) > 0.01) ShadowMapping::init();//如果改变了shadow mapping的缩放大小重新初始化
+                if(abs(ShadowMapping::shadow_mapping_scale - shadow_mapping_scale) > 0.01)
+                {
+                    ShadowMapping::init();//如果改变了shadow mapping的缩放大小重新初始化
+                }
                 ImGui::Separator();
 
                 //点云全局设置
                 ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-                if (ImGui::TreeNode("Point cloud global settings")){
+                if (ImGui::TreeNode("Point cloud global settings"))
+                {
                     //所有点云显示设置
-                    for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+                    for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                    {
                         //如果有一个点云不显示，设置Scene::show_all_point_cloud为false
-                        if(!it->second.show){
+                        if(!it->second.show)
+                        {
                             Scene::show_all_point_cloud = false;
                             break;
-                        }else{
+                        }
+                        else
+                        {
                             Scene::show_all_point_cloud = true;
                         }
                     }
                     //判断是否显示所有点云
                     bool show_all_point_cloud = Scene::show_all_point_cloud;
                     ImGui::Checkbox("Show all the point clouds", &Scene::show_all_point_cloud);
-                    if(show_all_point_cloud != Scene::show_all_point_cloud){
+                    if(show_all_point_cloud != Scene::show_all_point_cloud)
+                    {
                         //如果改变了Scene::show_all_point_cloud，将所有点云的show属性设置为Scene::show_all_point_cloud
-                        for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+                        for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                        {
                             it->second.show = Scene::show_all_point_cloud;
                         }
                     }
@@ -437,16 +494,25 @@ void CoolenderUI::render_right_sidebar(){
                     Scene::point_type = POINT_TYPE(point_type);//int强制转化为enum
 
                     //设置所有点云的point size
-                    for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+                    for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                    {
                         // 将所有点云的change_point_size设置为false
                         it->second.change_point_size = false;
                     }
                     float point_cloud_point_size = Scene::point_cloud_point_size;
-                    ImGui::DragFloat("Global point cloud point size", &Scene::point_cloud_point_size, 0.005f, 0.0f, 2.0f, "Global point cloud point size: %.3f");
+                    ImGui::DragFloat
+                    (
+                        "Global point cloud point size", 
+                        &Scene::point_cloud_point_size, 
+                        0.005f, 0.0f, 2.0f, 
+                        "Global point cloud point size: %.3f"
+                    );
                     ImGui::SameLine();
                     warning_marker("WARNING!!! If you set all the point clouds' point size \ntoo big in sphere type with too many point cloud models, \nyour PC will explode!!!");
-                    if(abs(Scene::point_cloud_point_size - point_cloud_point_size) > 0.001){//如果改变的点云球面的大小
-                        for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+                    if(abs(Scene::point_cloud_point_size - point_cloud_point_size) > 0.001)
+                    {//如果改变的点云球面的大小
+                        for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                        {
                             it->second.point_size = Scene::point_cloud_point_size;
                             it->second.change_point_size = true;
                         }
@@ -456,7 +522,8 @@ void CoolenderUI::render_right_sidebar(){
                     float point_cloud_color_r = Scene::point_cloud_point_color.x;
                     float point_cloud_color_g = Scene::point_cloud_point_color.y;
                     float point_cloud_color_b = Scene::point_cloud_point_color.z;
-                    float point_cloud_point_color[3] = {
+                    float point_cloud_point_color[3] = 
+                    {
                         Scene::point_cloud_point_color.x,
                         Scene::point_cloud_point_color.y,
                         Scene::point_cloud_point_color.z
@@ -466,12 +533,15 @@ void CoolenderUI::render_right_sidebar(){
                     Scene::point_cloud_point_color.y = point_cloud_point_color[1];
                     Scene::point_cloud_point_color.z = point_cloud_point_color[2];
                     //判断是否更改了全局点云颜色
-                    if(
+                    if
+                    (
                         abs(Scene::point_cloud_point_color.x - point_cloud_color_r) >  0.001 ||
                         abs(Scene::point_cloud_point_color.y - point_cloud_color_g) >  0.001 ||
                         abs(Scene::point_cloud_point_color.z - point_cloud_color_b) >  0.001 
-                    ){
-                        for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+                    )
+                    {
+                        for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                        {
                             //color
                             it->second.color.x = point_cloud_point_color[0];
                             it->second.color.y = point_cloud_point_color[1];
@@ -485,23 +555,30 @@ void CoolenderUI::render_right_sidebar(){
 
                 //Polygon mesh全局设置
                 ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-                if (ImGui::TreeNode("Polygon mesh global settings")){
+                if (ImGui::TreeNode("Polygon mesh global settings"))
+                {
                     //所有polygon mesh显示设置
-                    for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
+                    for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+                    {
                         //如果有一个polygon mesh不显示，设置Scene::show_all_polygon_mesh为false
-                        if(!it->second.show){
+                        if(!it->second.show)
+                        {
                             Scene::show_all_polygon_mesh = false;
                             break;
-                        }else{
+                        }
+                        else
+                        {
                              Scene::show_all_polygon_mesh = true;
                         }
                     }
                     //判断是否显示所有mesh
                     bool show_all_polygon_mesh = Scene::show_all_polygon_mesh;
                     ImGui::Checkbox("Show all the polygon mesh", &Scene::show_all_polygon_mesh);
-                    if(show_all_polygon_mesh != Scene::show_all_polygon_mesh){
+                    if(show_all_polygon_mesh != Scene::show_all_polygon_mesh)
+                    {
                         //如果改变了Scene::show_all_polygon_mesh，将所有点云的show属性设置为Scene::show_all_polygon_mesh
-                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
+                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+                        {
                             it->second.show = Scene::show_all_polygon_mesh;
                         }
                     }
@@ -517,8 +594,11 @@ void CoolenderUI::render_right_sidebar(){
 
                     float polygon_mesh_point_size = Scene::polygon_mesh_point_size;
                     ImGui::DragFloat("Global polygon mesh point size", &Scene::polygon_mesh_point_size, 0.005f, 0.0f, 50.0f, "Global polygon mesh point size: %.3f");
-                    if(abs(Scene::polygon_mesh_point_size - polygon_mesh_point_size) > 0.001){//如果改变了polygon mesh顶点的大小
-                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
+                    if(abs(Scene::polygon_mesh_point_size - polygon_mesh_point_size) > 0.001)
+                    {
+                        //如果改变了polygon mesh顶点的大小
+                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+                        {
                             it->second.point_size = Scene::polygon_mesh_point_size;
                         }
                     }
@@ -528,7 +608,8 @@ void CoolenderUI::render_right_sidebar(){
                     float polygonMeshPointAndLineColorR = Scene::polygon_mesh_point_line_color.x;
                     float polygonMeshPointAndLineColorG = Scene::polygon_mesh_point_line_color.y;
                     float polygonMeshPointAndLineColorB = Scene::polygon_mesh_point_line_color.z;
-                    float polygon_mesh_point_line_color[3] = {
+                    float polygon_mesh_point_line_color[3] = 
+                    {
                         Scene::polygon_mesh_point_line_color.x,
                         Scene::polygon_mesh_point_line_color.y,
                         Scene::polygon_mesh_point_line_color.z
@@ -538,12 +619,15 @@ void CoolenderUI::render_right_sidebar(){
                     Scene::polygon_mesh_point_line_color.y = polygon_mesh_point_line_color[1];
                     Scene::polygon_mesh_point_line_color.z = polygon_mesh_point_line_color[2];
                     //判断是否更改了全局点云颜色
-                    if(
+                    if
+                    (
                         abs(Scene::polygon_mesh_point_line_color.x - polygonMeshPointAndLineColorR) >  0.001 ||
                         abs(Scene::polygon_mesh_point_line_color.y - polygonMeshPointAndLineColorG) >  0.001 ||
                         abs(Scene::polygon_mesh_point_line_color.z - polygonMeshPointAndLineColorB) >  0.001 
-                    ){
-                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
+                    )
+                    {
+                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+                        {
                             //color
                             it->second.point_line_color.x = polygon_mesh_point_line_color[0];
                             it->second.point_line_color.y = polygon_mesh_point_line_color[1];
@@ -554,7 +638,8 @@ void CoolenderUI::render_right_sidebar(){
                     float face_color_r = Scene::polygon_mesh_face_color.x;
                     float face_color_g = Scene::polygon_mesh_face_color.y;
                     float face_color_b = Scene::polygon_mesh_face_color.z;
-                    float polygon_mesh_face_color[3] = {
+                    float polygon_mesh_face_color[3] = 
+                    {
                         Scene::polygon_mesh_face_color.x,
                         Scene::polygon_mesh_face_color.y,
                         Scene::polygon_mesh_face_color.z
@@ -564,12 +649,15 @@ void CoolenderUI::render_right_sidebar(){
                     Scene::polygon_mesh_face_color.y = polygon_mesh_face_color[1];
                     Scene::polygon_mesh_face_color.z = polygon_mesh_face_color[2];
                     //判断是否更改了全局点云颜色
-                    if(
+                    if
+                    (
                         abs(Scene::polygon_mesh_face_color.x - face_color_r) >  0.001 ||
                         abs(Scene::polygon_mesh_face_color.y - face_color_g) >  0.001 ||
                         abs(Scene::polygon_mesh_face_color.z - face_color_b) >  0.001 
-                    ){
-                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
+                    )
+                    {
+                        for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+                        {
                             //color
                             it->second.face_color.x = polygon_mesh_face_color[0];
                             it->second.face_color.y = polygon_mesh_face_color[1];
@@ -588,12 +676,19 @@ void CoolenderUI::render_right_sidebar(){
             //地板显示设置
             //ImGui::TableNextColumn();
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Floor:")){
+            if (ImGui::TreeNode("Floor:"))
+            {
                 ImGui::Checkbox("Show floor", &Scene::show_floor);ImGui::SameLine();
                 ImGui::Checkbox("Use texture", &Scene::floor_use_tex);
-                if(!Scene::show_floor) Scene::floor_use_tex = false;
-                if(Scene::show_floor && !Scene::floor_use_tex){//地板不使用纹理，使用纯色
-                    float floor_color[] = {
+                if(!Scene::show_floor)
+                {
+                    Scene::floor_use_tex = false;
+                }
+                if(Scene::show_floor && !Scene::floor_use_tex)
+                {
+                    //地板不使用纹理，使用纯色
+                    float floor_color[] = 
+                    {
                         Scene::floor.color.x,
                         Scene::floor.color.y,
                         Scene::floor.color.z
@@ -611,11 +706,14 @@ void CoolenderUI::render_right_sidebar(){
             //======================根据场景中数据渲染UI======================
             //点云数据
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Point Cloud:")){
+            if (ImGui::TreeNode("Point Cloud:"))
+            {
                 //每一个点云
-                for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){   
+                for(auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                {   
                     ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-                    if (ImGui::TreeNode(it->first.c_str())){   
+                    if (ImGui::TreeNode(it->first.c_str()))
+                    {   
                         //checkbox
                         ImGui::Checkbox("Show point cloud", &it->second.show);
                         
@@ -624,11 +722,13 @@ void CoolenderUI::render_right_sidebar(){
                         ImGui::DragFloat("Point size", &it->second.point_size, 0.005f, 0.0f, 2.0f, "Point size: %.3f");
                         //ImGui::SliderFloat("Point size", &it->second.point_size, 0.0f, 10.f, "Point size = %.3f");
                         //判断是否改变了球面的半径
-                        if(abs(it->second.point_size - point_size) > 0.001){
+                        if(abs(it->second.point_size - point_size) > 0.001)
+                        {
                             it->second.change_point_size = true;
                         }
                         //color
-                        float pointColor[3] = {
+                        float pointColor[3] = 
+                        {
                             it->second.color.x,
                             it->second.color.y,
                             it->second.color.z,
@@ -651,7 +751,9 @@ void CoolenderUI::render_right_sidebar(){
                         ImGui::DragFloat("trans_y", &it->second.trans_y, 0.01f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("trans_z", &it->second.trans_z, 0.01f);
-                        it->second.model = glm::translate(
+                        it->second.model = 
+                        glm::translate
+                        (
                             it->second.model,
                             glm::vec3(it->second.trans_x, it->second.trans_y, it->second.trans_z)
                         );
@@ -663,18 +765,24 @@ void CoolenderUI::render_right_sidebar(){
                         ImGui::DragFloat("rotate_y", &it->second.rotate_y, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("rotate_z", &it->second.rotate_z, 0.1f);
-                        it->second.model = glm::rotate(
+                        it->second.model = 
+                        glm::rotate
+                        (
                             it->second.model,
                             glm::radians(it->second.rotate_x), 
                             glm::vec3(1.0f, 0.0f, 0.0f)
                         );
 
-                        it->second.model = glm::rotate(
+                        it->second.model = 
+                        glm::rotate
+                        (
                             it->second.model,
                             glm::radians(it->second.rotate_y), 
                             glm::vec3(0.0f, 1.0f, 0.0f)
                         );
-                        it->second.model = glm::rotate(
+                        it->second.model = 
+                        glm::rotate
+                        (
                             it->second.model,
                             glm::radians(it->second.rotate_z), 
                             glm::vec3(0.0f, 0.0f, 1.0f)
@@ -682,7 +790,8 @@ void CoolenderUI::render_right_sidebar(){
 
                         //delete button 
                         ImVec2 button_size(ImGui::GetFontSize() * 6.0f, 0.0f);
-                        if(ImGui::Button("Delete", button_size)){
+                        if(ImGui::Button("Delete", button_size))
+                        {
                             Scene::delete_point_cloud(it->first);
                             //注意这里删除后要break否则会出现内存错误
                             //猜测是因为map删除元素后，迭代器失效！！！！
@@ -700,11 +809,14 @@ void CoolenderUI::render_right_sidebar(){
 
             //polygon mesh的相关UI
             ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-            if (ImGui::TreeNode("Polygon Mesh:")){
+            if (ImGui::TreeNode("Polygon Mesh:"))
+            {
                 //每一个polygon mesh的UI
-                for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
+                for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++)
+                {
                     ImGui::SetNextItemOpen(true, ImGuiCond_Once);//设置下一个窗口打开（只设置一次）
-                    if (ImGui::TreeNode(it->first.c_str())){   
+                    if (ImGui::TreeNode(it->first.c_str()))
+                    {   
                         //checkbox
                         ImGui::Checkbox("Show polygon mesh", &it->second.show);
                         
@@ -712,7 +824,8 @@ void CoolenderUI::render_right_sidebar(){
                         ImGui::DragFloat("Point size", &it->second.point_size, 0.005f, 0.0f, 50.0f, "Point size: %.3f");
                         
                         //color
-                        float point_line_color[3] = {
+                        float point_line_color[3] = 
+                        {
                             it->second.point_line_color.x,
                             it->second.point_line_color.y,
                             it->second.point_line_color.z,
@@ -723,7 +836,8 @@ void CoolenderUI::render_right_sidebar(){
                         it->second.point_line_color.z = point_line_color[2];
                         it->second.point_line_color.w = 1.0;
 
-                        float face_color[3] = {
+                        float face_color[3] = 
+                        {
                             it->second.face_color.x,
                             it->second.face_color.y,
                             it->second.face_color.z,
@@ -745,7 +859,9 @@ void CoolenderUI::render_right_sidebar(){
                         ImGui::DragFloat("trans_y", &it->second.trans_y, 0.01f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("trans_z", &it->second.trans_z, 0.01f);
-                        it->second.model = glm::translate(
+                        it->second.model = 
+                        glm::translate
+                        (
                             it->second.model,
                             glm::vec3(it->second.trans_x, it->second.trans_y, it->second.trans_z)
                         );
@@ -757,17 +873,23 @@ void CoolenderUI::render_right_sidebar(){
                         ImGui::DragFloat("rotate_y", &it->second.rotate_y, 0.1f);ImGui::SameLine();
                         ImGui::SetNextItemWidth(80);
                         ImGui::DragFloat("rotate_z", &it->second.rotate_z, 0.1f);
-                        it->second.model = glm::rotate(
+                        it->second.model = 
+                        glm::rotate
+                        (
                             it->second.model,
                             glm::radians(it->second.rotate_x), 
                             glm::vec3(1.0f, 0.0f, 0.0f)
                         );
-                        it->second.model = glm::rotate(
+                        it->second.model = 
+                        glm::rotate
+                        (
                             it->second.model,
                             glm::radians(it->second.rotate_y), 
                             glm::vec3(0.0f, 1.0f, 0.0f)
                         );
-                        it->second.model = glm::rotate(
+                        it->second.model = 
+                        glm::rotate
+                        (
                             it->second.model,
                             glm::radians(it->second.rotate_z), 
                             glm::vec3(0.0f, 0.0f, 1.0f)
@@ -775,7 +897,8 @@ void CoolenderUI::render_right_sidebar(){
 
                         //delete button 
                         ImVec2 button_size(ImGui::GetFontSize() * 6.0f, 0.0f);
-                        if(ImGui::Button("Delete", button_size)){
+                        if(ImGui::Button("Delete", button_size))
+                        {
                             Scene::delete_polygon_mesh(it->first);
                             //注意这里删除后要break否则会出现内存错误
                             //猜测是因为map删除元素后，迭代器失效！！！！
@@ -796,7 +919,8 @@ void CoolenderUI::render_right_sidebar(){
 }
 
 //message信息框
-void CoolenderUI::render_message_box(){   
+void CoolenderUI::render_message_box()
+{   
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     //获取glfw window宽高
     int win_width, win_height;
@@ -809,8 +933,10 @@ void CoolenderUI::render_message_box(){
     // );
 
     //设置位置
-    ImGui::SetNextWindowPos(
-        ImVec2(   
+    ImGui::SetNextWindowPos
+    (
+        ImVec2
+        (   
             // 注意FramebufferSize是窗口实际长度的2倍(?????)
             main_viewport->WorkPos.x + CoolenderUI::message_box_pos_x, 
             main_viewport->WorkPos.y + CoolenderUI::message_box_pos_y
@@ -819,37 +945,46 @@ void CoolenderUI::render_message_box(){
     );
 
     //Message box
-    ImGui::Begin("Message Box", &CoolenderUI::show_message_box, ImGuiWindowFlags_AlwaysAutoResize);{   
+    ImGui::Begin("Message Box", &CoolenderUI::show_message_box, ImGuiWindowFlags_AlwaysAutoResize);
+    {   
         //简介
         ImGui::Text("Brief Introduction:");
         ImGui::BulletText("This is a simple scene renderer for \npoint clouds, polygon meshes without any \nPBR texture and models with PBR textures(TODO).");
         ImGui::Separator();
         //显示帧数
-        ImGui::Text(
+        ImGui::Text
+        (
             "Application average %.3f ms/frame (%.1f FPS)", 
             1000.0f / ImGui::GetIO().Framerate, 
             ImGui::GetIO().Framerate
         );
     }
-    
     ImGui::End();
 }
 
 //渲染点云文件选择框
-void CoolenderUI::render_point_cloud_obj_file_choose_dialog(){
+void CoolenderUI::render_point_cloud_obj_file_choose_dialog()
+{
     //设置大小和位置
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos
+    (
+        ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), 
+        ImGuiCond_FirstUseEver
+    );
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
     ImGuiFileDialog::Instance()->OpenDialog("polygon_mesh_obj_file_choose_dialog", "Choose Obj File", ".obj", ".", 0);
     ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
     // display
-    if (ImGuiFileDialog::Instance()->Display("polygon_mesh_obj_file_choose_dialog")) {
+    if (ImGuiFileDialog::Instance()->Display("polygon_mesh_obj_file_choose_dialog")) 
+    {
         // action if OK 点击OK
-        if (ImGuiFileDialog::Instance()->IsOk()){
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
             //获取的路径和文件名称
             auto file_map = ImGuiFileDialog::Instance()->GetSelection();//返回一个map<string, string> key是文件名，value是路径
-            for(auto it = file_map.begin(); it != file_map.end(); it++){
+            for(auto it = file_map.begin(); it != file_map.end(); it++)
+            {
                 // action
                 cout << "You choose point cloud file:" << it->first << endl;
                 cout << "Your choosed file’s path is " << it->second << endl;
@@ -877,7 +1012,8 @@ void CoolenderUI::render_point_cloud_obj_file_choose_dialog(){
 }
 
 //渲染mesh文件选择框
-void CoolenderUI::render_polygon_mesh_obj_file_choose_dialog(){
+void CoolenderUI::render_polygon_mesh_obj_file_choose_dialog()
+{
     //设置大小和位置
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
@@ -885,12 +1021,15 @@ void CoolenderUI::render_polygon_mesh_obj_file_choose_dialog(){
     ImGuiFileDialog::Instance()->OpenDialog("polygon_mesh_obj_file_choose_dialog", "Choose Obj File", ".obj", ".", 0);
     ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
     // display
-    if (ImGuiFileDialog::Instance()->Display("polygon_mesh_obj_file_choose_dialog")) {
+    if (ImGuiFileDialog::Instance()->Display("polygon_mesh_obj_file_choose_dialog")) 
+    {
         // action if OK 点击OK
-        if (ImGuiFileDialog::Instance()->IsOk()){
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
             //获取的路径和文件名称
             auto file_map = ImGuiFileDialog::Instance()->GetSelection();//返回一个map<string, string> key是文件名，value是路径
-            for(auto it = file_map.begin(); it != file_map.end(); it++){
+            for(auto it = file_map.begin(); it != file_map.end(); it++)
+            {
                 // action
                 cout << "You choose polygon mesh file:" << it->first << endl;
                 cout << "Your choosed file’s path is " << it->second << endl;
@@ -913,20 +1052,28 @@ void CoolenderUI::render_polygon_mesh_obj_file_choose_dialog(){
 }
 
 //渲染model文件选择对话框
-void CoolenderUI::render_model_obj_file_choose_dialog(){
+void CoolenderUI::render_model_obj_file_choose_dialog()
+{
     //设置大小和位置
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos
+    (
+        ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), 
+        ImGuiCond_FirstUseEver
+    );
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
     ImGuiFileDialog::Instance()->OpenDialog("ModelObjFileChooseDialog", "Choose Obj File", ".obj", ".", 0);
     ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1,0,1, 0.9));//设置.obj文件的颜色
     // display
-    if (ImGuiFileDialog::Instance()->Display("ModelObjFileChooseDialog")){
+    if (ImGuiFileDialog::Instance()->Display("ModelObjFileChooseDialog"))
+    {
         // action if OK 点击OK
-        if (ImGuiFileDialog::Instance()->IsOk()){
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
             //获取的路径和文件名称
             auto file_map = ImGuiFileDialog::Instance()->GetSelection();//返回一个map<string, string> key是文件名，value是路径
-            for(auto it = file_map.begin(); it != file_map.end(); it++){
+            for(auto it = file_map.begin(); it != file_map.end(); it++)
+            {
                 // action
                 cout << "You choose model file:" << it->first << endl;
                 cout << "Your choosed file’s path is " << it->second << endl;
@@ -945,17 +1092,24 @@ void CoolenderUI::render_model_obj_file_choose_dialog(){
 }
 
 //截图保存路径选择对话框
-void CoolenderUI::render_screenshot_save_dir_choose_dialog(){
+void CoolenderUI::render_screenshot_save_dir_choose_dialog()
+{
     //设置大小和位置
     const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos
+    (
+        ImVec2(main_viewport->WorkPos.x + 30, main_viewport->WorkPos.y + 50), 
+        ImGuiCond_FirstUseEver
+    );
     ImGui::SetNextWindowSize(ImVec2(400, 600), ImGuiCond_FirstUseEver);
     ImGuiFileDialog::Instance()->OpenDialog("ScreenshotSaveDirChooseDialog", "Choose Directory", nullptr, ".", 0);
     
     // display
-    if (ImGuiFileDialog::Instance()->Display("ScreenshotSaveDirChooseDialog")){
+    if (ImGuiFileDialog::Instance()->Display("ScreenshotSaveDirChooseDialog"))
+    {
         // action if OK 点击OK
-        if (ImGuiFileDialog::Instance()->IsOk()){
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
             Function::screenshot_out_path = ImGuiFileDialog::Instance()->GetCurrentPath();
             //关闭窗口
             ImGuiFileDialog::Instance()->Close();
@@ -968,9 +1122,11 @@ void CoolenderUI::render_screenshot_save_dir_choose_dialog(){
 }
 
 //warning 提示
-void CoolenderUI::warning_marker(const char* desc){
+void CoolenderUI::warning_marker(const char* desc)
+{
     ImGui::TextDisabled("(!!!)");
-    if (ImGui::IsItemHovered()){
+    if (ImGui::IsItemHovered())
+    {
         ImGui::BeginTooltip();
         ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
         ImGui::TextUnformatted(desc);
@@ -980,7 +1136,8 @@ void CoolenderUI::warning_marker(const char* desc){
 }
 
 //cleanup
-void CoolenderUI::destroy(){
+void CoolenderUI::destroy()
+{
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

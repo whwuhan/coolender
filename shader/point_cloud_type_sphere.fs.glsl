@@ -3,7 +3,8 @@
 绘制球状的点云
 */
 out vec4 frag_color;
-in VsOut{
+in VsOut
+{
     vec3 frag_pos;
     vec2 tex_coords;
     vec3 normal;
@@ -22,7 +23,8 @@ uniform vec3 light_look_at;//光源聚焦位置
 
 //环境光强度
 uniform float ambient_intensity;
-void main(){
+void main()
+{
     vec3 color = point_cloud_color;
 
     // ambient 环境光

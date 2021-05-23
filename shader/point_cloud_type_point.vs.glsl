@@ -11,7 +11,8 @@ uniform mat4 model;
 
 uniform float point_size;//点的大小
 
-void main(){
+void main()
+{
     gl_Position = projection * view *  model * vec4(a_pos, 1.0);
     gl_PointSize = point_size;
 }

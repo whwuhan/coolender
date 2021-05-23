@@ -115,9 +115,12 @@ vec4 blinn_phong(float intensity)
 void main()
 {
     float dis_frag_pos_to_cen = distance(fs_in.frag_pos, vec3(0.0f, -1.0f, 0.0f));  //场景中心的距离
-    // if(dis_frag_pos_to_cen > 10){//地面绘制成圆形
+    // if(dis_frag_pos_to_cen > 10)
+    // {//地面绘制成圆形
     //     frag_color = clear_color;
-    // }else{
+    // }
+    // else
+    // {
     //     blinn_phong(1);
     // }
 

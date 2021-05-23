@@ -6,7 +6,8 @@ layout(location = 2) in vec3 a_normal;//法线
 layout (location = 3) in mat4 a_instance_matrix;//点的model矩阵
 
 // declare an interface block; see 'Advanced GLSL' for what these are.
-out VsOut{
+out VsOut
+{
     vec3 frag_pos;
     vec2 tex_coords;
     vec3 normal;
