@@ -51,31 +51,36 @@ Scene::Scene()
 // }
 
 //增加点光源
-void Scene::add_point_light(string point_light_name, coolender::Light &point_light){
+void Scene::add_point_light(string point_light_name, coolender::Light &point_light)
+{
     point_light_map[point_light_name] = point_light;
     cout << "Add point light successfully." << endl;
 }
 
 //添加点云
-void Scene::add_point_cloud(string point_cloud_name, PointCloud &point_cloud){
+void Scene::add_point_cloud(string point_cloud_name, PointCloud &point_cloud)
+{
     point_cloud_map[point_cloud_name] = point_cloud;
     cout << "Add point cloud successfully." << endl;
 }
 
 //添加球面
-void Scene::add_sphere(string sphere_name, Sphere& sphere){
+void Scene::add_sphere(string sphere_name, Sphere& sphere)
+{
     sphere_map[sphere_name] = sphere;
     cout << "Add sphere successfully." << endl;
 }
 
 //添加mesh
-void Scene::add_polygon_mesh(string polygon_mesh_name, PolygonMesh& polygon_mesh){
+void Scene::add_polygon_mesh(string polygon_mesh_name, PolygonMesh& polygon_mesh)
+{
     polygon_mesh_map[polygon_mesh_name] = polygon_mesh;
     cout << "Add polygon mesh successfully." << endl;
 }
 
 //添加Model
-void Scene::add_model(string model_name, Model &model){
+void Scene::add_model(string model_name, Model &model)
+{
     model_map[model_name] = model;
     cout << "Add model successfully." << endl;
 }
@@ -90,13 +95,15 @@ void Scene::add_model(string model_name, Model &model){
 // }
 
 //删除点光源
-void Scene::delete_point_light(string point_light_name){
+void Scene::delete_point_light(string point_light_name)
+{
     point_light_map.erase(point_light_name);
     cout << "Delete point light successfully." << endl;
 }
 
 //删除点云
-void Scene::delete_point_cloud(string point_cloud_name){   
+void Scene::delete_point_cloud(string point_cloud_name)
+{   
     //先删VBO VAO
     glDeleteBuffers(1, &point_cloud_map[point_cloud_name].VBO);
     glDeleteBuffers(1, &point_cloud_map[point_cloud_name].point_model_matrices_buffer);
@@ -109,7 +116,8 @@ void Scene::delete_point_cloud(string point_cloud_name){
 }
 
 //删除球面
-void Scene::delete_sphere(string sphere_name){
+void Scene::delete_sphere(string sphere_name)
+{
     //先删VBO EBO VAO
     glDeleteBuffers(1, &sphere_map[sphere_name].VBO);
     glDeleteBuffers(1, &sphere_map[sphere_name].EBO);

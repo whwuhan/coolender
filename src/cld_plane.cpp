@@ -9,9 +9,11 @@ Plane::Plane():color(1.0f, 1.0f, 1.0f, 1.0f), texture_path("img/concrete_seamles
 Plane::Plane(vec4 color, string texture_path):color(color), texture_path(texture_path)
 {}
 
-void Plane::init(){
+void Plane::init()
+{
     // set up vertex data (and buffer(s)) and configure vertex attributes
-    float planeVertices[] = {
+    float planeVertices[] = 
+    {
         // positions            // normals         // texcoords
          10.0f, -1.0f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
         -10.0f, -1.0f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,

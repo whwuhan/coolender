@@ -17,8 +17,10 @@ x_segments(10),y_segments(10)
 {}
 
 //产生球的mesh,返回VAO
-void Sphere::create_sphere(){
-    if(0 == VAO){
+void Sphere::create_sphere()
+{
+    if(0 == VAO)
+    {
         glGenVertexArrays(1, &VAO);
 
         glGenBuffers(1, &VBO);
@@ -31,8 +33,10 @@ void Sphere::create_sphere(){
 
         //生成球的坐标信息
         float PI = 3.14159265359;
-        for (unsigned int y = 0; y <= y_segments; ++y){
-            for (unsigned int x = 0; x <= x_segments; ++x){
+        for (unsigned int y = 0; y <= y_segments; ++y)
+        {
+            for (unsigned int x = 0; x <= x_segments; ++x)
+            {
                 // 绘制球面上的点
                 float x_segment = (float)x / (float)x_segments;
                 float y_segment = (float)y / (float)y_segments;
@@ -49,14 +53,21 @@ void Sphere::create_sphere(){
         //生成EBO
         // 将三个点绘制成一个面
         bool odd_row = false; //是否是奇数行
-        for (unsigned int y = 0; y < y_segments; ++y){
-            if (!odd_row) {// even rows: y == 0, y == 2; and so on
-                for (unsigned int x = 0; x <= x_segments; ++x){
+        for (unsigned int y = 0; y < y_segments; ++y)
+        {
+            if (!odd_row) 
+            {
+                // even rows: y == 0, y == 2; and so on
+                for (unsigned int x = 0; x <= x_segments; ++x)
+                {
                     indices.push_back(y * (x_segments + 1) + x);
                     indices.push_back((y + 1) * (x_segments + 1) + x);
                 }
-            }else{
-                for (int x = x_segments; x >= 0; --x) {// 注意这里是int类型而不是unsigned int 如果是unsigned int会陷入死循环，因为无符号数不会小于0
+            }
+            else
+            {
+                for (int x = x_segments; x >= 0; --x) 
+                {// 注意这里是int类型而不是unsigned int 如果是unsigned int会陷入死循环，因为无符号数不会小于0
                     indices.push_back((y + 1) * (x_segments + 1) + x);
                     indices.push_back(y * (x_segments + 1) + x);
                 }
@@ -67,15 +78,18 @@ void Sphere::create_sphere(){
 
         // 将点的坐标 法线 uv坐标放到一起（放入data内）
         vector<float> data;
-        for (unsigned int i = 0; i < positions.size(); ++i){
+        for (unsigned int i = 0; i < positions.size(); ++i)
+        {
             data.push_back(positions[i].x);
             data.push_back(positions[i].y);
             data.push_back(positions[i].z);
-            if (uv.size() > 0){
+            if (uv.size() > 0)
+            {
                 data.push_back(uv[i].x);
                 data.push_back(uv[i].y);
             }
-            if (normals.size() > 0){
+            if (normals.size() > 0)
+            {
                 data.push_back(normals[i].x);
                 data.push_back(normals[i].y);
                 data.push_back(normals[i].z);
@@ -103,7 +117,8 @@ void Sphere::create_sphere(){
 }
 
 //根据point_size设置球的半径和分割数量
-void Sphere::set_radius_segments_by_point_size(float point_size){
+void Sphere::set_radius_segments_by_point_size(float point_size)
+{
     //先删VBO EBO VAO
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
