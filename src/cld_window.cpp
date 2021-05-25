@@ -29,7 +29,8 @@ double Window::cursor_pos_y = Window::height / 2.0f; //鼠标位置Y
 //功能
 bool Window::screenshot = false;
 
-void Window::init_and_run(){
+void Window::init_and_run()
+{
     //======================glfw glad opengl 初始化======================
     glfwInit(); //初始化GLFW
 
@@ -43,10 +44,11 @@ void Window::init_and_run(){
 #endif
     //创建一个窗口对象
     string windowTitle = "Coolender Version " + Coolender::version;
-    Window::glfw_window = glfwCreateWindow(Window::width, Window::height, windowTitle.c_str(), NULL, NULL);
-
     //参数依次是长，宽，名称，后两个参数忽略
-    if (Window::glfw_window == nullptr){
+    Window::glfw_window = glfwCreateWindow(Window::width, Window::height, windowTitle.c_str(), NULL, NULL);
+    
+    if (Window::glfw_window == nullptr)
+    {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return;
@@ -67,7 +69,8 @@ void Window::init_and_run(){
 
     //GLAD是用来管理OpenGL的函数指针
     //初始化GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
         //glfwGetProcAddress 根据编译的系统给出了正确的函数
         cout << "Failed to initialize GLAD" << endl;
         return;
@@ -110,7 +113,8 @@ void Window::init_and_run(){
 
     //渲染循环
     // Main loop
-    while (!glfwWindowShouldClose(Window::glfw_window)){
+    while (!glfwWindowShouldClose(Window::glfw_window))
+    {
         
         // per-frame time logic
         float current_frame = glfwGetTime();
@@ -123,7 +127,8 @@ void Window::init_and_run(){
 
         //开始渲染场景
         //背景颜色
-        glClearColor(
+        glClearColor
+        (
             Scene::clear_color.x,
             Scene::clear_color.y,
             Scene::clear_color.z,
@@ -139,7 +144,8 @@ void Window::init_and_run(){
         mat4 view = camera.GetViewMatrix();
 
         //渲染地板
-        if (Scene::show_floor){
+        if (Scene::show_floor)
+        {
             floor_shader.use();
             // vs uniform
             //暂时不需要model矩阵
@@ -178,12 +184,15 @@ void Window::init_and_run(){
         glEnable(GL_CULL_FACE); //开启面剔除，默认剔除背面
         //glCullFace(GL_FRONT);//设置剔除正面
         glFrontFace(GL_CW); //设置顺时针的面为正面
-        switch (Scene::point_type){
+        switch (Scene::point_type)
+        {
             //绘制成点
             case POINT:
-                for (auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+                for (auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+                {
                     //判断是否显示点云模型
-                    if (it->second.show){
+                    if (it->second.show)
+                    {
                         point_cloud_type_point_shader.use();
                         //vs uniform                   
                         point_cloud_type_point_shader.setMat4("projection", projection);
@@ -199,9 +208,11 @@ void Window::init_and_run(){
                 break;
         //将点绘制成球
         case SPHERE:
-            for (auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++){
+            for (auto it = Scene::point_cloud_map.begin(); it != Scene::point_cloud_map.end(); it++)
+            {
                 //判断是否显示球状点云
-                if (it->second.show){
+                if (it->second.show)
+                {
                     point_cloud_type_shpere_shader.use();
                     // vs uniform
                     point_cloud_type_shpere_shader.setMat4("projection", projection);
@@ -216,7 +227,8 @@ void Window::init_and_run(){
                     point_cloud_type_shpere_shader.setVec3("light_pos", Scene::parallel_light.position);//光源位置
                     point_cloud_type_shpere_shader.setVec3("light_look_at", Scene::parallel_light.look_at);//光源位置
                     //判断是否改变了球状点云的半径
-                    if (it->second.change_point_size){
+                    if (it->second.change_point_size)
+                    {
                         Scene::sphere_map[it->first].set_radius_segments_by_point_size(it->second.point_size);
                         Render::render_point_cloud_type_sphere_init(it->second, Scene::sphere_map[it->first]); //重新初始化（因为球的大小变了，要更新VAO）
                     }
@@ -234,8 +246,10 @@ void Window::init_and_run(){
 
         //渲染polygon mesh
         for(auto it = Scene::polygon_mesh_map.begin(); it != Scene::polygon_mesh_map.end(); it++){
-            if(it->second.show){
-                switch(Scene::polygon_mesh_type){
+            if(it->second.show)
+            {
+                switch(Scene::polygon_mesh_type)
+                {
                 case LINE:
                     polygon_mesh_type_line_shader.use();
                     polygon_mesh_type_line_shader.setMat4("projection", projection);
@@ -293,7 +307,8 @@ void Window::init_and_run(){
         //==========================场景渲染结束==========================
 
         //场景截图
-        if(Window::screenshot){
+        if(Window::screenshot)
+        {
             string cur_time = Function::get_cur_time();
             Function::screenshot("cld_screenshot_" + cur_time + "_" + to_string(glfwGetTime()) +".png");
         }
@@ -319,58 +334,81 @@ void Window::init_and_run(){
 }
 
 //回调函数声明，更改窗口大小的时候，更改视口大小
-void coolender::framebuffer_size_callback(GLFWwindow *glfw_window, int width, int height){
+void coolender::framebuffer_size_callback(GLFWwindow *glfw_window, int width, int height)
+{
     Window::width = width;
     Window::height = height;
     glViewport(0, 0, width, height);
 }
 
 // 声明输入函数，判断是否按下键盘
-void coolender::process_input(GLFWwindow *glfw_window){
+void coolender::process_input(GLFWwindow *glfw_window)
+{
     //退出
     if (glfwGetKey(glfw_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(glfw_window, true);
 
     //按Q切换操作模式
-    if (
+    if 
+    (
         glfwGetKey(glfw_window, GLFW_KEY_Q) == GLFW_PRESS && 
         !Window::change_operate_mode_key_pressed && 
         glfwGetMouseButton(glfw_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE
-    ){
+    )
+    {
         Window::change_operate_mode_key_pressed = true;
         change_operate_mode(Window::glfw_window);
     }
     if (glfwGetKey(glfw_window, GLFW_KEY_Q) == GLFW_RELEASE)
+    {
         Window::change_operate_mode_key_pressed = false;
-
+    }
 
     //截图快捷键
-    if (glfwGetKey(glfw_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && glfwGetKey(glfw_window, GLFW_KEY_P) == GLFW_PRESS)
+    if 
+    (
+        glfwGetKey(glfw_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && 
+        glfwGetKey(glfw_window, GLFW_KEY_P) == GLFW_PRESS
+    )
+    {
         Window::screenshot = true;
+    }
+        
 
     //键盘监听
     //相机移动
     //向前
     if (glfwGetKey(glfw_window, GLFW_KEY_W) == GLFW_PRESS)
+    {
         Window::camera.ProcessKeyboard(FORWARD, Window::delta_time * Window::camera_speed_scale);
+    }
     //向后
     if (glfwGetKey(glfw_window, GLFW_KEY_S) == GLFW_PRESS)
+    {
         Window::camera.ProcessKeyboard(BACKWARD, Window::delta_time * Window::camera_speed_scale);
+    }
     //向左
     if (glfwGetKey(glfw_window, GLFW_KEY_A) == GLFW_PRESS)
+    {
         Window::camera.ProcessKeyboard(LEFT, Window::delta_time * Window::camera_speed_scale);
+    }
     //向右
     if (glfwGetKey(glfw_window, GLFW_KEY_D) == GLFW_PRESS)
+    {
         Window::camera.ProcessKeyboard(RIGHT, Window::delta_time * Window::camera_speed_scale);
+    }
     //向上
     if (glfwGetKey(glfw_window, GLFW_KEY_SPACE))
+    {
         Window::camera.ProcessKeyboard(UPWARD, Window::delta_time * Window::camera_speed_scale);
+    }
 }
 
 //修改操作模式
-void coolender::change_operate_mode(GLFWwindow *glfw_window){
-
-    switch(Window::operate_mode){
+void coolender::change_operate_mode(GLFWwindow *glfw_window)
+{
+    switch(Window::operate_mode)
+    {
     //注意设置的顺序
     case WOW:
         //切换为FPS风格
@@ -396,16 +434,19 @@ void coolender::change_operate_mode(GLFWwindow *glfw_window){
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void coolender::scroll_callback(GLFWwindow *winglfwWindowdow, double xoffset, double yoffset){
+void coolender::scroll_callback(GLFWwindow *winglfwWindowdow, double xoffset, double yoffset)
+{
     Window::camera.ProcessMouseScroll(yoffset);
 }
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
 //移动模式下的鼠标移动回调函数 类似FPS游戏
-void coolender::FPS_mode_mouse_callback(GLFWwindow *glfw_window, double xpos, double ypos){   
+void coolender::FPS_mode_mouse_callback(GLFWwindow *glfw_window, double xpos, double ypos)
+{   
     //防止镜头抖动
-    if (Window::first_change_to_FPS_mode){
+    if (Window::first_change_to_FPS_mode)
+    {
         Window::cursor_pos_x = xpos;
         Window::cursor_pos_y = ypos;
         Window::first_change_to_FPS_mode = false;
@@ -421,11 +462,14 @@ void coolender::FPS_mode_mouse_callback(GLFWwindow *glfw_window, double xpos, do
 }
 
 //鼠标点击回调函数
-void coolender::mouse_button_callback(GLFWwindow* glfw_window, int button, int action, int mods){
+void coolender::mouse_button_callback(GLFWwindow* glfw_window, int button, int action, int mods)
+{
     //===============WOW操作风格下的鼠标按键监听===============
     //监听鼠标右键按下
-    if (action == GLFW_PRESS && Window::operate_mode == WOW){
-        switch(button){
+    if (action == GLFW_PRESS && Window::operate_mode == WOW)
+    {
+        switch(button)
+        {
         case GLFW_MOUSE_BUTTON_RIGHT:
             if(Window::mouse_button_right_first_pressed){
                 glfwSetCursorPosCallback(glfw_window, nullptr);                  //先禁用鼠标移动监听
@@ -439,10 +483,13 @@ void coolender::mouse_button_callback(GLFWwindow* glfw_window, int button, int a
         }
     }
     //监听鼠标右键释放
-    if(action == GLFW_RELEASE && Window::operate_mode == WOW){
-        switch(button){
+    if(action == GLFW_RELEASE && Window::operate_mode == WOW)
+    {
+        switch(button)
+        {
         case GLFW_MOUSE_BUTTON_RIGHT:
-            if(Window::mouse_button_right_first_rlease){
+            if(Window::mouse_button_right_first_rlease)
+            {
                 glfwSetCursorPosCallback(glfw_window, nullptr);                  //先禁用鼠标移动监听
                 Window::mouse_button_right_first_pressed = true;
                 Window::mouse_button_right_first_rlease = false;
@@ -456,10 +503,13 @@ void coolender::mouse_button_callback(GLFWwindow* glfw_window, int button, int a
 }
 
 //鼠标模式下的鼠标移动回调函数 类似WOW
-void coolender::WOW_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos){
-    if (glfwGetMouseButton(glfw_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){ 
+void coolender::WOW_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos)
+{
+    if (glfwGetMouseButton(glfw_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    { 
         //防止镜头抖动
-        if (Window::first_change_to_WOW_mode){
+        if (Window::first_change_to_WOW_mode)
+        {
             Window::cursor_pos_x = xpos;
             Window::cursor_pos_y = ypos;
             Window::first_change_to_WOW_mode = false;
@@ -475,7 +525,8 @@ void coolender::WOW_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, do
 }
 
 //获取当前指针的位置
-void coolender::get_cursor_pos(GLFWwindow *glfw_window, double xpos, double ypos){
+void coolender::get_cursor_pos(GLFWwindow *glfw_window, double xpos, double ypos)
+{
     Window::cursor_pos_x = xpos;
     Window::cursor_pos_y = ypos;
 }
