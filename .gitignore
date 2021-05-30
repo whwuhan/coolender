@@ -38,5 +38,5 @@
 # apitrace 抓帧文件
 *.trace 
 
-# imgui 生成文件
+# imgui UI文件
 ingui.ini
