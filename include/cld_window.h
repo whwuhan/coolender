@@ -56,14 +56,14 @@ namespace coolender
     void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height);
     // 键盘操作
     void process_input(GLFWwindow *glfw_window);
-    void change_operate_mode(GLFWwindow *glfw_window);//修改操作模式
+    void change_operate_mode(GLFWwindow *glfw_window);                                      // 修改操作模式
     // 鼠标滚轮操作
     void scroll_callback(GLFWwindow *glfw_window, double xoffset, double yoffset);
     // 鼠标点击回调函数
     void mouse_button_callback(GLFWwindow* glfw_window, int button, int action, int mods);
     // 鼠标移动
-    void FPS_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos);//移动模式下的鼠标移动回调函数 类似FPS游戏
-    void WOW_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos);//鼠标模式下的鼠标移动回调函数 类似WOW
+    void FPS_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos);        // 移动模式下的鼠标移动回调函数 类似FPS游戏
+    void WOW_mode_mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos);        // 鼠标模式下的鼠标移动回调函数 类似WOW
     // 获取鼠标位置
     void get_cursor_pos(GLFWwindow* glfw_window, double xpos, double ypos);
 }// end coolender
