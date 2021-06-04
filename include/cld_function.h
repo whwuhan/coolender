@@ -9,15 +9,12 @@
 #include <glad/glad.h>
 #include <string>
 #include <ctime>
-namespace coolender{
-    class Function{
+namespace coolender
+{
+    class Function
+    {
     public:
         static std::string screenshot_out_path;//截图保存文件夹位置
-
-
-
-
-
         /**
          * 截图
          * 参数：
@@ -30,5 +27,5 @@ namespace coolender{
 
         //获取当前时间
         static std::string get_cur_time();
-    };
-}
+    };// end Function
+}// end coolender

@@ -8,9 +8,11 @@
 #include <cld_shader.h>
 #include <string>
 #include <vector>
-namespace coolender{
+namespace coolender
+{
     //点结构体
-    struct Vertex{
+    struct Vertex
+    {
         glm::vec3 Position;     //点的位置
         glm::vec3 Normal;       //点法线
         glm::vec2 TexCoords;    //点纹理坐标
@@ -19,13 +21,15 @@ namespace coolender{
     };
 
     //纹理结构体
-    struct Texture{
+    struct Texture
+    {
         unsigned int id;        //纹理ID
         std::string type;       //类型
         std::string path;       //路径
     };
 
-    class Mesh{
+    class Mesh
+    {
     public:
         //mesh Data
         std::vector<Vertex>         vertices;   //顶点
@@ -45,6 +49,6 @@ namespace coolender{
 
         //初始化所有buffer
         void setupMesh();
-    };
-}
+    };// end Mesh
+}// end namespace coolender
 
