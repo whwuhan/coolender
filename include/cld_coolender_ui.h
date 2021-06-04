@@ -13,19 +13,17 @@
 #include <cld_window.h>
 #include <cld_scene.h>
 #include <whlib.h>
-
-namespace coolender{
-    class CoolenderUI{
+namespace coolender
+{
+    class CoolenderUI
+    {
     public:
-       
         static  GLFWwindow* glfw_window;//glfw window
-        
         static void init(GLFWwindow* glfw_window);//初始化，在渲染循环外
         static void render_demo_ui();//渲染imgui demo
         static void render();//渲染所有的UI
         static void destroy();//清空数据
         
-
     private:
         static float font_size;//字体大小
         static float global_scale;//整体的字体缩放
@@ -64,5 +62,5 @@ namespace coolender{
 
         //其他UI
         static void warning_marker(const char* desc);//警告标志
-    };
-}
+    };// end CoolenderUI
+}// end namespace coolender
