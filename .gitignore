@@ -34,6 +34,7 @@
 # macOS
 */*.DS_Store
 *.DS_Store
+.DS_Store
 
 # apitrace 抓帧文件
 *.trace 
