@@ -8,7 +8,8 @@
 #include <string>
 #include <cld_texture_loader.h>
 namespace coolender{
-    class Plane {
+    class Plane
+    {
     public:
         Plane();
         Plane(glm::vec4 color, std::string texture_path);
@@ -19,5 +20,5 @@ namespace coolender{
         glm::vec4 color;//颜色
     private:
         std::string texture_path;//纹理路径
-    };
-}
+    };// end Plane
+}// end namespace coolender
