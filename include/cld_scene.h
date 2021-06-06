@@ -8,7 +8,8 @@
 #include <cld_light.h>
 #include <cld_plane.h>
 #include <cld_model.h>
-namespace coolender{
+namespace coolender
+{
     enum POINT_TYPE{POINT, SPHERE};                                             //点的绘制类型
     enum LIGHT_MODEL{PHONG, BLINN_PHONG, PBR};                                  //场景使用的光照模型
     enum POLYGON_MESH_TYPE{LINE, FILL, LINE_AND_FILL, LIGHT};                   //mesh的渲染模式
@@ -67,5 +68,5 @@ namespace coolender{
 
         //渲染场景
         static void render_scene();
-    };// end Render
+    };// end class Scene
 }// end namespace coolender

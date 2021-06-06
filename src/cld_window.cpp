@@ -76,9 +76,9 @@ void Window::init_and_run()
         return;
     }
     //openGL全局配置
-    glEnable(GL_DEPTH_TEST);         //开启深度测试
+    glEnable(GL_DEPTH_TEST);         // 开启深度测试
     glEnable(GL_MULTISAMPLE);        // 开启MSAA通常都是默认开启的
-    glEnable(GL_PROGRAM_POINT_SIZE); //开启改变点的大小（暂时无用）
+    glEnable(GL_PROGRAM_POINT_SIZE); // 开启改变点的大小（暂时无用）
 
     //glPoint_size(25);
     //======================glfw glad opengl 初始化结束======================
@@ -137,7 +137,11 @@ void Window::init_and_run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //渲染shawdow mapping depth map(只有显示地板的时候渲染shadow mapping)
-        if(Scene::show_floor) ShadowMapping::render_depth_map(depth_map_shader);
+        if(Scene::show_floor) 
+        {
+            ShadowMapping::render_depth_map(depth_map_shader);
+        }
+        
         
         //获取投影矩阵和相机矩阵
         mat4 projection = perspective(radians(camera.Zoom), (float)Window::width / (float)Window::height, 0.1f, 100.0f);
