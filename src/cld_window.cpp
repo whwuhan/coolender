@@ -317,9 +317,9 @@ void Window::init_and_run()
             Function::screenshot("cld_screenshot_" + cur_time + "_" + to_string(glfwGetTime()) +".png");
         }
         
-        //根据场景渲染UI
-        //绘制UI 注意绘制UI要放在最后否则UI会被遮盖
-        //CoolenderUI.render_demo_ui();
+        // 根据场景渲染UI
+        // 绘制UI 注意绘制UI要放在最后否则UI会被遮盖
+        // CoolenderUI::render_demo_ui();
         CoolenderUI::render();
         
         //交换buffer

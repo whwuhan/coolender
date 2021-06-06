@@ -28,7 +28,8 @@ EIGEN_INCLUDE := $(3RD_SRC_DIR)/whlib/deps/eigen-3.3.7
 
 
 #包含所有第三方头文件
-3RD_SRC_INCLUDE := -I$(ASSIMP_INCLUDE) \
+3RD_SRC_INCLUDE := \
+-I$(ASSIMP_INCLUDE) \
 -I$(GLFW_INCLUDE) \
 -I$(GLAD_INCLUDE) \
 -I$(GLM_INCLUDE) \
