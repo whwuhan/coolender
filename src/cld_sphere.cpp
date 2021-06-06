@@ -129,7 +129,7 @@ void Sphere::set_radius_segments_by_point_size(float point_size)
     VAO = 0;
     //设置球的参数
     radius = point_size * 0.05;
-    x_segments = 10+ point_size;
+    x_segments = 10 + point_size;
     y_segments = 10 + point_size;
     //打印球的细分程度
     // cout << "x_segments : " << x_segments << endl;

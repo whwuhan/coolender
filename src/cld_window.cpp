@@ -8,8 +8,8 @@ GLFWwindow *Window::glfw_window = nullptr;          //glfw window
 unsigned int Window::width = 1600;
 unsigned int Window::height = 900;
 //相机相关
-Camera Window::camera;                             //相机
-float Window::camera_speed_scale = 1.0f;             //相机移速比例
+Camera Window::camera;                                  //相机
+float Window::camera_speed_scale = 1.0f;                //相机移速比例
 //渲染相关
 bool Window::use_MSAA = true;
 int Window::MSAA_level = 8;                          //MSAA采样数量
